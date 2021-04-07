@@ -19,23 +19,23 @@ jobs:
         - uses: actions/checkout@v2
 
         - name: Install dependencies
-          run: yarn install
+          run: npm install
 
         - name: Build for development
           if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
           run:
-            yarn build
+            npm run build
 
         - name: Build for production
           if: github.event.inputs.environment == 'prod'
           run:
-            yarn build:prod
+            npm run build
 
         - name: Deploy to dev
           if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
           uses: reggionick/s3-deploy@v3
           with:
-            folder: build
+            folder: public
             bucket: ${{ secrets.S3_DEV_BUCKET }}
             bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
             invalidation: /
@@ -47,7 +47,7 @@ jobs:
           if: github.event.inputs.environment == 'prod'
           uses: reggionick/s3-deploy@v3
           with:
-            folder: build
+            folder: public
             bucket: ${{ secrets.S3_PROD_BUCKET }}
             bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
             invalidation: /
