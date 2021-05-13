@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>overview</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="Dashboard01_new01" transform="translate(-54.000000, -431.000000)">
+            <g id="icon/dashboard" transform="translate(54.000000, 431.000000)">
+                <g>
+                    <rect id="Rectangle" fill="#FFFFFF" x="0" y="8.38095238" width="3.80952381" height="6.0952381" rx="1.52380952"></rect>
+                    <rect id="Rectangle-Copy" stroke="#FFFFFF" stroke-width="1.52380952" x="6.85714286" y="4.57142857" width="2.28571429" height="9.14285714" rx="1.14285714"></rect>
+                    <rect id="Rectangle-Copy" stroke="#FFFFFF" stroke-width="1.52380952" x="12.952381" y="0.761904762" width="2.28571429" height="12.952381" rx="1.14285714"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
