@@ -16,41 +16,107 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-        - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-        - name: Install dependencies
-          run: npm install
+      - name: Install dependencies
+        run: npm install
 
-        - name: Build for development
-          if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
-          run:
-            npm run build
+      - name: Build for development - rococo
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        run:
+          npm run build
+        env:
+          STAGE: rococo
 
-        - name: Build for production
-          if: github.event.inputs.environment == 'prod'
-          run:
-            npm run build
+      - name: Deploy to dev - rococo
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: rococo.${{ secrets.DEV_DOMAIN }}
+          bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
 
-        - name: Deploy to dev
-          if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
-          uses: reggionick/s3-deploy@v3
-          with:
-            folder: public
-            bucket: ${{ secrets.S3_DEV_BUCKET }}
-            bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
-            invalidation: /
-            delete-removed: false
-            no-cache: true
-            private: true
+      - name: Build for development - kusama
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        run:
+          npm run build
+        env:
+          STAGE: kusama
 
-        - name: Deploy to prod
-          if: github.event.inputs.environment == 'prod'
-          uses: reggionick/s3-deploy@v3
-          with:
-            folder: public
-            bucket: ${{ secrets.S3_PROD_BUCKET }}
-            bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
-            invalidation: /
-            delete-removed: false
-            no-cache: true
-            private: true
+      - name: Deploy to dev - kusama
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: kusama.${{ secrets.DEV_DOMAIN }}
+          bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+      - name: Deploy to dev - kusama-default
+        if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: www.${{ secrets.DEV_DOMAIN }}
+          bucket-region: ${{ secrets.S3_DEV_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+      - name: Build for production - rococo
+        if: github.event.inputs.environment == 'prod'
+        run:
+          npm run build
+        env:
+          STAGE: rococo
+
+      - name: Deploy to prod - rococo
+        if: github.event.inputs.environment == 'prod'
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: rococo.${{ secrets.PROD_DOMAIN }}
+          bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+      - name: Build for production - kusama
+        if: github.event.inputs.environment == 'prod'
+        run:
+          npm run build
+        env:
+          STAGE: kusama
+
+      - name: Deploy to prod - kusama
+        if: github.event.inputs.environment == 'prod'
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: kusama.${{ secrets.PROD_DOMAIN }}
+          bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
+
+      - name: Deploy to prod - kusama-default
+        if: github.event.inputs.environment == 'prod'
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: public
+          bucket: www.${{ secrets.PROD_DOMAIN }}
+          bucket-region: ${{ secrets.S3_PROD_BUCKET_REGION }}
+          invalidation: /
+          delete-removed: false
+          no-cache: true
+          private: true
