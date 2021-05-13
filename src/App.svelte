@@ -6,9 +6,10 @@
   import AuctionPage from './AuctionPage.svelte';
   import Tailwind from './Tailwind.svelte';
   import { initClient } from '@urql/svelte';
+  import { config } from './constants';
 
   initClient({
-    url: 'http://localhost:3000'
+    url: config.endpoint
   });
 </script>
 
