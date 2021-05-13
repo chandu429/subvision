@@ -1,30 +1,48 @@
 {
   "name": "svelte-app",
   "version": "1.0.0",
-  "private": true,
   "scripts": {
-    "build": "rollup -c",
+    "build": "NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear",
-    "validate": "svelte-check"
+    "start": "sirv public",
+    "validate": "svelte-check",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/introspection": "1.18.2",
+    "@graphql-codegen/typescript": "1.22.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
-    "@rollup/plugin-typescript": "^8.0.0",
-    "@tsconfig/svelte": "^1.0.10",
+    "@rollup/plugin-typescript": "^8.1.0",
+    "@tsconfig/svelte": "^1.0.0",
+    "@types/node": "^15.0.3",
+    "autoprefixer": "^10.2.3",
+    "postcss": "^8.2.4",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-inject-process-env": "^1.3.1",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
+    "sass": "^1.32.12",
     "svelte": "^3.0.0",
     "svelte-check": "^1.0.0",
-    "svelte-preprocess": "^4.0.0",
+    "svelte-navigator": "^3.1.5",
+    "svelte-preprocess": "^4.6.3",
+    "tailwindcss": "^2.0.2",
     "tslib": "^2.0.0",
-    "typescript": "^4.0.0"
+    "typescript": "^4.2.4"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0"
+    "@apollo/client": "^3.3.16",
+    "@left4code/tw-starter": "^1.0.23",
+    "@urql/svelte": "^1.2.1",
+    "big.js": "^6.1.1",
+    "date-fns": "^1.30.1",
+    "graphql": "^15.5.0",
+    "lodash-es": "^4.17.21",
+    "sirv-cli": "^1.0.0",
+    "svelte-apollo": "^0.4.0"
   }
 }
