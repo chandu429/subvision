@@ -1,30 +1,31 @@
-<script lang="ts">
-  export let name: string;
+<script>
+  import { Router, Route } from 'svelte-navigator';
+  import MobileMenu from './MobileMenu.svelte';
+  import SideMenu from './SideMenu.svelte';
+  import Layout from './Layout.svelte';
+  import AuctionPage from './AuctionPage.svelte';
+  import Tailwind from './Tailwind.svelte';
+  import { initClient } from '@urql/svelte';
+
+  initClient({
+    url: 'http://localhost:3000'
+  });
 </script>
 
-<main>
-  <h1>Hello {name}!</h1>
-  <p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<Tailwind />
 
-<style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
-</style>
+<Router>
+  <main class="main">
+    <Layout>
+      <div slot="mobile-menu">
+        <MobileMenu />
+      </div>
+      <div slot="side-menu"><SideMenu /></div>
+      <div slot="content">
+        <Route path="/">
+          <AuctionPage />
+        </Route>
+      </div>
+    </Layout>
+  </main>
+</Router>
