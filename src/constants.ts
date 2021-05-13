@@ -1,5 +1,8 @@
 type Network = 'polkadot' | 'kusama' | 'rococo';
 
+const { STAGE, NODE_ENV } = process.env;
+const isProd = NODE_ENV?.startsWith('prod');
+
 interface Config {
 	leasePeriod: number;
 	decimal: number;
@@ -24,10 +27,10 @@ export const NetworkConfigs: Record<Network, Config> = {
 		leasePeriod: 14400,
 		decimal: 12,
 		tokenSymbol: 'ROC',
-		endpoint: 'https://api.subquery.network/sq/subvis-io/rococo-auction',
+		endpoint: isProd ? 'https://api.subquery.network/sq/subvis-io/rococo-auction' : 'http://localhost:3000',
 	},
 };
 
 export const config: Config = {
-	...NetworkConfigs[process.env.STAGE || 'rococo'],
+	...NetworkConfigs[STAGE || 'rococo'],
 };

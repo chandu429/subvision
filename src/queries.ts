@@ -9,6 +9,7 @@ query ($auctionStatusFilter: AuctionFilter) {
   auctions (filter: $auctionStatusFilter, first: 1) {
     nodes {
       id
+      blockNum
       slotsStart
       slotsEnd
       status

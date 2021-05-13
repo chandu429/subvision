@@ -29,7 +29,7 @@
       <div class="text-gray-400 mb-2">Current Winner</div>
       <div class="flex flex-row justify-center items-center">
         {#if paraId}
-        <img class="mx-1 rounded-full" src="parachain-logo.png" alt="{paraId}" width="22" height="22">
+        <img class="mx-1 rounded-full" src="./ksm-logo.png" alt="{paraId}" width="22" height="22">
         {/if}
         <div class="mx-1">{paraId || 'N/A'}</div>
       </div>

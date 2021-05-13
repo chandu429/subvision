@@ -1,15 +1,18 @@
 <script>
   import { getTimeDiffInWord } from './utils';
-  export let closingStart, closingEnd, curBlockNum;
 
-  let title, timeRemain, isClosing;
+  export let closingStart, closingEnd, curBlockNum, auctionStart;
 
+  let title, timeRemain, isClosing, progress;
+  
   $: {
     isClosing = curBlockNum >= closingStart;
     const timeDelta = (isClosing ? closingEnd - (curBlockNum || 0) : (closingStart - curBlockNum)) * 6000;
     const timeDiff = getTimeDiffInWord(timeDelta)
     title = isClosing ? 'Auction ending started' : 'Auction started';
     timeRemain = (isClosing ? 'Closed ' : 'Ending starts in ') + timeDiff;
+    progress = (curBlockNum < closingEnd ? Math.floor((curBlockNum / closingEnd) * 100) : 100);
+    console.log(progress, curBlockNum, closingEnd, auctionStart);
   }
 </script>
 
@@ -33,8 +36,7 @@
     <p>{timeRemain}</p>
     <div class="flex flex-row pt-4">
       <div class="bar">
-        <div class="indicator"></div>
-        
+        <div class="indicator" style="left: {progress}%"></div>
       </div>
     </div>
   </div>
@@ -49,11 +51,10 @@
   }
 
   .indicator {
-    border-right: 1px solid magenta;
-    height: 17px;
+    border-right: 2px solid magenta;
+    height: 19px;
     position: absolute;
-    top: -3px;
-    left: 70%;
+    top: -4px;
   }
 
 </style>

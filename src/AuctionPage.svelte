@@ -95,6 +95,12 @@
       <i class="fas fa-circle-notch fa-spin fa-5x"></i>
     </span>
   </div>
+  {:else if !curAuction}
+  <div class="h-screen">
+    <span class="text-blue-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0" style="top: 30%;">
+      Auction ended
+    </span>
+  </div>
   {:else}
   <div class="grid grid-cols-12 gap-6">
     <div class="col-span-12 lg:col-span-12 xl:col-span-12 mt-2">
@@ -116,7 +122,7 @@
             <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Current Block</div>
             <div class="text-3xl font-bold mt-4 text-center">{$chronicle?.curBlockNum}</div>
           </div>
-          <AuctionProgressIndicator closingStart={$curAuction?.closingStart } closingEnd={ $curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} />
+          <AuctionProgressIndicator closingStart={$curAuction?.closingStart } closingEnd={ $curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={$curAuction?.blockNum} />
         </div>
       </div>
     </div>
