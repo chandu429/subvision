@@ -4,6 +4,7 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
+    "dev:prod": "NODE_ENV=production rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
     "codegen": "graphql-codegen --config codegen.yml"

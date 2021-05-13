@@ -4,7 +4,7 @@ var app = (function () {
     'use strict';
 
     (function() {
-        const env = {};
+        const env = {"NODE_ENV":"production"};
         try {
             if (process) {
                 process.env = Object.assign({}, process.env);

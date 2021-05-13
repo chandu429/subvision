@@ -64,7 +64,8 @@ export default {
     }),
     commonjs(),
     injectProcessEnv({
-      STAGE: process.env.STAGE
+      STAGE: process.env.STAGE,
+      NODE_ENV: process.env.NODE_ENV
     }),
     typescript({
       sourceMap: !production,
