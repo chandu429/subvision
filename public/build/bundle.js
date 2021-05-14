@@ -370,11 +370,6 @@ var app = (function () {
         : typeof globalThis !== 'undefined'
             ? globalThis
             : global);
-
-    function destroy_block(block, lookup) {
-        block.d(1);
-        lookup.delete(block.key);
-    }
     function outro_and_destroy_block(block, lookup) {
         transition_out(block, 1, 1, () => {
             lookup.delete(block.key);
@@ -1679,10 +1674,10 @@ var app = (function () {
     	"white-space:nowrap;" +
     	"border:0;";
 
-    const file$g = "node_modules/svelte-navigator/src/Router.svelte";
+    const file$i = "node_modules/svelte-navigator/src/Router.svelte";
 
     // (195:0) {#if isTopLevelRouter && manageFocus && a11yConfig.announcements}
-    function create_if_block$7(ctx) {
+    function create_if_block$8(ctx) {
     	let div;
     	let t;
 
@@ -1694,7 +1689,7 @@ var app = (function () {
     			attr_dev(div, "aria-atomic", "true");
     			attr_dev(div, "aria-live", "polite");
     			attr_dev(div, "style", visuallyHiddenStyle);
-    			add_location(div, file$g, 195, 1, 5906);
+    			add_location(div, file$i, 195, 1, 5906);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1710,7 +1705,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$7.name,
+    		id: create_if_block$8.name,
     		type: "if",
     		source: "(195:0) {#if isTopLevelRouter && manageFocus && a11yConfig.announcements}",
     		ctx
@@ -1719,7 +1714,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$h(ctx) {
+    function create_fragment$j(ctx) {
     	let div;
     	let t0;
     	let t1;
@@ -1727,7 +1722,7 @@ var app = (function () {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[20].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[19], null);
-    	let if_block = /*isTopLevelRouter*/ ctx[2] && /*manageFocus*/ ctx[4] && /*a11yConfig*/ ctx[1].announcements && create_if_block$7(ctx);
+    	let if_block = /*isTopLevelRouter*/ ctx[2] && /*manageFocus*/ ctx[4] && /*a11yConfig*/ ctx[1].announcements && create_if_block$8(ctx);
 
     	const block = {
     		c: function create() {
@@ -1740,7 +1735,7 @@ var app = (function () {
     			set_style(div, "display", "none");
     			attr_dev(div, "aria-hidden", "true");
     			attr_dev(div, "data-svnav-router", /*routerId*/ ctx[3]);
-    			add_location(div, file$g, 190, 0, 5750);
+    			add_location(div, file$i, 190, 0, 5750);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1788,7 +1783,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$h.name,
+    		id: create_fragment$j.name,
     		type: "component",
     		source: "",
     		ctx
@@ -1800,7 +1795,7 @@ var app = (function () {
     const createId$1 = createCounter();
     const defaultBasepath = "/";
 
-    function instance$h($$self, $$props, $$invalidate) {
+    function instance$j($$self, $$props, $$invalidate) {
     	let $location;
     	let $routes;
     	let $prevLocation;
@@ -2091,8 +2086,8 @@ var app = (function () {
     		init(
     			this,
     			options,
-    			instance$h,
-    			create_fragment$h,
+    			instance$j,
+    			create_fragment$j,
     			safe_not_equal,
     			{
     				basepath: 10,
@@ -2108,7 +2103,7 @@ var app = (function () {
     			component: this,
     			tagName: "Router",
     			options,
-    			id: create_fragment$h.name
+    			id: create_fragment$j.name
     		});
     	}
 
@@ -2396,7 +2391,7 @@ var app = (function () {
     	return toReadonly(ROUTE_PARAMS);
     }
 
-    const file$f = "node_modules/svelte-navigator/src/Route.svelte";
+    const file$h = "node_modules/svelte-navigator/src/Route.svelte";
 
     const get_default_slot_changes = dirty => ({
     	params: dirty & /*$params*/ 16,
@@ -2410,7 +2405,7 @@ var app = (function () {
     });
 
     // (97:0) {#if isActive}
-    function create_if_block$6(ctx) {
+    function create_if_block$7(ctx) {
     	let router;
     	let current;
 
@@ -2457,7 +2452,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$6.name,
+    		id: create_if_block$7.name,
     		type: "if",
     		source: "(97:0) {#if isActive}",
     		ctx
@@ -2467,7 +2462,7 @@ var app = (function () {
     }
 
     // (113:2) {:else}
-    function create_else_block$4(ctx) {
+    function create_else_block$5(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[17].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[18], get_default_slot_context);
@@ -2506,7 +2501,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$4.name,
+    		id: create_else_block$5.name,
     		type: "else",
     		source: "(113:2) {:else}",
     		ctx
@@ -2626,7 +2621,7 @@ var app = (function () {
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block_1$3, create_else_block$4];
+    	const if_block_creators = [create_if_block_1$3, create_else_block$5];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -2700,13 +2695,13 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$g(ctx) {
+    function create_fragment$i(ctx) {
     	let div0;
     	let t0;
     	let t1;
     	let div1;
     	let current;
-    	let if_block = /*isActive*/ ctx[3] && create_if_block$6(ctx);
+    	let if_block = /*isActive*/ ctx[3] && create_if_block$7(ctx);
 
     	const block = {
     		c: function create() {
@@ -2718,11 +2713,11 @@ var app = (function () {
     			set_style(div0, "display", "none");
     			attr_dev(div0, "aria-hidden", "true");
     			attr_dev(div0, "data-svnav-route-start", /*id*/ ctx[5]);
-    			add_location(div0, file$f, 95, 0, 2622);
+    			add_location(div0, file$h, 95, 0, 2622);
     			set_style(div1, "display", "none");
     			attr_dev(div1, "aria-hidden", "true");
     			attr_dev(div1, "data-svnav-route-end", /*id*/ ctx[5]);
-    			add_location(div1, file$f, 121, 0, 3295);
+    			add_location(div1, file$h, 121, 0, 3295);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2744,7 +2739,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$6(ctx);
+    					if_block = create_if_block$7(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(t1.parentNode, t1);
@@ -2779,7 +2774,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$g.name,
+    		id: create_fragment$i.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2790,7 +2785,7 @@ var app = (function () {
 
     const createId = createCounter();
 
-    function instance$g($$self, $$props, $$invalidate) {
+    function instance$i($$self, $$props, $$invalidate) {
     	let isActive;
     	const omit_props_names = ["path","component","meta","primary"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -2978,7 +2973,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
+    		init(this, options, instance$i, create_fragment$i, safe_not_equal, {
     			path: 12,
     			component: 0,
     			meta: 13,
@@ -2989,7 +2984,7 @@ var app = (function () {
     			component: this,
     			tagName: "Route",
     			options,
-    			id: create_fragment$g.name
+    			id: create_fragment$i.name
     		});
     	}
 
@@ -3026,9 +3021,9 @@ var app = (function () {
     	}
     }
 
-    const file$e = "node_modules/svelte-navigator/src/Link.svelte";
+    const file$g = "node_modules/svelte-navigator/src/Link.svelte";
 
-    function create_fragment$f(ctx) {
+    function create_fragment$h(ctx) {
     	let a;
     	let current;
     	let mounted;
@@ -3047,7 +3042,7 @@ var app = (function () {
     			a = element("a");
     			if (default_slot) default_slot.c();
     			set_attributes(a, a_data);
-    			add_location(a, file$e, 63, 0, 1735);
+    			add_location(a, file$g, 63, 0, 1735);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3098,7 +3093,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$f.name,
+    		id: create_fragment$h.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3107,7 +3102,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$f($$self, $$props, $$invalidate) {
+    function instance$h($$self, $$props, $$invalidate) {
     	let href;
     	let isPartiallyCurrent;
     	let isCurrent;
@@ -3257,13 +3252,13 @@ var app = (function () {
     class Link extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, { to: 5, replace: 6, state: 7, getProps: 8 });
+    		init(this, options, instance$h, create_fragment$h, safe_not_equal, { to: 5, replace: 6, state: 7, getProps: 8 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Link",
     			options,
-    			id: create_fragment$f.name
+    			id: create_fragment$h.name
     		});
 
     		const { ctx } = this.$$;
@@ -3307,7 +3302,7 @@ var app = (function () {
     	}
     }
 
-    const file$d = "src/MobileMenu.svelte";
+    const file$f = "src/MobileMenu.svelte";
 
     // (5:2) <Link to="/" class="flex mr-auto">
     function create_default_slot$4(ctx) {
@@ -3320,7 +3315,7 @@ var app = (function () {
     			attr_dev(img, "alt", "Subvisio");
     			attr_dev(img, "class", "w-6");
     			if (img.src !== (img_src_value = "/logo.svg")) attr_dev(img, "src", img_src_value);
-    			add_location(img, file$d, 5, 4, 141);
+    			add_location(img, file$f, 5, 4, 141);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -3341,7 +3336,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$e(ctx) {
+    function create_fragment$g(ctx) {
     	let div0;
     	let link;
     	let t0;
@@ -4598,858 +4593,858 @@ var app = (function () {
     			div152.textContent = "Image Zoom";
     			attr_dev(i0, "data-feather", "bar-chart-2");
     			attr_dev(i0, "class", "w-8 h-8 text-white transform -rotate-90");
-    			add_location(i0, file$d, 8, 4, 247);
+    			add_location(i0, file$f, 8, 4, 247);
     			attr_dev(a0, "href", "/#");
     			attr_dev(a0, "id", "mobile-menu-toggler");
-    			add_location(a0, file$d, 7, 2, 204);
+    			add_location(a0, file$f, 7, 2, 204);
     			attr_dev(div0, "class", "mobile-menu-bar");
-    			add_location(div0, file$d, 3, 0, 70);
+    			add_location(div0, file$f, 3, 0, 70);
     			attr_dev(i1, "data-feather", "home");
-    			add_location(i1, file$d, 14, 30, 460);
+    			add_location(i1, file$f, 14, 30, 460);
     			attr_dev(div1, "class", "menu__icon");
-    			add_location(div1, file$d, 14, 6, 436);
+    			add_location(div1, file$f, 14, 6, 436);
     			attr_dev(i2, "data-feather", "chevron-down");
     			attr_dev(i2, "class", "menu__sub-icon");
-    			add_location(i2, file$d, 15, 41, 533);
+    			add_location(i2, file$f, 15, 41, 533);
     			attr_dev(div2, "class", "menu__title");
-    			add_location(div2, file$d, 15, 6, 498);
+    			add_location(div2, file$f, 15, 6, 498);
     			attr_dev(a1, "href", "/#");
     			attr_dev(a1, "class", "menu");
-    			add_location(a1, file$d, 13, 4, 403);
+    			add_location(a1, file$f, 13, 4, 403);
     			attr_dev(i3, "data-feather", "activity");
-    			add_location(i3, file$d, 20, 34, 725);
+    			add_location(i3, file$f, 20, 34, 725);
     			attr_dev(div3, "class", "menu__icon");
-    			add_location(div3, file$d, 20, 10, 701);
+    			add_location(div3, file$f, 20, 10, 701);
     			attr_dev(div4, "class", "menu__title");
-    			add_location(div4, file$d, 21, 10, 771);
+    			add_location(div4, file$f, 21, 10, 771);
     			attr_dev(a2, "href", "index.html");
     			attr_dev(a2, "class", "menu");
-    			add_location(a2, file$d, 19, 8, 656);
-    			add_location(li0, file$d, 18, 6, 643);
+    			add_location(a2, file$f, 19, 8, 656);
+    			add_location(li0, file$f, 18, 6, 643);
     			attr_dev(i4, "data-feather", "activity");
-    			add_location(i4, file$d, 26, 34, 960);
+    			add_location(i4, file$f, 26, 34, 960);
     			attr_dev(div5, "class", "menu__icon");
-    			add_location(div5, file$d, 26, 10, 936);
+    			add_location(div5, file$f, 26, 10, 936);
     			attr_dev(div6, "class", "menu__title");
-    			add_location(div6, file$d, 27, 10, 1006);
+    			add_location(div6, file$f, 27, 10, 1006);
     			attr_dev(a3, "href", "side-menu-light-dashboard-overview-2.html");
     			attr_dev(a3, "class", "menu");
-    			add_location(a3, file$d, 25, 8, 860);
-    			add_location(li1, file$d, 24, 6, 847);
+    			add_location(a3, file$f, 25, 8, 860);
+    			add_location(li1, file$f, 24, 6, 847);
     			attr_dev(ul0, "class", "menu__sub-open");
-    			add_location(ul0, file$d, 17, 4, 609);
-    			add_location(li2, file$d, 12, 2, 394);
+    			add_location(ul0, file$f, 17, 4, 609);
+    			add_location(li2, file$f, 12, 2, 394);
     			attr_dev(i5, "data-feather", "box");
-    			add_location(i5, file$d, 34, 30, 1179);
+    			add_location(i5, file$f, 34, 30, 1179);
     			attr_dev(div7, "class", "menu__icon");
-    			add_location(div7, file$d, 34, 6, 1155);
+    			add_location(div7, file$f, 34, 6, 1155);
     			attr_dev(i6, "data-feather", "chevron-down");
     			attr_dev(i6, "class", "menu__sub-icon");
-    			add_location(i6, file$d, 35, 43, 1253);
+    			add_location(i6, file$f, 35, 43, 1253);
     			attr_dev(div8, "class", "menu__title");
-    			add_location(div8, file$d, 35, 6, 1216);
+    			add_location(div8, file$f, 35, 6, 1216);
     			attr_dev(a4, "href", "/#");
     			attr_dev(a4, "class", "menu menu--active");
-    			add_location(a4, file$d, 33, 4, 1109);
+    			add_location(a4, file$f, 33, 4, 1109);
     			attr_dev(i7, "data-feather", "activity");
-    			add_location(i7, file$d, 40, 34, 1444);
+    			add_location(i7, file$f, 40, 34, 1444);
     			attr_dev(div9, "class", "menu__icon");
-    			add_location(div9, file$d, 40, 10, 1420);
+    			add_location(div9, file$f, 40, 10, 1420);
     			attr_dev(div10, "class", "menu__title");
-    			add_location(div10, file$d, 41, 10, 1490);
+    			add_location(div10, file$f, 41, 10, 1490);
     			attr_dev(a5, "href", "index.html");
     			attr_dev(a5, "class", "menu menu--active");
-    			add_location(a5, file$d, 39, 8, 1362);
-    			add_location(li3, file$d, 38, 6, 1349);
+    			add_location(a5, file$f, 39, 8, 1362);
+    			add_location(li3, file$f, 38, 6, 1349);
     			attr_dev(i8, "data-feather", "activity");
-    			add_location(i8, file$d, 46, 34, 1690);
+    			add_location(i8, file$f, 46, 34, 1690);
     			attr_dev(div11, "class", "menu__icon");
-    			add_location(div11, file$d, 46, 10, 1666);
+    			add_location(div11, file$f, 46, 10, 1666);
     			attr_dev(div12, "class", "menu__title");
-    			add_location(div12, file$d, 47, 10, 1736);
+    			add_location(div12, file$f, 47, 10, 1736);
     			attr_dev(a6, "href", "simple-menu-light-dashboard-overview-1.html");
     			attr_dev(a6, "class", "menu menu--active");
-    			add_location(a6, file$d, 45, 8, 1575);
-    			add_location(li4, file$d, 44, 6, 1562);
+    			add_location(a6, file$f, 45, 8, 1575);
+    			add_location(li4, file$f, 44, 6, 1562);
     			attr_dev(i9, "data-feather", "activity");
-    			add_location(i9, file$d, 52, 34, 1935);
+    			add_location(i9, file$f, 52, 34, 1935);
     			attr_dev(div13, "class", "menu__icon");
-    			add_location(div13, file$d, 52, 10, 1911);
+    			add_location(div13, file$f, 52, 10, 1911);
     			attr_dev(div14, "class", "menu__title");
-    			add_location(div14, file$d, 53, 10, 1981);
+    			add_location(div14, file$f, 53, 10, 1981);
     			attr_dev(a7, "href", "top-menu-light-dashboard-overview-1.html");
     			attr_dev(a7, "class", "menu menu--active");
-    			add_location(a7, file$d, 51, 8, 1823);
-    			add_location(li5, file$d, 50, 6, 1810);
+    			add_location(a7, file$f, 51, 8, 1823);
+    			add_location(li5, file$f, 50, 6, 1810);
     			attr_dev(ul1, "class", "");
-    			add_location(ul1, file$d, 37, 4, 1329);
-    			add_location(li6, file$d, 32, 2, 1100);
+    			add_location(ul1, file$f, 37, 4, 1329);
+    			add_location(li6, file$f, 32, 2, 1100);
     			attr_dev(i10, "data-feather", "inbox");
-    			add_location(i10, file$d, 60, 30, 2156);
+    			add_location(i10, file$f, 60, 30, 2156);
     			attr_dev(div15, "class", "menu__icon");
-    			add_location(div15, file$d, 60, 6, 2132);
+    			add_location(div15, file$f, 60, 6, 2132);
     			attr_dev(div16, "class", "menu__title");
-    			add_location(div16, file$d, 61, 6, 2195);
+    			add_location(div16, file$f, 61, 6, 2195);
     			attr_dev(a8, "href", "side-menu-light-inbox.html");
     			attr_dev(a8, "class", "menu");
-    			add_location(a8, file$d, 59, 4, 2075);
-    			add_location(li7, file$d, 58, 2, 2066);
+    			add_location(a8, file$f, 59, 4, 2075);
+    			add_location(li7, file$f, 58, 2, 2066);
     			attr_dev(i11, "data-feather", "hard-drive");
-    			add_location(i11, file$d, 66, 30, 2348);
+    			add_location(i11, file$f, 66, 30, 2348);
     			attr_dev(div17, "class", "menu__icon");
-    			add_location(div17, file$d, 66, 6, 2324);
+    			add_location(div17, file$f, 66, 6, 2324);
     			attr_dev(div18, "class", "menu__title");
-    			add_location(div18, file$d, 67, 6, 2392);
+    			add_location(div18, file$f, 67, 6, 2392);
     			attr_dev(a9, "href", "side-menu-light-file-manager.html");
     			attr_dev(a9, "class", "menu");
-    			add_location(a9, file$d, 65, 4, 2260);
-    			add_location(li8, file$d, 64, 2, 2251);
+    			add_location(a9, file$f, 65, 4, 2260);
+    			add_location(li8, file$f, 64, 2, 2251);
     			attr_dev(i12, "data-feather", "credit-card");
-    			add_location(i12, file$d, 72, 30, 2553);
+    			add_location(i12, file$f, 72, 30, 2553);
     			attr_dev(div19, "class", "menu__icon");
-    			add_location(div19, file$d, 72, 6, 2529);
+    			add_location(div19, file$f, 72, 6, 2529);
     			attr_dev(div20, "class", "menu__title");
-    			add_location(div20, file$d, 73, 6, 2598);
+    			add_location(div20, file$f, 73, 6, 2598);
     			attr_dev(a10, "href", "side-menu-light-point-of-sale.html");
     			attr_dev(a10, "class", "menu");
-    			add_location(a10, file$d, 71, 4, 2464);
-    			add_location(li9, file$d, 70, 2, 2455);
+    			add_location(a10, file$f, 71, 4, 2464);
+    			add_location(li9, file$f, 70, 2, 2455);
     			attr_dev(i13, "data-feather", "message-square");
-    			add_location(i13, file$d, 78, 30, 2751);
+    			add_location(i13, file$f, 78, 30, 2751);
     			attr_dev(div21, "class", "menu__icon");
-    			add_location(div21, file$d, 78, 6, 2727);
+    			add_location(div21, file$f, 78, 6, 2727);
     			attr_dev(div22, "class", "menu__title");
-    			add_location(div22, file$d, 79, 6, 2799);
+    			add_location(div22, file$f, 79, 6, 2799);
     			attr_dev(a11, "href", "side-menu-light-chat.html");
     			attr_dev(a11, "class", "menu");
-    			add_location(a11, file$d, 77, 4, 2671);
-    			add_location(li10, file$d, 76, 2, 2662);
+    			add_location(a11, file$f, 77, 4, 2671);
+    			add_location(li10, file$f, 76, 2, 2662);
     			attr_dev(i14, "data-feather", "file-text");
-    			add_location(i14, file$d, 84, 30, 2943);
+    			add_location(i14, file$f, 84, 30, 2943);
     			attr_dev(div23, "class", "menu__icon");
-    			add_location(div23, file$d, 84, 6, 2919);
+    			add_location(div23, file$f, 84, 6, 2919);
     			attr_dev(div24, "class", "menu__title");
-    			add_location(div24, file$d, 85, 6, 2986);
+    			add_location(div24, file$f, 85, 6, 2986);
     			attr_dev(a12, "href", "side-menu-light-post.html");
     			attr_dev(a12, "class", "menu");
-    			add_location(a12, file$d, 83, 4, 2863);
-    			add_location(li11, file$d, 82, 2, 2854);
+    			add_location(a12, file$f, 83, 4, 2863);
+    			add_location(li11, file$f, 82, 2, 2854);
     			attr_dev(i15, "data-feather", "calendar");
-    			add_location(i15, file$d, 90, 30, 3134);
+    			add_location(i15, file$f, 90, 30, 3134);
     			attr_dev(div25, "class", "menu__icon");
-    			add_location(div25, file$d, 90, 6, 3110);
+    			add_location(div25, file$f, 90, 6, 3110);
     			attr_dev(div26, "class", "menu__title");
-    			add_location(div26, file$d, 91, 6, 3176);
+    			add_location(div26, file$f, 91, 6, 3176);
     			attr_dev(a13, "href", "side-menu-light-calendar.html");
     			attr_dev(a13, "class", "menu");
-    			add_location(a13, file$d, 89, 4, 3050);
-    			add_location(li12, file$d, 88, 2, 3041);
+    			add_location(a13, file$f, 89, 4, 3050);
+    			add_location(li12, file$f, 88, 2, 3041);
     			attr_dev(li13, "class", "menu__devider my-6");
-    			add_location(li13, file$d, 94, 2, 3235);
+    			add_location(li13, file$f, 94, 2, 3235);
     			attr_dev(i16, "data-feather", "edit");
-    			add_location(i16, file$d, 97, 30, 3337);
+    			add_location(i16, file$f, 97, 30, 3337);
     			attr_dev(div27, "class", "menu__icon");
-    			add_location(div27, file$d, 97, 6, 3313);
+    			add_location(div27, file$f, 97, 6, 3313);
     			attr_dev(i17, "data-feather", "chevron-down");
     			attr_dev(i17, "class", "menu__sub-icon");
-    			add_location(i17, file$d, 98, 36, 3405);
+    			add_location(i17, file$f, 98, 36, 3405);
     			attr_dev(div28, "class", "menu__title");
-    			add_location(div28, file$d, 98, 6, 3375);
+    			add_location(div28, file$f, 98, 6, 3375);
     			attr_dev(a14, "href", "/#");
     			attr_dev(a14, "class", "menu");
-    			add_location(a14, file$d, 96, 4, 3280);
+    			add_location(a14, file$f, 96, 4, 3280);
     			attr_dev(i18, "data-feather", "activity");
-    			add_location(i18, file$d, 103, 34, 3608);
+    			add_location(i18, file$f, 103, 34, 3608);
     			attr_dev(div29, "class", "menu__icon");
-    			add_location(div29, file$d, 103, 10, 3584);
+    			add_location(div29, file$f, 103, 10, 3584);
     			attr_dev(div30, "class", "menu__title");
-    			add_location(div30, file$d, 104, 10, 3654);
+    			add_location(div30, file$f, 104, 10, 3654);
     			attr_dev(a15, "href", "side-menu-light-crud-data-list.html");
     			attr_dev(a15, "class", "menu");
-    			add_location(a15, file$d, 102, 8, 3514);
-    			add_location(li14, file$d, 101, 6, 3501);
+    			add_location(a15, file$f, 102, 8, 3514);
+    			add_location(li14, file$f, 101, 6, 3501);
     			attr_dev(i19, "data-feather", "activity");
-    			add_location(i19, file$d, 109, 34, 3828);
+    			add_location(i19, file$f, 109, 34, 3828);
     			attr_dev(div31, "class", "menu__icon");
-    			add_location(div31, file$d, 109, 10, 3804);
+    			add_location(div31, file$f, 109, 10, 3804);
     			attr_dev(div32, "class", "menu__title");
-    			add_location(div32, file$d, 110, 10, 3874);
+    			add_location(div32, file$f, 110, 10, 3874);
     			attr_dev(a16, "href", "side-menu-light-crud-form.html");
     			attr_dev(a16, "class", "menu");
-    			add_location(a16, file$d, 108, 8, 3739);
-    			add_location(li15, file$d, 107, 6, 3726);
+    			add_location(a16, file$f, 108, 8, 3739);
+    			add_location(li15, file$f, 107, 6, 3726);
     			attr_dev(ul2, "class", "");
-    			add_location(ul2, file$d, 100, 4, 3481);
-    			add_location(li16, file$d, 95, 2, 3271);
+    			add_location(ul2, file$f, 100, 4, 3481);
+    			add_location(li16, file$f, 95, 2, 3271);
     			attr_dev(i20, "data-feather", "users");
-    			add_location(i20, file$d, 117, 30, 4021);
+    			add_location(i20, file$f, 117, 30, 4021);
     			attr_dev(div33, "class", "menu__icon");
-    			add_location(div33, file$d, 117, 6, 3997);
+    			add_location(div33, file$f, 117, 6, 3997);
     			attr_dev(i21, "data-feather", "chevron-down");
     			attr_dev(i21, "class", "menu__sub-icon");
-    			add_location(i21, file$d, 118, 37, 4091);
+    			add_location(i21, file$f, 118, 37, 4091);
     			attr_dev(div34, "class", "menu__title");
-    			add_location(div34, file$d, 118, 6, 4060);
+    			add_location(div34, file$f, 118, 6, 4060);
     			attr_dev(a17, "href", "/#");
     			attr_dev(a17, "class", "menu");
-    			add_location(a17, file$d, 116, 4, 3964);
+    			add_location(a17, file$f, 116, 4, 3964);
     			attr_dev(i22, "data-feather", "activity");
-    			add_location(i22, file$d, 123, 34, 4294);
+    			add_location(i22, file$f, 123, 34, 4294);
     			attr_dev(div35, "class", "menu__icon");
-    			add_location(div35, file$d, 123, 10, 4270);
+    			add_location(div35, file$f, 123, 10, 4270);
     			attr_dev(div36, "class", "menu__title");
-    			add_location(div36, file$d, 124, 10, 4340);
+    			add_location(div36, file$f, 124, 10, 4340);
     			attr_dev(a18, "href", "side-menu-light-users-layout-1.html");
     			attr_dev(a18, "class", "menu");
-    			add_location(a18, file$d, 122, 8, 4200);
-    			add_location(li17, file$d, 121, 6, 4187);
+    			add_location(a18, file$f, 122, 8, 4200);
+    			add_location(li17, file$f, 121, 6, 4187);
     			attr_dev(i23, "data-feather", "activity");
-    			add_location(i23, file$d, 129, 34, 4518);
+    			add_location(i23, file$f, 129, 34, 4518);
     			attr_dev(div37, "class", "menu__icon");
-    			add_location(div37, file$d, 129, 10, 4494);
+    			add_location(div37, file$f, 129, 10, 4494);
     			attr_dev(div38, "class", "menu__title");
-    			add_location(div38, file$d, 130, 10, 4564);
+    			add_location(div38, file$f, 130, 10, 4564);
     			attr_dev(a19, "href", "side-menu-light-users-layout-2.html");
     			attr_dev(a19, "class", "menu");
-    			add_location(a19, file$d, 128, 8, 4424);
-    			add_location(li18, file$d, 127, 6, 4411);
+    			add_location(a19, file$f, 128, 8, 4424);
+    			add_location(li18, file$f, 127, 6, 4411);
     			attr_dev(i24, "data-feather", "activity");
-    			add_location(i24, file$d, 135, 34, 4742);
+    			add_location(i24, file$f, 135, 34, 4742);
     			attr_dev(div39, "class", "menu__icon");
-    			add_location(div39, file$d, 135, 10, 4718);
+    			add_location(div39, file$f, 135, 10, 4718);
     			attr_dev(div40, "class", "menu__title");
-    			add_location(div40, file$d, 136, 10, 4788);
+    			add_location(div40, file$f, 136, 10, 4788);
     			attr_dev(a20, "href", "side-menu-light-users-layout-3.html");
     			attr_dev(a20, "class", "menu");
-    			add_location(a20, file$d, 134, 8, 4648);
-    			add_location(li19, file$d, 133, 6, 4635);
+    			add_location(a20, file$f, 134, 8, 4648);
+    			add_location(li19, file$f, 133, 6, 4635);
     			attr_dev(ul3, "class", "");
-    			add_location(ul3, file$d, 120, 4, 4167);
-    			add_location(li20, file$d, 115, 2, 3955);
+    			add_location(ul3, file$f, 120, 4, 4167);
+    			add_location(li20, file$f, 115, 2, 3955);
     			attr_dev(i25, "data-feather", "trello");
-    			add_location(i25, file$d, 143, 30, 4939);
+    			add_location(i25, file$f, 143, 30, 4939);
     			attr_dev(div41, "class", "menu__icon");
-    			add_location(div41, file$d, 143, 6, 4915);
+    			add_location(div41, file$f, 143, 6, 4915);
     			attr_dev(i26, "data-feather", "chevron-down");
     			attr_dev(i26, "class", "menu__sub-icon");
-    			add_location(i26, file$d, 144, 39, 5012);
+    			add_location(i26, file$f, 144, 39, 5012);
     			attr_dev(div42, "class", "menu__title");
-    			add_location(div42, file$d, 144, 6, 4979);
+    			add_location(div42, file$f, 144, 6, 4979);
     			attr_dev(a21, "href", "/#");
     			attr_dev(a21, "class", "menu");
-    			add_location(a21, file$d, 142, 4, 4882);
+    			add_location(a21, file$f, 142, 4, 4882);
     			attr_dev(i27, "data-feather", "activity");
-    			add_location(i27, file$d, 149, 34, 5219);
+    			add_location(i27, file$f, 149, 34, 5219);
     			attr_dev(div43, "class", "menu__icon");
-    			add_location(div43, file$d, 149, 10, 5195);
+    			add_location(div43, file$f, 149, 10, 5195);
     			attr_dev(div44, "class", "menu__title");
-    			add_location(div44, file$d, 150, 10, 5265);
+    			add_location(div44, file$f, 150, 10, 5265);
     			attr_dev(a22, "href", "side-menu-light-profile-overview-1.html");
     			attr_dev(a22, "class", "menu");
-    			add_location(a22, file$d, 148, 8, 5121);
-    			add_location(li21, file$d, 147, 6, 5108);
+    			add_location(a22, file$f, 148, 8, 5121);
+    			add_location(li21, file$f, 147, 6, 5108);
     			attr_dev(i28, "data-feather", "activity");
-    			add_location(i28, file$d, 155, 34, 5449);
+    			add_location(i28, file$f, 155, 34, 5449);
     			attr_dev(div45, "class", "menu__icon");
-    			add_location(div45, file$d, 155, 10, 5425);
+    			add_location(div45, file$f, 155, 10, 5425);
     			attr_dev(div46, "class", "menu__title");
-    			add_location(div46, file$d, 156, 10, 5495);
+    			add_location(div46, file$f, 156, 10, 5495);
     			attr_dev(a23, "href", "side-menu-light-profile-overview-2.html");
     			attr_dev(a23, "class", "menu");
-    			add_location(a23, file$d, 154, 8, 5351);
-    			add_location(li22, file$d, 153, 6, 5338);
+    			add_location(a23, file$f, 154, 8, 5351);
+    			add_location(li22, file$f, 153, 6, 5338);
     			attr_dev(i29, "data-feather", "activity");
-    			add_location(i29, file$d, 161, 34, 5679);
+    			add_location(i29, file$f, 161, 34, 5679);
     			attr_dev(div47, "class", "menu__icon");
-    			add_location(div47, file$d, 161, 10, 5655);
+    			add_location(div47, file$f, 161, 10, 5655);
     			attr_dev(div48, "class", "menu__title");
-    			add_location(div48, file$d, 162, 10, 5725);
+    			add_location(div48, file$f, 162, 10, 5725);
     			attr_dev(a24, "href", "side-menu-light-profile-overview-3.html");
     			attr_dev(a24, "class", "menu");
-    			add_location(a24, file$d, 160, 8, 5581);
-    			add_location(li23, file$d, 159, 6, 5568);
+    			add_location(a24, file$f, 160, 8, 5581);
+    			add_location(li23, file$f, 159, 6, 5568);
     			attr_dev(ul4, "class", "");
-    			add_location(ul4, file$d, 146, 4, 5088);
-    			add_location(li24, file$d, 141, 2, 4873);
+    			add_location(ul4, file$f, 146, 4, 5088);
+    			add_location(li24, file$f, 141, 2, 4873);
     			attr_dev(i30, "data-feather", "layout");
-    			add_location(i30, file$d, 169, 30, 5878);
+    			add_location(i30, file$f, 169, 30, 5878);
     			attr_dev(div49, "class", "menu__icon");
-    			add_location(div49, file$d, 169, 6, 5854);
+    			add_location(div49, file$f, 169, 6, 5854);
     			attr_dev(i31, "data-feather", "chevron-down");
     			attr_dev(i31, "class", "menu__sub-icon");
-    			add_location(i31, file$d, 170, 37, 5949);
+    			add_location(i31, file$f, 170, 37, 5949);
     			attr_dev(div50, "class", "menu__title");
-    			add_location(div50, file$d, 170, 6, 5918);
+    			add_location(div50, file$f, 170, 6, 5918);
     			attr_dev(a25, "href", "/#");
     			attr_dev(a25, "class", "menu");
-    			add_location(a25, file$d, 168, 4, 5821);
+    			add_location(a25, file$f, 168, 4, 5821);
     			attr_dev(i32, "data-feather", "activity");
-    			add_location(i32, file$d, 175, 34, 6119);
+    			add_location(i32, file$f, 175, 34, 6119);
     			attr_dev(div51, "class", "menu__icon");
-    			add_location(div51, file$d, 175, 10, 6095);
+    			add_location(div51, file$f, 175, 10, 6095);
     			attr_dev(i33, "data-feather", "chevron-down");
     			attr_dev(i33, "class", "menu__sub-icon");
-    			add_location(i33, file$d, 176, 43, 6198);
+    			add_location(i33, file$f, 176, 43, 6198);
     			attr_dev(div52, "class", "menu__title");
-    			add_location(div52, file$d, 176, 10, 6165);
+    			add_location(div52, file$f, 176, 10, 6165);
     			attr_dev(a26, "href", "/#");
     			attr_dev(a26, "class", "menu");
-    			add_location(a26, file$d, 174, 8, 6058);
+    			add_location(a26, file$f, 174, 8, 6058);
     			attr_dev(i34, "data-feather", "zap");
-    			add_location(i34, file$d, 181, 38, 6422);
+    			add_location(i34, file$f, 181, 38, 6422);
     			attr_dev(div53, "class", "menu__icon");
-    			add_location(div53, file$d, 181, 14, 6398);
+    			add_location(div53, file$f, 181, 14, 6398);
     			attr_dev(div54, "class", "menu__title");
-    			add_location(div54, file$d, 182, 14, 6467);
+    			add_location(div54, file$f, 182, 14, 6467);
     			attr_dev(a27, "href", "side-menu-light-wizard-layout-1.html");
     			attr_dev(a27, "class", "menu");
-    			add_location(a27, file$d, 180, 12, 6323);
-    			add_location(li25, file$d, 179, 10, 6306);
+    			add_location(a27, file$f, 180, 12, 6323);
+    			add_location(li25, file$f, 179, 10, 6306);
     			attr_dev(i35, "data-feather", "zap");
-    			add_location(i35, file$d, 187, 38, 6666);
+    			add_location(i35, file$f, 187, 38, 6666);
     			attr_dev(div55, "class", "menu__icon");
-    			add_location(div55, file$d, 187, 14, 6642);
+    			add_location(div55, file$f, 187, 14, 6642);
     			attr_dev(div56, "class", "menu__title");
-    			add_location(div56, file$d, 188, 14, 6711);
+    			add_location(div56, file$f, 188, 14, 6711);
     			attr_dev(a28, "href", "side-menu-light-wizard-layout-2.html");
     			attr_dev(a28, "class", "menu");
-    			add_location(a28, file$d, 186, 12, 6567);
-    			add_location(li26, file$d, 185, 10, 6550);
+    			add_location(a28, file$f, 186, 12, 6567);
+    			add_location(li26, file$f, 185, 10, 6550);
     			attr_dev(i36, "data-feather", "zap");
-    			add_location(i36, file$d, 193, 38, 6910);
+    			add_location(i36, file$f, 193, 38, 6910);
     			attr_dev(div57, "class", "menu__icon");
-    			add_location(div57, file$d, 193, 14, 6886);
+    			add_location(div57, file$f, 193, 14, 6886);
     			attr_dev(div58, "class", "menu__title");
-    			add_location(div58, file$d, 194, 14, 6955);
+    			add_location(div58, file$f, 194, 14, 6955);
     			attr_dev(a29, "href", "side-menu-light-wizard-layout-3.html");
     			attr_dev(a29, "class", "menu");
-    			add_location(a29, file$d, 192, 12, 6811);
-    			add_location(li27, file$d, 191, 10, 6794);
+    			add_location(a29, file$f, 192, 12, 6811);
+    			add_location(li27, file$f, 191, 10, 6794);
     			attr_dev(ul5, "class", "");
-    			add_location(ul5, file$d, 178, 8, 6282);
-    			add_location(li28, file$d, 173, 6, 6045);
+    			add_location(ul5, file$f, 178, 8, 6282);
+    			add_location(li28, file$f, 173, 6, 6045);
     			attr_dev(i37, "data-feather", "activity");
-    			add_location(i37, file$d, 201, 34, 7134);
+    			add_location(i37, file$f, 201, 34, 7134);
     			attr_dev(div59, "class", "menu__icon");
-    			add_location(div59, file$d, 201, 10, 7110);
+    			add_location(div59, file$f, 201, 10, 7110);
     			attr_dev(i38, "data-feather", "chevron-down");
     			attr_dev(i38, "class", "menu__sub-icon");
-    			add_location(i38, file$d, 202, 40, 7210);
+    			add_location(i38, file$f, 202, 40, 7210);
     			attr_dev(div60, "class", "menu__title");
-    			add_location(div60, file$d, 202, 10, 7180);
+    			add_location(div60, file$f, 202, 10, 7180);
     			attr_dev(a30, "href", "/#");
     			attr_dev(a30, "class", "menu");
-    			add_location(a30, file$d, 200, 8, 7073);
+    			add_location(a30, file$f, 200, 8, 7073);
     			attr_dev(i39, "data-feather", "zap");
-    			add_location(i39, file$d, 207, 38, 7432);
+    			add_location(i39, file$f, 207, 38, 7432);
     			attr_dev(div61, "class", "menu__icon");
-    			add_location(div61, file$d, 207, 14, 7408);
+    			add_location(div61, file$f, 207, 14, 7408);
     			attr_dev(div62, "class", "menu__title");
-    			add_location(div62, file$d, 208, 14, 7477);
+    			add_location(div62, file$f, 208, 14, 7477);
     			attr_dev(a31, "href", "side-menu-light-blog-layout-1.html");
     			attr_dev(a31, "class", "menu");
-    			add_location(a31, file$d, 206, 12, 7335);
-    			add_location(li29, file$d, 205, 10, 7318);
+    			add_location(a31, file$f, 206, 12, 7335);
+    			add_location(li29, file$f, 205, 10, 7318);
     			attr_dev(i40, "data-feather", "zap");
-    			add_location(i40, file$d, 213, 38, 7674);
+    			add_location(i40, file$f, 213, 38, 7674);
     			attr_dev(div63, "class", "menu__icon");
-    			add_location(div63, file$d, 213, 14, 7650);
+    			add_location(div63, file$f, 213, 14, 7650);
     			attr_dev(div64, "class", "menu__title");
-    			add_location(div64, file$d, 214, 14, 7719);
+    			add_location(div64, file$f, 214, 14, 7719);
     			attr_dev(a32, "href", "side-menu-light-blog-layout-2.html");
     			attr_dev(a32, "class", "menu");
-    			add_location(a32, file$d, 212, 12, 7577);
-    			add_location(li30, file$d, 211, 10, 7560);
+    			add_location(a32, file$f, 212, 12, 7577);
+    			add_location(li30, file$f, 211, 10, 7560);
     			attr_dev(i41, "data-feather", "zap");
-    			add_location(i41, file$d, 219, 38, 7916);
+    			add_location(i41, file$f, 219, 38, 7916);
     			attr_dev(div65, "class", "menu__icon");
-    			add_location(div65, file$d, 219, 14, 7892);
+    			add_location(div65, file$f, 219, 14, 7892);
     			attr_dev(div66, "class", "menu__title");
-    			add_location(div66, file$d, 220, 14, 7961);
+    			add_location(div66, file$f, 220, 14, 7961);
     			attr_dev(a33, "href", "side-menu-light-blog-layout-3.html");
     			attr_dev(a33, "class", "menu");
-    			add_location(a33, file$d, 218, 12, 7819);
-    			add_location(li31, file$d, 217, 10, 7802);
+    			add_location(a33, file$f, 218, 12, 7819);
+    			add_location(li31, file$f, 217, 10, 7802);
     			attr_dev(ul6, "class", "");
-    			add_location(ul6, file$d, 204, 8, 7294);
-    			add_location(li32, file$d, 199, 6, 7060);
+    			add_location(ul6, file$f, 204, 8, 7294);
+    			add_location(li32, file$f, 199, 6, 7060);
     			attr_dev(i42, "data-feather", "activity");
-    			add_location(i42, file$d, 227, 34, 8140);
+    			add_location(i42, file$f, 227, 34, 8140);
     			attr_dev(div67, "class", "menu__icon");
-    			add_location(div67, file$d, 227, 10, 8116);
+    			add_location(div67, file$f, 227, 10, 8116);
     			attr_dev(i43, "data-feather", "chevron-down");
     			attr_dev(i43, "class", "menu__sub-icon");
-    			add_location(i43, file$d, 228, 43, 8219);
+    			add_location(i43, file$f, 228, 43, 8219);
     			attr_dev(div68, "class", "menu__title");
-    			add_location(div68, file$d, 228, 10, 8186);
+    			add_location(div68, file$f, 228, 10, 8186);
     			attr_dev(a34, "href", "/#");
     			attr_dev(a34, "class", "menu");
-    			add_location(a34, file$d, 226, 8, 8079);
+    			add_location(a34, file$f, 226, 8, 8079);
     			attr_dev(i44, "data-feather", "zap");
-    			add_location(i44, file$d, 233, 38, 8444);
+    			add_location(i44, file$f, 233, 38, 8444);
     			attr_dev(div69, "class", "menu__icon");
-    			add_location(div69, file$d, 233, 14, 8420);
+    			add_location(div69, file$f, 233, 14, 8420);
     			attr_dev(div70, "class", "menu__title");
-    			add_location(div70, file$d, 234, 14, 8489);
+    			add_location(div70, file$f, 234, 14, 8489);
     			attr_dev(a35, "href", "side-menu-light-pricing-layout-1.html");
     			attr_dev(a35, "class", "menu");
-    			add_location(a35, file$d, 232, 12, 8344);
-    			add_location(li33, file$d, 231, 10, 8327);
+    			add_location(a35, file$f, 232, 12, 8344);
+    			add_location(li33, file$f, 231, 10, 8327);
     			attr_dev(i45, "data-feather", "zap");
-    			add_location(i45, file$d, 239, 38, 8689);
+    			add_location(i45, file$f, 239, 38, 8689);
     			attr_dev(div71, "class", "menu__icon");
-    			add_location(div71, file$d, 239, 14, 8665);
+    			add_location(div71, file$f, 239, 14, 8665);
     			attr_dev(div72, "class", "menu__title");
-    			add_location(div72, file$d, 240, 14, 8734);
+    			add_location(div72, file$f, 240, 14, 8734);
     			attr_dev(a36, "href", "side-menu-light-pricing-layout-2.html");
     			attr_dev(a36, "class", "menu");
-    			add_location(a36, file$d, 238, 12, 8589);
-    			add_location(li34, file$d, 237, 10, 8572);
+    			add_location(a36, file$f, 238, 12, 8589);
+    			add_location(li34, file$f, 237, 10, 8572);
     			attr_dev(ul7, "class", "");
-    			add_location(ul7, file$d, 230, 8, 8303);
-    			add_location(li35, file$d, 225, 6, 8066);
+    			add_location(ul7, file$f, 230, 8, 8303);
+    			add_location(li35, file$f, 225, 6, 8066);
     			attr_dev(i46, "data-feather", "activity");
-    			add_location(i46, file$d, 247, 34, 8913);
+    			add_location(i46, file$f, 247, 34, 8913);
     			attr_dev(div73, "class", "menu__icon");
-    			add_location(div73, file$d, 247, 10, 8889);
+    			add_location(div73, file$f, 247, 10, 8889);
     			attr_dev(i47, "data-feather", "chevron-down");
     			attr_dev(i47, "class", "menu__sub-icon");
-    			add_location(i47, file$d, 248, 43, 8992);
+    			add_location(i47, file$f, 248, 43, 8992);
     			attr_dev(div74, "class", "menu__title");
-    			add_location(div74, file$d, 248, 10, 8959);
+    			add_location(div74, file$f, 248, 10, 8959);
     			attr_dev(a37, "href", "/#");
     			attr_dev(a37, "class", "menu");
-    			add_location(a37, file$d, 246, 8, 8852);
+    			add_location(a37, file$f, 246, 8, 8852);
     			attr_dev(i48, "data-feather", "zap");
-    			add_location(i48, file$d, 253, 38, 9217);
+    			add_location(i48, file$f, 253, 38, 9217);
     			attr_dev(div75, "class", "menu__icon");
-    			add_location(div75, file$d, 253, 14, 9193);
+    			add_location(div75, file$f, 253, 14, 9193);
     			attr_dev(div76, "class", "menu__title");
-    			add_location(div76, file$d, 254, 14, 9262);
+    			add_location(div76, file$f, 254, 14, 9262);
     			attr_dev(a38, "href", "side-menu-light-invoice-layout-1.html");
     			attr_dev(a38, "class", "menu");
-    			add_location(a38, file$d, 252, 12, 9117);
-    			add_location(li36, file$d, 251, 10, 9100);
+    			add_location(a38, file$f, 252, 12, 9117);
+    			add_location(li36, file$f, 251, 10, 9100);
     			attr_dev(i49, "data-feather", "zap");
-    			add_location(i49, file$d, 259, 38, 9462);
+    			add_location(i49, file$f, 259, 38, 9462);
     			attr_dev(div77, "class", "menu__icon");
-    			add_location(div77, file$d, 259, 14, 9438);
+    			add_location(div77, file$f, 259, 14, 9438);
     			attr_dev(div78, "class", "menu__title");
-    			add_location(div78, file$d, 260, 14, 9507);
+    			add_location(div78, file$f, 260, 14, 9507);
     			attr_dev(a39, "href", "side-menu-light-invoice-layout-2.html");
     			attr_dev(a39, "class", "menu");
-    			add_location(a39, file$d, 258, 12, 9362);
-    			add_location(li37, file$d, 257, 10, 9345);
+    			add_location(a39, file$f, 258, 12, 9362);
+    			add_location(li37, file$f, 257, 10, 9345);
     			attr_dev(ul8, "class", "");
-    			add_location(ul8, file$d, 250, 8, 9076);
-    			add_location(li38, file$d, 245, 6, 8839);
+    			add_location(ul8, file$f, 250, 8, 9076);
+    			add_location(li38, file$f, 245, 6, 8839);
     			attr_dev(i50, "data-feather", "activity");
-    			add_location(i50, file$d, 267, 34, 9686);
+    			add_location(i50, file$f, 267, 34, 9686);
     			attr_dev(div79, "class", "menu__icon");
-    			add_location(div79, file$d, 267, 10, 9662);
+    			add_location(div79, file$f, 267, 10, 9662);
     			attr_dev(i51, "data-feather", "chevron-down");
     			attr_dev(i51, "class", "menu__sub-icon");
-    			add_location(i51, file$d, 268, 39, 9761);
+    			add_location(i51, file$f, 268, 39, 9761);
     			attr_dev(div80, "class", "menu__title");
-    			add_location(div80, file$d, 268, 10, 9732);
+    			add_location(div80, file$f, 268, 10, 9732);
     			attr_dev(a40, "href", "/#");
     			attr_dev(a40, "class", "menu");
-    			add_location(a40, file$d, 266, 8, 9625);
+    			add_location(a40, file$f, 266, 8, 9625);
     			attr_dev(i52, "data-feather", "zap");
-    			add_location(i52, file$d, 273, 38, 9982);
+    			add_location(i52, file$f, 273, 38, 9982);
     			attr_dev(div81, "class", "menu__icon");
-    			add_location(div81, file$d, 273, 14, 9958);
+    			add_location(div81, file$f, 273, 14, 9958);
     			attr_dev(div82, "class", "menu__title");
-    			add_location(div82, file$d, 274, 14, 10027);
+    			add_location(div82, file$f, 274, 14, 10027);
     			attr_dev(a41, "href", "side-menu-light-faq-layout-1.html");
     			attr_dev(a41, "class", "menu");
-    			add_location(a41, file$d, 272, 12, 9886);
-    			add_location(li39, file$d, 271, 10, 9869);
+    			add_location(a41, file$f, 272, 12, 9886);
+    			add_location(li39, file$f, 271, 10, 9869);
     			attr_dev(i53, "data-feather", "zap");
-    			add_location(i53, file$d, 279, 38, 10223);
+    			add_location(i53, file$f, 279, 38, 10223);
     			attr_dev(div83, "class", "menu__icon");
-    			add_location(div83, file$d, 279, 14, 10199);
+    			add_location(div83, file$f, 279, 14, 10199);
     			attr_dev(div84, "class", "menu__title");
-    			add_location(div84, file$d, 280, 14, 10268);
+    			add_location(div84, file$f, 280, 14, 10268);
     			attr_dev(a42, "href", "side-menu-light-faq-layout-2.html");
     			attr_dev(a42, "class", "menu");
-    			add_location(a42, file$d, 278, 12, 10127);
-    			add_location(li40, file$d, 277, 10, 10110);
+    			add_location(a42, file$f, 278, 12, 10127);
+    			add_location(li40, file$f, 277, 10, 10110);
     			attr_dev(i54, "data-feather", "zap");
-    			add_location(i54, file$d, 285, 38, 10464);
+    			add_location(i54, file$f, 285, 38, 10464);
     			attr_dev(div85, "class", "menu__icon");
-    			add_location(div85, file$d, 285, 14, 10440);
+    			add_location(div85, file$f, 285, 14, 10440);
     			attr_dev(div86, "class", "menu__title");
-    			add_location(div86, file$d, 286, 14, 10509);
+    			add_location(div86, file$f, 286, 14, 10509);
     			attr_dev(a43, "href", "side-menu-light-faq-layout-3.html");
     			attr_dev(a43, "class", "menu");
-    			add_location(a43, file$d, 284, 12, 10368);
-    			add_location(li41, file$d, 283, 10, 10351);
+    			add_location(a43, file$f, 284, 12, 10368);
+    			add_location(li41, file$f, 283, 10, 10351);
     			attr_dev(ul9, "class", "");
-    			add_location(ul9, file$d, 270, 8, 9845);
-    			add_location(li42, file$d, 265, 6, 9612);
+    			add_location(ul9, file$f, 270, 8, 9845);
+    			add_location(li42, file$f, 265, 6, 9612);
     			attr_dev(i55, "data-feather", "activity");
-    			add_location(i55, file$d, 293, 34, 10708);
+    			add_location(i55, file$f, 293, 34, 10708);
     			attr_dev(div87, "class", "menu__icon");
-    			add_location(div87, file$d, 293, 10, 10684);
+    			add_location(div87, file$f, 293, 10, 10684);
     			attr_dev(div88, "class", "menu__title");
-    			add_location(div88, file$d, 294, 10, 10754);
+    			add_location(div88, file$f, 294, 10, 10754);
     			attr_dev(a44, "href", "login-light-login.html");
     			attr_dev(a44, "class", "menu");
-    			add_location(a44, file$d, 292, 8, 10627);
-    			add_location(li43, file$d, 291, 6, 10614);
+    			add_location(a44, file$f, 292, 8, 10627);
+    			add_location(li43, file$f, 291, 6, 10614);
     			attr_dev(i56, "data-feather", "activity");
-    			add_location(i56, file$d, 299, 34, 10919);
+    			add_location(i56, file$f, 299, 34, 10919);
     			attr_dev(div89, "class", "menu__icon");
-    			add_location(div89, file$d, 299, 10, 10895);
+    			add_location(div89, file$f, 299, 10, 10895);
     			attr_dev(div90, "class", "menu__title");
-    			add_location(div90, file$d, 300, 10, 10965);
+    			add_location(div90, file$f, 300, 10, 10965);
     			attr_dev(a45, "href", "login-light-register.html");
     			attr_dev(a45, "class", "menu");
-    			add_location(a45, file$d, 298, 8, 10835);
-    			add_location(li44, file$d, 297, 6, 10822);
+    			add_location(a45, file$f, 298, 8, 10835);
+    			add_location(li44, file$f, 297, 6, 10822);
     			attr_dev(i57, "data-feather", "activity");
-    			add_location(i57, file$d, 305, 34, 11134);
+    			add_location(i57, file$f, 305, 34, 11134);
     			attr_dev(div91, "class", "menu__icon");
-    			add_location(div91, file$d, 305, 10, 11110);
+    			add_location(div91, file$f, 305, 10, 11110);
     			attr_dev(div92, "class", "menu__title");
-    			add_location(div92, file$d, 306, 10, 11180);
+    			add_location(div92, file$f, 306, 10, 11180);
     			attr_dev(a46, "href", "main-light-error-page.html");
     			attr_dev(a46, "class", "menu");
-    			add_location(a46, file$d, 304, 8, 11049);
-    			add_location(li45, file$d, 303, 6, 11036);
+    			add_location(a46, file$f, 304, 8, 11049);
+    			add_location(li45, file$f, 303, 6, 11036);
     			attr_dev(i58, "data-feather", "activity");
-    			add_location(i58, file$d, 311, 34, 11360);
+    			add_location(i58, file$f, 311, 34, 11360);
     			attr_dev(div93, "class", "menu__icon");
-    			add_location(div93, file$d, 311, 10, 11336);
+    			add_location(div93, file$f, 311, 10, 11336);
     			attr_dev(div94, "class", "menu__title");
-    			add_location(div94, file$d, 312, 10, 11406);
+    			add_location(div94, file$f, 312, 10, 11406);
     			attr_dev(a47, "href", "side-menu-light-update-profile.html");
     			attr_dev(a47, "class", "menu");
-    			add_location(a47, file$d, 310, 8, 11266);
-    			add_location(li46, file$d, 309, 6, 11253);
+    			add_location(a47, file$f, 310, 8, 11266);
+    			add_location(li46, file$f, 309, 6, 11253);
     			attr_dev(i59, "data-feather", "activity");
-    			add_location(i59, file$d, 317, 34, 11591);
+    			add_location(i59, file$f, 317, 34, 11591);
     			attr_dev(div95, "class", "menu__icon");
-    			add_location(div95, file$d, 317, 10, 11567);
+    			add_location(div95, file$f, 317, 10, 11567);
     			attr_dev(div96, "class", "menu__title");
-    			add_location(div96, file$d, 318, 10, 11637);
+    			add_location(div96, file$f, 318, 10, 11637);
     			attr_dev(a48, "href", "side-menu-light-change-password.html");
     			attr_dev(a48, "class", "menu");
-    			add_location(a48, file$d, 316, 8, 11496);
-    			add_location(li47, file$d, 315, 6, 11483);
+    			add_location(a48, file$f, 316, 8, 11496);
+    			add_location(li47, file$f, 315, 6, 11483);
     			attr_dev(ul10, "class", "");
-    			add_location(ul10, file$d, 172, 4, 6025);
-    			add_location(li48, file$d, 167, 2, 5812);
+    			add_location(ul10, file$f, 172, 4, 6025);
+    			add_location(li48, file$f, 167, 2, 5812);
     			attr_dev(li49, "class", "menu__devider my-6");
-    			add_location(li49, file$d, 323, 2, 11729);
+    			add_location(li49, file$f, 323, 2, 11729);
     			attr_dev(i60, "data-feather", "inbox");
-    			add_location(i60, file$d, 326, 30, 11831);
+    			add_location(i60, file$f, 326, 30, 11831);
     			attr_dev(div97, "class", "menu__icon");
-    			add_location(div97, file$d, 326, 6, 11807);
+    			add_location(div97, file$f, 326, 6, 11807);
     			attr_dev(i61, "data-feather", "chevron-down");
     			attr_dev(i61, "class", "menu__sub-icon");
-    			add_location(i61, file$d, 327, 42, 11906);
+    			add_location(i61, file$f, 327, 42, 11906);
     			attr_dev(div98, "class", "menu__title");
-    			add_location(div98, file$d, 327, 6, 11870);
+    			add_location(div98, file$f, 327, 6, 11870);
     			attr_dev(a49, "href", "/#");
     			attr_dev(a49, "class", "menu");
-    			add_location(a49, file$d, 325, 4, 11774);
+    			add_location(a49, file$f, 325, 4, 11774);
     			attr_dev(i62, "data-feather", "activity");
-    			add_location(i62, file$d, 332, 34, 12076);
+    			add_location(i62, file$f, 332, 34, 12076);
     			attr_dev(div99, "class", "menu__icon");
-    			add_location(div99, file$d, 332, 10, 12052);
+    			add_location(div99, file$f, 332, 10, 12052);
     			attr_dev(i63, "data-feather", "chevron-down");
     			attr_dev(i63, "class", "menu__sub-icon");
-    			add_location(i63, file$d, 333, 41, 12153);
+    			add_location(i63, file$f, 333, 41, 12153);
     			attr_dev(div100, "class", "menu__title");
-    			add_location(div100, file$d, 333, 10, 12122);
+    			add_location(div100, file$f, 333, 10, 12122);
     			attr_dev(a50, "href", "/#");
     			attr_dev(a50, "class", "menu");
-    			add_location(a50, file$d, 331, 8, 12015);
+    			add_location(a50, file$f, 331, 8, 12015);
     			attr_dev(i64, "data-feather", "zap");
-    			add_location(i64, file$d, 338, 38, 12375);
+    			add_location(i64, file$f, 338, 38, 12375);
     			attr_dev(div101, "class", "menu__icon");
-    			add_location(div101, file$d, 338, 14, 12351);
+    			add_location(div101, file$f, 338, 14, 12351);
     			attr_dev(div102, "class", "menu__title");
-    			add_location(div102, file$d, 339, 14, 12420);
+    			add_location(div102, file$f, 339, 14, 12420);
     			attr_dev(a51, "href", "side-menu-light-regular-table.html");
     			attr_dev(a51, "class", "menu");
-    			add_location(a51, file$d, 337, 12, 12278);
-    			add_location(li50, file$d, 336, 10, 12261);
+    			add_location(a51, file$f, 337, 12, 12278);
+    			add_location(li50, file$f, 336, 10, 12261);
     			attr_dev(i65, "data-feather", "zap");
-    			add_location(i65, file$d, 344, 38, 12618);
+    			add_location(i65, file$f, 344, 38, 12618);
     			attr_dev(div103, "class", "menu__icon");
-    			add_location(div103, file$d, 344, 14, 12594);
+    			add_location(div103, file$f, 344, 14, 12594);
     			attr_dev(div104, "class", "menu__title");
-    			add_location(div104, file$d, 345, 14, 12663);
+    			add_location(div104, file$f, 345, 14, 12663);
     			attr_dev(a52, "href", "side-menu-light-tabulator.html");
     			attr_dev(a52, "class", "menu");
-    			add_location(a52, file$d, 343, 12, 12525);
-    			add_location(li51, file$d, 342, 10, 12508);
+    			add_location(a52, file$f, 343, 12, 12525);
+    			add_location(li51, file$f, 342, 10, 12508);
     			attr_dev(ul11, "class", "");
-    			add_location(ul11, file$d, 335, 8, 12237);
-    			add_location(li52, file$d, 330, 6, 12002);
+    			add_location(ul11, file$f, 335, 8, 12237);
+    			add_location(li52, file$f, 330, 6, 12002);
     			attr_dev(i66, "data-feather", "activity");
-    			add_location(i66, file$d, 352, 34, 12843);
+    			add_location(i66, file$f, 352, 34, 12843);
     			attr_dev(div105, "class", "menu__icon");
-    			add_location(div105, file$d, 352, 10, 12819);
+    			add_location(div105, file$f, 352, 10, 12819);
     			attr_dev(i67, "data-feather", "chevron-down");
     			attr_dev(i67, "class", "menu__sub-icon");
-    			add_location(i67, file$d, 353, 43, 12922);
+    			add_location(i67, file$f, 353, 43, 12922);
     			attr_dev(div106, "class", "menu__title");
-    			add_location(div106, file$d, 353, 10, 12889);
+    			add_location(div106, file$f, 353, 10, 12889);
     			attr_dev(a53, "href", "/#");
     			attr_dev(a53, "class", "menu");
-    			add_location(a53, file$d, 351, 8, 12782);
+    			add_location(a53, file$f, 351, 8, 12782);
     			attr_dev(i68, "data-feather", "zap");
-    			add_location(i68, file$d, 358, 38, 13136);
+    			add_location(i68, file$f, 358, 38, 13136);
     			attr_dev(div107, "class", "menu__icon");
-    			add_location(div107, file$d, 358, 14, 13112);
+    			add_location(div107, file$f, 358, 14, 13112);
     			attr_dev(div108, "class", "menu__title");
-    			add_location(div108, file$d, 359, 14, 13181);
+    			add_location(div108, file$f, 359, 14, 13181);
     			attr_dev(a54, "href", "side-menu-light-modal.html");
     			attr_dev(a54, "class", "menu");
-    			add_location(a54, file$d, 357, 12, 13047);
-    			add_location(li53, file$d, 356, 10, 13030);
+    			add_location(a54, file$f, 357, 12, 13047);
+    			add_location(li53, file$f, 356, 10, 13030);
     			attr_dev(i69, "data-feather", "zap");
-    			add_location(i69, file$d, 364, 38, 13372);
+    			add_location(i69, file$f, 364, 38, 13372);
     			attr_dev(div109, "class", "menu__icon");
-    			add_location(div109, file$d, 364, 14, 13348);
+    			add_location(div109, file$f, 364, 14, 13348);
     			attr_dev(div110, "class", "menu__title");
-    			add_location(div110, file$d, 365, 14, 13417);
+    			add_location(div110, file$f, 365, 14, 13417);
     			attr_dev(a55, "href", "side-menu-light-slide-over.html");
     			attr_dev(a55, "class", "menu");
-    			add_location(a55, file$d, 363, 12, 13278);
-    			add_location(li54, file$d, 362, 10, 13261);
+    			add_location(a55, file$f, 363, 12, 13278);
+    			add_location(li54, file$f, 362, 10, 13261);
     			attr_dev(i70, "data-feather", "zap");
-    			add_location(i70, file$d, 370, 38, 13615);
+    			add_location(i70, file$f, 370, 38, 13615);
     			attr_dev(div111, "class", "menu__icon");
-    			add_location(div111, file$d, 370, 14, 13591);
+    			add_location(div111, file$f, 370, 14, 13591);
     			attr_dev(div112, "class", "menu__title");
-    			add_location(div112, file$d, 371, 14, 13660);
+    			add_location(div112, file$f, 371, 14, 13660);
     			attr_dev(a56, "href", "side-menu-light-notification.html");
     			attr_dev(a56, "class", "menu");
-    			add_location(a56, file$d, 369, 12, 13519);
-    			add_location(li55, file$d, 368, 10, 13502);
+    			add_location(a56, file$f, 369, 12, 13519);
+    			add_location(li55, file$f, 368, 10, 13502);
     			attr_dev(ul12, "class", "");
-    			add_location(ul12, file$d, 355, 8, 13006);
-    			add_location(li56, file$d, 350, 6, 12769);
+    			add_location(ul12, file$f, 355, 8, 13006);
+    			add_location(li56, file$f, 350, 6, 12769);
     			attr_dev(i71, "data-feather", "activity");
-    			add_location(i71, file$d, 378, 34, 13871);
+    			add_location(i71, file$f, 378, 34, 13871);
     			attr_dev(div113, "class", "menu__icon");
-    			add_location(div113, file$d, 378, 10, 13847);
+    			add_location(div113, file$f, 378, 10, 13847);
     			attr_dev(div114, "class", "menu__title");
-    			add_location(div114, file$d, 379, 10, 13917);
+    			add_location(div114, file$f, 379, 10, 13917);
     			attr_dev(a57, "href", "side-menu-light-accordion.html");
     			attr_dev(a57, "class", "menu");
-    			add_location(a57, file$d, 377, 8, 13782);
-    			add_location(li57, file$d, 376, 6, 13769);
+    			add_location(a57, file$f, 377, 8, 13782);
+    			add_location(li57, file$f, 376, 6, 13769);
     			attr_dev(i72, "data-feather", "activity");
-    			add_location(i72, file$d, 384, 34, 14088);
+    			add_location(i72, file$f, 384, 34, 14088);
     			attr_dev(div115, "class", "menu__icon");
-    			add_location(div115, file$d, 384, 10, 14064);
+    			add_location(div115, file$f, 384, 10, 14064);
     			attr_dev(div116, "class", "menu__title");
-    			add_location(div116, file$d, 385, 10, 14134);
+    			add_location(div116, file$f, 385, 10, 14134);
     			attr_dev(a58, "href", "side-menu-light-button.html");
     			attr_dev(a58, "class", "menu");
-    			add_location(a58, file$d, 383, 8, 14002);
-    			add_location(li58, file$d, 382, 6, 13989);
+    			add_location(a58, file$f, 383, 8, 14002);
+    			add_location(li58, file$f, 382, 6, 13989);
     			attr_dev(i73, "data-feather", "activity");
-    			add_location(i73, file$d, 390, 34, 14301);
+    			add_location(i73, file$f, 390, 34, 14301);
     			attr_dev(div117, "class", "menu__icon");
-    			add_location(div117, file$d, 390, 10, 14277);
+    			add_location(div117, file$f, 390, 10, 14277);
     			attr_dev(div118, "class", "menu__title");
-    			add_location(div118, file$d, 391, 10, 14347);
+    			add_location(div118, file$f, 391, 10, 14347);
     			attr_dev(a59, "href", "side-menu-light-alert.html");
     			attr_dev(a59, "class", "menu");
-    			add_location(a59, file$d, 389, 8, 14216);
-    			add_location(li59, file$d, 388, 6, 14203);
+    			add_location(a59, file$f, 389, 8, 14216);
+    			add_location(li59, file$f, 388, 6, 14203);
     			attr_dev(i74, "data-feather", "activity");
-    			add_location(i74, file$d, 396, 34, 14520);
+    			add_location(i74, file$f, 396, 34, 14520);
     			attr_dev(div119, "class", "menu__icon");
-    			add_location(div119, file$d, 396, 10, 14496);
+    			add_location(div119, file$f, 396, 10, 14496);
     			attr_dev(div120, "class", "menu__title");
-    			add_location(div120, file$d, 397, 10, 14566);
+    			add_location(div120, file$f, 397, 10, 14566);
     			attr_dev(a60, "href", "side-menu-light-progress-bar.html");
     			attr_dev(a60, "class", "menu");
-    			add_location(a60, file$d, 395, 8, 14428);
-    			add_location(li60, file$d, 394, 6, 14415);
+    			add_location(a60, file$f, 395, 8, 14428);
+    			add_location(li60, file$f, 394, 6, 14415);
     			attr_dev(i75, "data-feather", "activity");
-    			add_location(i75, file$d, 402, 34, 14741);
+    			add_location(i75, file$f, 402, 34, 14741);
     			attr_dev(div121, "class", "menu__icon");
-    			add_location(div121, file$d, 402, 10, 14717);
+    			add_location(div121, file$f, 402, 10, 14717);
     			attr_dev(div122, "class", "menu__title");
-    			add_location(div122, file$d, 403, 10, 14787);
+    			add_location(div122, file$f, 403, 10, 14787);
     			attr_dev(a61, "href", "side-menu-light-tooltip.html");
     			attr_dev(a61, "class", "menu");
-    			add_location(a61, file$d, 401, 8, 14654);
-    			add_location(li61, file$d, 400, 6, 14641);
+    			add_location(a61, file$f, 401, 8, 14654);
+    			add_location(li61, file$f, 400, 6, 14641);
     			attr_dev(i76, "data-feather", "activity");
-    			add_location(i76, file$d, 408, 34, 14958);
+    			add_location(i76, file$f, 408, 34, 14958);
     			attr_dev(div123, "class", "menu__icon");
-    			add_location(div123, file$d, 408, 10, 14934);
+    			add_location(div123, file$f, 408, 10, 14934);
     			attr_dev(div124, "class", "menu__title");
-    			add_location(div124, file$d, 409, 10, 15004);
+    			add_location(div124, file$f, 409, 10, 15004);
     			attr_dev(a62, "href", "side-menu-light-dropdown.html");
     			attr_dev(a62, "class", "menu");
-    			add_location(a62, file$d, 407, 8, 14870);
-    			add_location(li62, file$d, 406, 6, 14857);
+    			add_location(a62, file$f, 407, 8, 14870);
+    			add_location(li62, file$f, 406, 6, 14857);
     			attr_dev(i77, "data-feather", "activity");
-    			add_location(i77, file$d, 414, 34, 15178);
+    			add_location(i77, file$f, 414, 34, 15178);
     			attr_dev(div125, "class", "menu__icon");
-    			add_location(div125, file$d, 414, 10, 15154);
+    			add_location(div125, file$f, 414, 10, 15154);
     			attr_dev(div126, "class", "menu__title");
-    			add_location(div126, file$d, 415, 10, 15224);
+    			add_location(div126, file$f, 415, 10, 15224);
     			attr_dev(a63, "href", "side-menu-light-typography.html");
     			attr_dev(a63, "class", "menu");
-    			add_location(a63, file$d, 413, 8, 15088);
-    			add_location(li63, file$d, 412, 6, 15075);
+    			add_location(a63, file$f, 413, 8, 15088);
+    			add_location(li63, file$f, 412, 6, 15075);
     			attr_dev(i78, "data-feather", "activity");
-    			add_location(i78, file$d, 420, 34, 15394);
+    			add_location(i78, file$f, 420, 34, 15394);
     			attr_dev(div127, "class", "menu__icon");
-    			add_location(div127, file$d, 420, 10, 15370);
+    			add_location(div127, file$f, 420, 10, 15370);
     			attr_dev(div128, "class", "menu__title");
-    			add_location(div128, file$d, 421, 10, 15440);
+    			add_location(div128, file$f, 421, 10, 15440);
     			attr_dev(a64, "href", "side-menu-light-icon.html");
     			attr_dev(a64, "class", "menu");
-    			add_location(a64, file$d, 419, 8, 15310);
-    			add_location(li64, file$d, 418, 6, 15297);
+    			add_location(a64, file$f, 419, 8, 15310);
+    			add_location(li64, file$f, 418, 6, 15297);
     			attr_dev(i79, "data-feather", "activity");
-    			add_location(i79, file$d, 426, 34, 15612);
+    			add_location(i79, file$f, 426, 34, 15612);
     			attr_dev(div129, "class", "menu__icon");
-    			add_location(div129, file$d, 426, 10, 15588);
+    			add_location(div129, file$f, 426, 10, 15588);
     			attr_dev(div130, "class", "menu__title");
-    			add_location(div130, file$d, 427, 10, 15658);
+    			add_location(div130, file$f, 427, 10, 15658);
     			attr_dev(a65, "href", "side-menu-light-loading-icon.html");
     			attr_dev(a65, "class", "menu");
-    			add_location(a65, file$d, 425, 8, 15520);
-    			add_location(li65, file$d, 424, 6, 15507);
+    			add_location(a65, file$f, 425, 8, 15520);
+    			add_location(li65, file$f, 424, 6, 15507);
     			attr_dev(ul13, "class", "");
-    			add_location(ul13, file$d, 329, 4, 11982);
-    			add_location(li66, file$d, 324, 2, 11765);
+    			add_location(ul13, file$f, 329, 4, 11982);
+    			add_location(li66, file$f, 324, 2, 11765);
     			attr_dev(i80, "data-feather", "sidebar");
-    			add_location(i80, file$d, 434, 30, 15813);
+    			add_location(i80, file$f, 434, 30, 15813);
     			attr_dev(div131, "class", "menu__icon");
-    			add_location(div131, file$d, 434, 6, 15789);
+    			add_location(div131, file$f, 434, 6, 15789);
     			attr_dev(i81, "data-feather", "chevron-down");
     			attr_dev(i81, "class", "menu__sub-icon");
-    			add_location(i81, file$d, 435, 37, 15885);
+    			add_location(i81, file$f, 435, 37, 15885);
     			attr_dev(div132, "class", "menu__title");
-    			add_location(div132, file$d, 435, 6, 15854);
+    			add_location(div132, file$f, 435, 6, 15854);
     			attr_dev(a66, "href", "/#");
     			attr_dev(a66, "class", "menu");
-    			add_location(a66, file$d, 433, 4, 15756);
+    			add_location(a66, file$f, 433, 4, 15756);
     			attr_dev(i82, "data-feather", "activity");
-    			add_location(i82, file$d, 440, 34, 16086);
+    			add_location(i82, file$f, 440, 34, 16086);
     			attr_dev(div133, "class", "menu__icon");
-    			add_location(div133, file$d, 440, 10, 16062);
+    			add_location(div133, file$f, 440, 10, 16062);
     			attr_dev(div134, "class", "menu__title");
-    			add_location(div134, file$d, 441, 10, 16132);
+    			add_location(div134, file$f, 441, 10, 16132);
     			attr_dev(a67, "href", "side-menu-light-regular-form.html");
     			attr_dev(a67, "class", "menu");
-    			add_location(a67, file$d, 439, 8, 15994);
-    			add_location(li67, file$d, 438, 6, 15981);
+    			add_location(a67, file$f, 439, 8, 15994);
+    			add_location(li67, file$f, 438, 6, 15981);
     			attr_dev(i83, "data-feather", "activity");
-    			add_location(i83, file$d, 446, 34, 16310);
+    			add_location(i83, file$f, 446, 34, 16310);
     			attr_dev(div135, "class", "menu__icon");
-    			add_location(div135, file$d, 446, 10, 16286);
+    			add_location(div135, file$f, 446, 10, 16286);
     			attr_dev(div136, "class", "menu__title");
-    			add_location(div136, file$d, 447, 10, 16356);
+    			add_location(div136, file$f, 447, 10, 16356);
     			attr_dev(a68, "href", "side-menu-light-datepicker.html");
     			attr_dev(a68, "class", "menu");
-    			add_location(a68, file$d, 445, 8, 16220);
-    			add_location(li68, file$d, 444, 6, 16207);
+    			add_location(a68, file$f, 445, 8, 16220);
+    			add_location(li68, file$f, 444, 6, 16207);
     			attr_dev(i84, "data-feather", "activity");
-    			add_location(i84, file$d, 452, 34, 16533);
+    			add_location(i84, file$f, 452, 34, 16533);
     			attr_dev(div137, "class", "menu__icon");
-    			add_location(div137, file$d, 452, 10, 16509);
+    			add_location(div137, file$f, 452, 10, 16509);
     			attr_dev(div138, "class", "menu__title");
-    			add_location(div138, file$d, 453, 10, 16579);
+    			add_location(div138, file$f, 453, 10, 16579);
     			attr_dev(a69, "href", "side-menu-light-tail-select.html");
     			attr_dev(a69, "class", "menu");
-    			add_location(a69, file$d, 451, 8, 16442);
-    			add_location(li69, file$d, 450, 6, 16429);
+    			add_location(a69, file$f, 451, 8, 16442);
+    			add_location(li69, file$f, 450, 6, 16429);
     			attr_dev(i85, "data-feather", "activity");
-    			add_location(i85, file$d, 458, 34, 16757);
+    			add_location(i85, file$f, 458, 34, 16757);
     			attr_dev(div139, "class", "menu__icon");
-    			add_location(div139, file$d, 458, 10, 16733);
+    			add_location(div139, file$f, 458, 10, 16733);
     			attr_dev(div140, "class", "menu__title");
-    			add_location(div140, file$d, 459, 10, 16803);
+    			add_location(div140, file$f, 459, 10, 16803);
     			attr_dev(a70, "href", "side-menu-light-file-upload.html");
     			attr_dev(a70, "class", "menu");
-    			add_location(a70, file$d, 457, 8, 16666);
-    			add_location(li70, file$d, 456, 6, 16653);
+    			add_location(a70, file$f, 457, 8, 16666);
+    			add_location(li70, file$f, 456, 6, 16653);
     			attr_dev(i86, "data-feather", "activity");
-    			add_location(i86, file$d, 464, 34, 16984);
+    			add_location(i86, file$f, 464, 34, 16984);
     			attr_dev(div141, "class", "menu__icon");
-    			add_location(div141, file$d, 464, 10, 16960);
+    			add_location(div141, file$f, 464, 10, 16960);
     			attr_dev(div142, "class", "menu__title");
-    			add_location(div142, file$d, 465, 10, 17030);
+    			add_location(div142, file$f, 465, 10, 17030);
     			attr_dev(a71, "href", "side-menu-light-wysiwyg-editor.html");
     			attr_dev(a71, "class", "menu");
-    			add_location(a71, file$d, 463, 8, 16890);
-    			add_location(li71, file$d, 462, 6, 16877);
+    			add_location(a71, file$f, 463, 8, 16890);
+    			add_location(li71, file$f, 462, 6, 16877);
     			attr_dev(i87, "data-feather", "activity");
-    			add_location(i87, file$d, 470, 34, 17210);
+    			add_location(i87, file$f, 470, 34, 17210);
     			attr_dev(div143, "class", "menu__icon");
-    			add_location(div143, file$d, 470, 10, 17186);
+    			add_location(div143, file$f, 470, 10, 17186);
     			attr_dev(div144, "class", "menu__title");
-    			add_location(div144, file$d, 471, 10, 17256);
+    			add_location(div144, file$f, 471, 10, 17256);
     			attr_dev(a72, "href", "side-menu-light-validation.html");
     			attr_dev(a72, "class", "menu");
-    			add_location(a72, file$d, 469, 8, 17120);
-    			add_location(li72, file$d, 468, 6, 17107);
+    			add_location(a72, file$f, 469, 8, 17120);
+    			add_location(li72, file$f, 468, 6, 17107);
     			attr_dev(ul14, "class", "");
-    			add_location(ul14, file$d, 437, 4, 15961);
-    			add_location(li73, file$d, 432, 2, 15747);
+    			add_location(ul14, file$f, 437, 4, 15961);
+    			add_location(li73, file$f, 432, 2, 15747);
     			attr_dev(i88, "data-feather", "hard-drive");
-    			add_location(i88, file$d, 478, 30, 17409);
+    			add_location(i88, file$f, 478, 30, 17409);
     			attr_dev(div145, "class", "menu__icon");
-    			add_location(div145, file$d, 478, 6, 17385);
+    			add_location(div145, file$f, 478, 6, 17385);
     			attr_dev(i89, "data-feather", "chevron-down");
     			attr_dev(i89, "class", "menu__sub-icon");
-    			add_location(i89, file$d, 479, 39, 17486);
+    			add_location(i89, file$f, 479, 39, 17486);
     			attr_dev(div146, "class", "menu__title");
-    			add_location(div146, file$d, 479, 6, 17453);
+    			add_location(div146, file$f, 479, 6, 17453);
     			attr_dev(a73, "href", "/#");
     			attr_dev(a73, "class", "menu");
-    			add_location(a73, file$d, 477, 4, 17352);
+    			add_location(a73, file$f, 477, 4, 17352);
     			attr_dev(i90, "data-feather", "activity");
-    			add_location(i90, file$d, 484, 34, 17680);
+    			add_location(i90, file$f, 484, 34, 17680);
     			attr_dev(div147, "class", "menu__icon");
-    			add_location(div147, file$d, 484, 10, 17656);
+    			add_location(div147, file$f, 484, 10, 17656);
     			attr_dev(div148, "class", "menu__title");
-    			add_location(div148, file$d, 485, 10, 17726);
+    			add_location(div148, file$f, 485, 10, 17726);
     			attr_dev(a74, "href", "side-menu-light-chart.html");
     			attr_dev(a74, "class", "menu");
-    			add_location(a74, file$d, 483, 8, 17595);
-    			add_location(li74, file$d, 482, 6, 17582);
+    			add_location(a74, file$f, 483, 8, 17595);
+    			add_location(li74, file$f, 482, 6, 17582);
     			attr_dev(i91, "data-feather", "activity");
-    			add_location(i91, file$d, 490, 34, 17893);
+    			add_location(i91, file$f, 490, 34, 17893);
     			attr_dev(div149, "class", "menu__icon");
-    			add_location(div149, file$d, 490, 10, 17869);
+    			add_location(div149, file$f, 490, 10, 17869);
     			attr_dev(div150, "class", "menu__title");
-    			add_location(div150, file$d, 491, 10, 17939);
+    			add_location(div150, file$f, 491, 10, 17939);
     			attr_dev(a75, "href", "side-menu-light-slider.html");
     			attr_dev(a75, "class", "menu");
-    			add_location(a75, file$d, 489, 8, 17807);
-    			add_location(li75, file$d, 488, 6, 17794);
+    			add_location(a75, file$f, 489, 8, 17807);
+    			add_location(li75, file$f, 488, 6, 17794);
     			attr_dev(i92, "data-feather", "activity");
-    			add_location(i92, file$d, 496, 34, 18111);
+    			add_location(i92, file$f, 496, 34, 18111);
     			attr_dev(div151, "class", "menu__icon");
-    			add_location(div151, file$d, 496, 10, 18087);
+    			add_location(div151, file$f, 496, 10, 18087);
     			attr_dev(div152, "class", "menu__title");
-    			add_location(div152, file$d, 497, 10, 18157);
+    			add_location(div152, file$f, 497, 10, 18157);
     			attr_dev(a76, "href", "side-menu-light-image-zoom.html");
     			attr_dev(a76, "class", "menu");
-    			add_location(a76, file$d, 495, 8, 18021);
-    			add_location(li76, file$d, 494, 6, 18008);
+    			add_location(a76, file$f, 495, 8, 18021);
+    			add_location(li76, file$f, 494, 6, 18008);
     			attr_dev(ul15, "class", "");
-    			add_location(ul15, file$d, 481, 4, 17562);
-    			add_location(li77, file$d, 476, 2, 17343);
+    			add_location(ul15, file$f, 481, 4, 17562);
+    			add_location(li77, file$f, 476, 2, 17343);
     			attr_dev(ul16, "class", "border-t border-theme-29 py-5 hidden");
-    			add_location(ul16, file$d, 11, 0, 342);
+    			add_location(ul16, file$f, 11, 0, 342);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6075,7 +6070,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$e.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6084,7 +6079,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$e($$self, $$props, $$invalidate) {
+    function instance$g($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("MobileMenu", slots, []);
     	const writable_props = [];
@@ -6100,18 +6095,18 @@ var app = (function () {
     class MobileMenu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
+    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "MobileMenu",
     			options,
-    			id: create_fragment$e.name
+    			id: create_fragment$g.name
     		});
     	}
     }
 
-    const file$c = "src/SideMenu.svelte";
+    const file$e = "src/SideMenu.svelte";
 
     // (7:2) <Link to="/" class="intro-x flex justify-center">
     function create_default_slot_2(ctx) {
@@ -6123,7 +6118,7 @@ var app = (function () {
     			img = element("img");
     			attr_dev(img, "alt", "Subvisio");
     			if (img.src !== (img_src_value = "/logo.svg")) attr_dev(img, "src", img_src_value);
-    			add_location(img, file$c, 7, 4, 224);
+    			add_location(img, file$e, 7, 4, 224);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6159,11 +6154,11 @@ var app = (function () {
     			div1 = element("div");
     			div1.textContent = "Auction";
     			attr_dev(i, "data-feather", "activity");
-    			add_location(i, file$c, 23, 41, 800);
+    			add_location(i, file$e, 23, 41, 800);
     			attr_dev(div0, "class", "side-menu__icon");
-    			add_location(div0, file$c, 23, 12, 771);
+    			add_location(div0, file$e, 23, 12, 771);
     			attr_dev(div1, "class", "side-menu__title");
-    			add_location(div1, file$c, 24, 12, 848);
+    			add_location(div1, file$e, 24, 12, 848);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -6204,11 +6199,11 @@ var app = (function () {
     			div1 = element("div");
     			div1.textContent = "Crowdloan";
     			attr_dev(i, "data-feather", "activity");
-    			add_location(i, file$c, 29, 41, 1089);
+    			add_location(i, file$e, 29, 41, 1089);
     			attr_dev(div0, "class", "side-menu__icon");
-    			add_location(div0, file$c, 29, 12, 1060);
+    			add_location(div0, file$e, 29, 12, 1060);
     			attr_dev(div1, "class", "side-menu__title");
-    			add_location(div1, file$c, 30, 12, 1137);
+    			add_location(div1, file$e, 30, 12, 1137);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -6234,7 +6229,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$d(ctx) {
+    function create_fragment$f(ctx) {
     	let nav;
     	let link0;
     	let t0;
@@ -6316,28 +6311,28 @@ var app = (function () {
     			li1 = element("li");
     			create_component(link2.$$.fragment);
     			attr_dev(div0, "class", "side-nav__devider my-6");
-    			add_location(div0, file$c, 10, 2, 276);
+    			add_location(div0, file$e, 10, 2, 276);
     			attr_dev(i0, "data-feather", "home");
-    			add_location(i0, file$c, 14, 37, 423);
+    			add_location(i0, file$e, 14, 37, 423);
     			attr_dev(div1, "class", "side-menu__icon");
-    			add_location(div1, file$c, 14, 8, 394);
+    			add_location(div1, file$e, 14, 8, 394);
     			attr_dev(i1, "data-feather", "chevron-down");
-    			add_location(i1, file$c, 17, 43, 557);
+    			add_location(i1, file$e, 17, 43, 557);
     			attr_dev(div2, "class", "side-menu__sub-icon");
-    			add_location(div2, file$c, 17, 10, 524);
+    			add_location(div2, file$e, 17, 10, 524);
     			attr_dev(div3, "class", "side-menu__title");
-    			add_location(div3, file$c, 15, 8, 463);
+    			add_location(div3, file$e, 15, 8, 463);
     			attr_dev(a, "href", "/");
     			attr_dev(a, "class", "side-menu side-menu--active");
-    			add_location(a, file$c, 13, 6, 337);
-    			add_location(li0, file$c, 21, 8, 670);
-    			add_location(li1, file$c, 27, 8, 932);
+    			add_location(a, file$e, 13, 6, 337);
+    			add_location(li0, file$e, 21, 8, 670);
+    			add_location(li1, file$e, 27, 8, 932);
     			attr_dev(ul0, "class", "side-menu__sub-open");
-    			add_location(ul0, file$c, 20, 6, 629);
-    			add_location(li2, file$c, 12, 4, 326);
-    			add_location(ul1, file$c, 11, 2, 317);
+    			add_location(ul0, file$e, 20, 6, 629);
+    			add_location(li2, file$e, 12, 4, 326);
+    			add_location(ul1, file$e, 11, 2, 317);
     			attr_dev(nav, "class", "side-nav");
-    			add_location(nav, file$c, 5, 0, 145);
+    			add_location(nav, file$e, 5, 0, 145);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6418,7 +6413,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$d.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6427,7 +6422,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$d($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let path;
     	let $location;
     	let { $$slots: slots = {}, $$scope } = $$props;
@@ -6469,18 +6464,18 @@ var app = (function () {
     class SideMenu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {});
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SideMenu",
     			options,
-    			id: create_fragment$d.name
+    			id: create_fragment$f.name
     		});
     	}
     }
 
-    const file$b = "src/Layout.svelte";
+    const file$d = "src/Layout.svelte";
     const get_content_slot_changes = dirty => ({});
     const get_content_slot_context = ctx => ({});
     const get_side_menu_slot_changes = dirty => ({});
@@ -6515,7 +6510,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$c(ctx) {
+    function create_fragment$e(ctx) {
     	let div5;
     	let div0;
     	let t0;
@@ -6571,28 +6566,28 @@ var app = (function () {
     			div3 = element("div");
     			div3.textContent = "Subvis.io © 2021";
     			attr_dev(div0, "class", "mobile-menu md:hidden");
-    			add_location(div0, file$b, 1, 2, 8);
+    			add_location(div0, file$d, 1, 2, 8);
     			attr_dev(nav, "class", "side-nav");
-    			add_location(nav, file$b, 6, 4, 116);
+    			add_location(nav, file$d, 6, 4, 116);
     			attr_dev(div1, "class", "content");
-    			add_location(div1, file$b, 9, 4, 186);
+    			add_location(div1, file$d, 9, 4, 186);
     			attr_dev(div2, "class", "flex");
-    			add_location(div2, file$b, 5, 2, 93);
+    			add_location(div2, file$d, 5, 2, 93);
     			attr_dev(li0, "class", "p-2 ");
-    			add_location(li0, file$b, 16, 10, 506);
+    			add_location(li0, file$d, 16, 10, 506);
     			attr_dev(li1, "class", "p-2 ");
-    			add_location(li1, file$b, 17, 10, 557);
+    			add_location(li1, file$d, 17, 10, 557);
     			attr_dev(li2, "class", "p-2 ");
-    			add_location(li2, file$b, 18, 10, 597);
+    			add_location(li2, file$d, 18, 10, 597);
     			attr_dev(ul, "class", "flex mx-auto text-white text-center");
-    			add_location(ul, file$b, 15, 8, 447);
+    			add_location(ul, file$d, 15, 8, 447);
     			attr_dev(div3, "class", "flex mx-auto text-white text-center");
-    			add_location(div3, file$b, 20, 8, 649);
+    			add_location(div3, file$d, 20, 8, 649);
     			attr_dev(div4, "class", "container mx-auto flex flex-col flex-wrap items-center justify-between");
-    			add_location(div4, file$b, 14, 4, 354);
+    			add_location(div4, file$d, 14, 4, 354);
     			attr_dev(footer, "class", "flex flex-wrap items-center justify-between pt-4 m-auto");
-    			add_location(footer, file$b, 13, 2, 277);
-    			add_location(div5, file$b, 0, 0, 0);
+    			add_location(footer, file$d, 13, 2, 277);
+    			add_location(div5, file$d, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6675,7 +6670,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$c.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6684,7 +6679,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$c($$self, $$props, $$invalidate) {
+    function instance$e($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Layout", slots, ['mobile-menu','side-menu','content']);
     	const writable_props = [];
@@ -6703,13 +6698,13 @@ var app = (function () {
     class Layout extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {});
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Layout",
     			options,
-    			id: create_fragment$c.name
+    			id: create_fragment$e.name
     		});
     	}
     }
@@ -14959,6 +14954,119 @@ var app = (function () {
     });
 
     /**
+     * The base implementation of `_.gt` which doesn't coerce arguments.
+     *
+     * @private
+     * @param {*} value The value to compare.
+     * @param {*} other The other value to compare.
+     * @returns {boolean} Returns `true` if `value` is greater than `other`,
+     *  else `false`.
+     */
+    function baseGt(value, other) {
+      return value > other;
+    }
+
+    /**
+     * The base implementation of `_.lt` which doesn't coerce arguments.
+     *
+     * @private
+     * @param {*} value The value to compare.
+     * @param {*} other The other value to compare.
+     * @returns {boolean} Returns `true` if `value` is less than `other`,
+     *  else `false`.
+     */
+    function baseLt(value, other) {
+      return value < other;
+    }
+
+    /**
+     * The base implementation of methods like `_.max` and `_.min` which accepts a
+     * `comparator` to determine the extremum value.
+     *
+     * @private
+     * @param {Array} array The array to iterate over.
+     * @param {Function} iteratee The iteratee invoked per iteration.
+     * @param {Function} comparator The comparator used to compare values.
+     * @returns {*} Returns the extremum value.
+     */
+    function baseExtremum(array, iteratee, comparator) {
+      var index = -1,
+          length = array.length;
+
+      while (++index < length) {
+        var value = array[index],
+            current = iteratee(value);
+
+        if (current != null && (computed === undefined
+              ? (current === current && !isSymbol(current))
+              : comparator(current, computed)
+            )) {
+          var computed = current,
+              result = value;
+        }
+      }
+      return result;
+    }
+
+    /**
+     * This method is like `_.max` except that it accepts `iteratee` which is
+     * invoked for each element in `array` to generate the criterion by which
+     * the value is ranked. The iteratee is invoked with one argument: (value).
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Math
+     * @param {Array} array The array to iterate over.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
+     * @returns {*} Returns the maximum value.
+     * @example
+     *
+     * var objects = [{ 'n': 1 }, { 'n': 2 }];
+     *
+     * _.maxBy(objects, function(o) { return o.n; });
+     * // => { 'n': 2 }
+     *
+     * // The `_.property` iteratee shorthand.
+     * _.maxBy(objects, 'n');
+     * // => { 'n': 2 }
+     */
+    function maxBy(array, iteratee) {
+      return (array && array.length)
+        ? baseExtremum(array, baseIteratee(iteratee), baseGt)
+        : undefined;
+    }
+
+    /**
+     * This method is like `_.min` except that it accepts `iteratee` which is
+     * invoked for each element in `array` to generate the criterion by which
+     * the value is ranked. The iteratee is invoked with one argument: (value).
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Math
+     * @param {Array} array The array to iterate over.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
+     * @returns {*} Returns the minimum value.
+     * @example
+     *
+     * var objects = [{ 'n': 1 }, { 'n': 2 }];
+     *
+     * _.minBy(objects, function(o) { return o.n; });
+     * // => { 'n': 1 }
+     *
+     * // The `_.property` iteratee shorthand.
+     * _.minBy(objects, 'n');
+     * // => { 'n': 1 }
+     */
+    function minBy(array, iteratee) {
+      return (array && array.length)
+        ? baseExtremum(array, baseIteratee(iteratee), baseLt)
+        : undefined;
+    }
+
+    /**
      * The base implementation of `_.sortBy` which uses `comparer` to define the
      * sort order of `array` and replaces criteria objects with their corresponding
      * values.
@@ -16265,32 +16373,37 @@ var app = (function () {
     });
 
     const { STAGE, NODE_ENV } = process.env;
-    const isProd = NODE_ENV === null || NODE_ENV === void 0 ? void 0 : NODE_ENV.startsWith('prod');
+    NODE_ENV === null || NODE_ENV === void 0 ? void 0 : NODE_ENV.startsWith('prod');
     const NetworkConfigs = {
         polkadot: {
-            leasePeriod: 259200,
+            leasePeriod: 2419200,
+            leasesPerSlot: 3,
             decimal: 10,
             tokenSymbol: 'DOT',
             endpoint: ''
         },
         kusama: {
-            leasePeriod: 129600,
+            leasePeriod: 604800,
+            leasesPerSlot: 7,
             decimal: 12,
             tokenSymbol: 'KSM',
             endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction'
         },
         rococo: {
             leasePeriod: 14400,
+            leasesPerSlot: 7,
             decimal: 12,
             tokenSymbol: 'ROC',
             endpoint: 'https://api.subquery.network/sq/subvis-io/rococo-auction'
         }
     };
-    const config = Object.assign(Object.assign({}, NetworkConfigs[STAGE || 'rococo']), (!isProd && { endpoint: 'http://localhost:3000' }));
+    const config = Object.assign({}, NetworkConfigs[STAGE || 'rococo']
+    // ...(!isProd && { endpoint: 'http://localhost:3000' })
+    );
 
-    const file$a = "src/Token.svelte";
+    const file$c = "src/Token.svelte";
 
-    function create_fragment$b(ctx) {
+    function create_fragment$d(ctx) {
     	let div;
     	let t;
 
@@ -16299,7 +16412,7 @@ var app = (function () {
     			div = element("div");
     			t = text(/*title*/ ctx[0]);
     			attr_dev(div, "class", "inline-block");
-    			add_location(div, file$a, 13, 0, 421);
+    			add_location(div, file$c, 13, 0, 421);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -16320,7 +16433,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -16329,7 +16442,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$b($$self, $$props, $$invalidate) {
+    function instance$d($$self, $$props, $$invalidate) {
     	let tokenValue;
     	let title;
     	let { $$slots: slots = {}, $$scope } = $$props;
@@ -16397,7 +16510,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {
     			value: 1,
     			allowZero: 2,
     			emptyDisplay: 3,
@@ -16408,7 +16521,7 @@ var app = (function () {
     			component: this,
     			tagName: "Token",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$d.name
     		});
 
     		const { ctx } = this.$$;
@@ -16452,10 +16565,10 @@ var app = (function () {
     	}
     }
 
-    const file$9 = "src/AuctionSlot.svelte";
+    const file$b = "src/AuctionSlot.svelte";
 
     // (31:8) {#if paraId}
-    function create_if_block$5(ctx) {
+    function create_if_block$6(ctx) {
     	let img;
     	let img_src_value;
 
@@ -16467,7 +16580,7 @@ var app = (function () {
     			attr_dev(img, "alt", /*paraId*/ ctx[2]);
     			attr_dev(img, "width", "22");
     			attr_dev(img, "height", "22");
-    			add_location(img, file$9, 31, 8, 1532);
+    			add_location(img, file$b, 31, 8, 1532);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -16484,7 +16597,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$5.name,
+    		id: create_if_block$6.name,
     		type: "if",
     		source: "(31:8) {#if paraId}",
     		ctx
@@ -16493,7 +16606,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$a(ctx) {
+    function create_fragment$c(ctx) {
     	let div15;
     	let div2;
     	let div0;
@@ -16533,7 +16646,7 @@ var app = (function () {
     	let t18_value = (/*wonBlocks*/ ctx[4] || "N/A") + "";
     	let t18;
     	let current;
-    	let if_block = /*paraId*/ ctx[2] && create_if_block$5(ctx);
+    	let if_block = /*paraId*/ ctx[2] && create_if_block$6(ctx);
 
     	token = new Token({
     			props: {
@@ -16584,39 +16697,39 @@ var app = (function () {
     			div11 = element("div");
     			t18 = text(t18_value);
     			attr_dev(div0, "class", "col-span-3 text-base");
-    			add_location(div0, file$9, 22, 4, 929);
+    			add_location(div0, file$b, 22, 4, 929);
     			attr_dev(div1, "class", "col-span-2 text-gray-400 text-xs text-right");
-    			add_location(div1, file$9, 23, 4, 998);
+    			add_location(div1, file$b, 23, 4, 998);
     			attr_dev(div2, "class", "grid grid-cols-5 mb-2");
-    			add_location(div2, file$9, 21, 2, 889);
+    			add_location(div2, file$b, 21, 2, 889);
     			attr_dev(div3, "class", "text-gray-400 mb-2");
-    			add_location(div3, file$9, 28, 6, 1388);
+    			add_location(div3, file$b, 28, 6, 1388);
     			attr_dev(div4, "class", "mx-1");
-    			add_location(div4, file$9, 33, 8, 1645);
+    			add_location(div4, file$b, 33, 8, 1645);
     			attr_dev(div5, "class", "flex flex-row justify-center items-center");
-    			add_location(div5, file$9, 29, 6, 1447);
+    			add_location(div5, file$b, 29, 6, 1447);
     			attr_dev(div6, "class", "text-center text-xm flex flex-col");
-    			add_location(div6, file$9, 27, 4, 1334);
+    			add_location(div6, file$b, 27, 4, 1334);
     			attr_dev(div7, "class", "text-gray-400 mb-2");
-    			add_location(div7, file$9, 37, 6, 1769);
+    			add_location(div7, file$b, 37, 6, 1769);
     			attr_dev(div8, "class", "flex flex-row justify-center items-center fixed-line-height svelte-pgbpgd");
-    			add_location(div8, file$9, 38, 6, 1823);
+    			add_location(div8, file$b, 38, 6, 1823);
     			attr_dev(div9, "class", "text-center text-xm flex flex-col");
-    			add_location(div9, file$9, 36, 4, 1715);
+    			add_location(div9, file$b, 36, 4, 1715);
     			attr_dev(div10, "class", "text-gray-400 mb-2");
-    			add_location(div10, file$9, 43, 6, 2056);
+    			add_location(div10, file$b, 43, 6, 2056);
     			attr_dev(div11, "class", "fixed-line-height svelte-pgbpgd");
-    			add_location(div11, file$9, 45, 8, 2179);
+    			add_location(div11, file$b, 45, 8, 2179);
     			attr_dev(div12, "class", "flex flex-row justify-center items-center");
-    			add_location(div12, file$9, 44, 6, 2115);
+    			add_location(div12, file$b, 44, 6, 2115);
     			attr_dev(div13, "class", "text-center text-xm flex flex-col");
-    			add_location(div13, file$9, 42, 4, 2002);
+    			add_location(div13, file$b, 42, 4, 2002);
     			attr_dev(div14, "class", "grid grid-cols-3 gap-1");
-    			add_location(div14, file$9, 26, 2, 1293);
+    			add_location(div14, file$b, 26, 2, 1293);
     			attr_dev(div15, "class", "rounded-lg p-2 col-span-6");
     			set_style(div15, "background-color", /*bgColor*/ ctx[8]);
     			set_style(div15, "border", "1px solid " + /*borderColor*/ ctx[9]);
-    			add_location(div15, file$9, 20, 0, 778);
+    			add_location(div15, file$b, 20, 0, 778);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -16667,7 +16780,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$5(ctx);
+    					if_block = create_if_block$6(ctx);
     					if_block.c();
     					if_block.m(div5, t10);
     				}
@@ -16700,7 +16813,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -16709,7 +16822,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$a($$self, $$props, $$invalidate) {
+    function instance$c($$self, $$props, $$invalidate) {
     	let slots;
     	let blockStart;
     	let blockEnd;
@@ -16850,7 +16963,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {
     			firstSlot: 10,
     			lastSlot: 11,
     			leaseStart: 0,
@@ -16865,7 +16978,7 @@ var app = (function () {
     			component: this,
     			tagName: "AuctionSlot",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$c.name
     		});
 
     		const { ctx } = this.$$;
@@ -17045,6 +17158,7 @@ var app = (function () {
         const span = occupied.filter((val) => !!val).reduce((all, cur) => all + cur, 0);
         const startIdx = occupied.findIndex((val) => !!val);
         const result = occupied.slice(0, startIdx).concat(span);
+        // console.log(allSlots, curSlots, result);
         return result;
     };
 
@@ -17074,6 +17188,7 @@ query {
 query ($auctionStatusFilter: AuctionFilter) {
   parachainLeaseds {
     nodes {
+      id
       parachain {
         paraId
       }
@@ -17153,6 +17268,8 @@ query {
       verifier
       cap
       raised
+      firstSlot
+      lastSlot
       lockExpiredBlock
       blockNum
       createdAt
@@ -17199,10 +17316,10 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 }
 `;
 
-    const file$8 = "src/BidCard.svelte";
+    const file$a = "src/BidCard.svelte";
 
     // (21:4) {:else}
-    function create_else_block$3(ctx) {
+    function create_else_block$4(ctx) {
     	let div;
     	let span;
     	let t0;
@@ -17215,9 +17332,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t0 = text("From bidder ");
     			t1 = text(/*bidder*/ ctx[0]);
     			attr_dev(span, "alt", /*bidder*/ ctx[0]);
-    			add_location(span, file$8, 21, 47, 880);
+    			add_location(span, file$a, 21, 47, 880);
     			attr_dev(div, "class", "text-gray-600 ellipsis-text svelte-1b6jv3z");
-    			add_location(div, file$8, 21, 6, 839);
+    			add_location(div, file$a, 21, 6, 839);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -17239,7 +17356,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$3.name,
+    		id: create_else_block$4.name,
     		type: "else",
     		source: "(21:4) {:else}",
     		ctx
@@ -17249,7 +17366,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     }
 
     // (19:4) {#if isCrowdloan }
-    function create_if_block$4(ctx) {
+    function create_if_block$5(ctx) {
     	let div;
 
     	const block = {
@@ -17257,7 +17374,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div = element("div");
     			div.textContent = `From Crowdloan ${/*paraId*/ ctx[6]}`;
     			attr_dev(div, "class", "text-gray-600");
-    			add_location(div, file$8, 19, 6, 764);
+    			add_location(div, file$a, 19, 6, 764);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -17270,7 +17387,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$5.name,
     		type: "if",
     		source: "(19:4) {#if isCrowdloan }",
     		ctx
@@ -17279,7 +17396,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    function create_fragment$9(ctx) {
+    function create_fragment$b(ctx) {
     	let div5;
     	let div1;
     	let div0;
@@ -17305,8 +17422,8 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		});
 
     	function select_block_type(ctx, dirty) {
-    		if (/*isCrowdloan*/ ctx[5]) return create_if_block$4;
-    		return create_else_block$3;
+    		if (/*isCrowdloan*/ ctx[5]) return create_if_block$5;
+    		return create_else_block$4;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -17333,17 +17450,17 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div4 = element("div");
     			if_block.c();
     			attr_dev(div0, "class", "text text-sm");
-    			add_location(div0, file$8, 11, 4, 371);
+    			add_location(div0, file$a, 11, 4, 371);
     			attr_dev(div1, "class", "col-span-2");
-    			add_location(div1, file$8, 10, 2, 342);
+    			add_location(div1, file$a, 10, 2, 342);
     			attr_dev(div2, "class", "text-xs text-gray-500 col-span-3 text-right");
-    			add_location(div2, file$8, 13, 2, 433);
+    			add_location(div2, file$a, 13, 2, 433);
     			attr_dev(div3, "class", "text-base col-span-5");
-    			add_location(div3, file$8, 14, 2, 562);
+    			add_location(div3, file$a, 14, 2, 562);
     			attr_dev(div4, "class", "text-base col-span-5 flex");
-    			add_location(div4, file$8, 17, 2, 695);
+    			add_location(div4, file$a, 17, 2, 695);
     			attr_dev(div5, "class", "box mb-3 px-5 py-3 grid grid-cols-5 grid-flow-row gap-2");
-    			add_location(div5, file$8, 9, 0, 270);
+    			add_location(div5, file$a, 9, 0, 270);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17406,7 +17523,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$b.name,
     		type: "component",
     		source: "",
     		ctx
@@ -17415,7 +17532,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$b($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BidCard", slots, []);
 
@@ -17488,7 +17605,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, {
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
     			bidder: 0,
     			firstSlot: 1,
     			lastSlot: 2,
@@ -17502,7 +17619,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			component: this,
     			tagName: "BidCard",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$b.name
     		});
 
     		const { ctx } = this.$$;
@@ -17594,9 +17711,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	}
     }
 
-    const file$7 = "src/AuctionProgressIndicator.svelte";
+    const file$9 = "src/AuctionProgressIndicator.svelte";
 
-    function create_fragment$8(ctx) {
+    function create_fragment$a(ctx) {
     	let div5;
     	let div0;
     	let svg;
@@ -17643,48 +17760,48 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			attr_dev(circle, "cx", "45");
     			attr_dev(circle, "cy", "45");
     			attr_dev(circle, "r", "45");
-    			add_location(circle, file$7, 23, 12, 1173);
+    			add_location(circle, file$9, 23, 12, 1173);
     			attr_dev(path, "d", "M18.5487981,17.681523 L26.2723558,17.681523 C27.1264423,17.681523 27.8170673,18.3628219 27.8170673,19.2053751 C27.8170673,20.0479283 27.1264423,20.7292273 26.2723558,20.7292273 L17.0040865,20.7292273 C16.15,20.7292273 15.459375,20.0479283 15.459375,19.2053751 L15.459375,13.1099664 C15.459375,12.2674132 16.15,11.5861142 17.0040865,11.5861142 C17.8581731,11.5861142 18.5487981,12.2674132 18.5487981,13.1099664 L18.5487981,17.681523 Z M17.0040865,35.9677492 C7.61730769,35.9677492 0.0122596154,28.4613662 0.0122596154,19.2053751 C0.0122596154,9.94535274 7.62139423,2.44300112 17.0040865,2.44300112 C26.3867788,2.44300112 33.9959135,9.9493841 33.9959135,19.2053751 C34,28.4613662 26.3908654,35.9677492 17.0040865,35.9677492 Z M17.0040865,32.9200448 C24.6826923,32.9200448 30.9064904,26.7802912 30.9064904,19.2053751 C30.9064904,11.6304591 24.6826923,5.48667413 17.0040865,5.48667413 C9.32548077,5.48667413 3.10168269,11.6264278 3.10168269,19.2013438 C3.10168269,26.7762598 9.32548077,32.9200448 17.0040865,32.9200448 Z M25.8228365,0.471668533 C26.4276442,-0.124972004 27.4043269,-0.124972004 28.0091346,0.471668533 L32.3776442,4.78118701 C32.9824519,5.37782755 32.9824519,6.34132139 32.3776442,6.93796193 C31.7728365,7.53460246 30.7961538,7.53460246 30.1913462,6.93796193 L25.8228365,2.62844345 C25.2180288,2.02777156 25.2180288,1.06427772 25.8228365,0.471668533 Z M7.65817308,0.471668533 C8.26298077,1.06830907 8.26298077,2.03180291 7.65817308,2.62844345 L3.28966346,6.93393057 C2.68485577,7.53057111 1.70817308,7.53057111 1.10336538,6.93393057 C0.498557692,6.33729003 0.498557692,5.37379619 1.10336538,4.77715566 L5.471875,0.467637178 C6.07668269,-0.124972004 7.05336538,-0.124972004 7.65817308,0.471668533 Z");
     			attr_dev(path, "id", "Shape");
-    			add_location(path, file$7, 25, 14, 1349);
+    			add_location(path, file$9, 25, 14, 1349);
     			attr_dev(g0, "transform", "translate(28.000000, 26.000000)");
     			attr_dev(g0, "fill", "#2549E6");
     			attr_dev(g0, "fill-rule", "nonzero");
-    			add_location(g0, file$7, 24, 12, 1252);
+    			add_location(g0, file$9, 24, 12, 1252);
     			attr_dev(g1, "id", "Group-4");
     			attr_dev(g1, "transform", "translate(963.000000, 135.000000)");
-    			add_location(g1, file$7, 22, 10, 1098);
+    			add_location(g1, file$9, 22, 10, 1098);
     			attr_dev(g2, "id", "Dashboard01_new01");
     			attr_dev(g2, "transform", "translate(-963.000000, -135.000000)");
-    			add_location(g2, file$7, 21, 8, 1013);
+    			add_location(g2, file$9, 21, 8, 1013);
     			attr_dev(g3, "id", "Page-1");
     			attr_dev(g3, "stroke", "none");
     			attr_dev(g3, "stroke-width", "1");
     			attr_dev(g3, "fill", "none");
     			attr_dev(g3, "fill-rule", "evenodd");
-    			add_location(g3, file$7, 20, 6, 926);
+    			add_location(g3, file$9, 20, 6, 926);
     			attr_dev(svg, "width", "90px");
     			attr_dev(svg, "height", "90px");
     			attr_dev(svg, "viewBox", "0 0 90 90");
     			attr_dev(svg, "version", "1.1");
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
-    			add_location(svg, file$7, 19, 4, 775);
+    			add_location(svg, file$9, 19, 4, 775);
     			attr_dev(div0, "class", "rounded-full h-20 w-20 flex items-center justify-center bg-blue-50");
-    			add_location(div0, file$7, 18, 2, 690);
+    			add_location(div0, file$9, 18, 2, 690);
     			attr_dev(div1, "class", "text-lg");
-    			add_location(div1, file$7, 33, 4, 3188);
-    			add_location(p, file$7, 34, 4, 3227);
+    			add_location(div1, file$9, 33, 4, 3199);
+    			add_location(p, file$9, 34, 4, 3238);
     			attr_dev(div2, "class", "progress-bar bg-theme-1");
     			attr_dev(div2, "role", "progressbar");
     			set_style(div2, "width", /*progress*/ ctx[2] + "%");
-    			add_location(div2, file$7, 36, 6, 3289);
+    			add_location(div2, file$9, 36, 6, 3300);
     			attr_dev(div3, "class", "progress h-1 mt-4");
-    			add_location(div3, file$7, 35, 4, 3251);
-    			attr_dev(div4, "class", "px-4");
-    			add_location(div4, file$7, 32, 2, 3165);
+    			add_location(div3, file$9, 35, 4, 3262);
+    			attr_dev(div4, "class", "px-4 min-w-full");
+    			add_location(div4, file$9, 32, 2, 3165);
     			attr_dev(div5, "class", "justify-center col-span-2 flex flex-row min-w-max");
-    			add_location(div5, file$7, 17, 0, 624);
+    			add_location(div5, file$9, 17, 0, 624);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17727,7 +17844,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$8.name,
+    		id: create_fragment$a.name,
     		type: "component",
     		source: "",
     		ctx
@@ -17736,7 +17853,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    function instance$8($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("AuctionProgressIndicator", slots, []);
 
@@ -17809,7 +17926,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
     			closingStart: 3,
     			closingEnd: 4,
     			curBlockNum: 5
@@ -17819,7 +17936,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			component: this,
     			tagName: "AuctionProgressIndicator",
     			options,
-    			id: create_fragment$8.name
+    			id: create_fragment$a.name
     		});
 
     		const { ctx } = this.$$;
@@ -17863,9 +17980,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	}
     }
 
-    const file$6 = "src/Loading.svelte";
+    const file$8 = "src/Loading.svelte";
 
-    function create_fragment$7(ctx) {
+    function create_fragment$9(ctx) {
     	let div2;
     	let div1;
     	let div0;
@@ -17881,14 +17998,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			h2 = element("h2");
     			h2.textContent = "Loading...";
     			attr_dev(div0, "class", "loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-16 w-16 mb-6 svelte-13ld8dg");
-    			add_location(div0, file$6, 8, 4, 325);
+    			add_location(div0, file$8, 8, 4, 325);
     			attr_dev(h2, "class", "text-center text-gray-600 text-xl font-semibold");
-    			add_location(h2, file$6, 9, 4, 432);
+    			add_location(h2, file$8, 9, 4, 432);
     			attr_dev(div1, "wire:loading", "");
     			attr_dev(div1, "class", "w-full overflow-hidden flex flex-col items-center justify-center");
-    			add_location(div1, file$6, 7, 2, 229);
+    			add_location(div1, file$8, 7, 2, 229);
     			attr_dev(div2, "class", "py-8");
-    			add_location(div2, file$6, 6, 0, 208);
+    			add_location(div2, file$8, 6, 0, 208);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17910,7 +18027,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$7.name,
+    		id: create_fragment$9.name,
     		type: "component",
     		source: "",
     		ctx
@@ -17919,7 +18036,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    function instance$7($$self, $$props) {
+    function instance$9($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Loading", slots, []);
     	const writable_props = [];
@@ -17934,20 +18051,20 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     class Loading extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, {});
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Loading",
     			options,
-    			id: create_fragment$7.name
+    			id: create_fragment$9.name
     		});
     	}
     }
 
-    const file$5 = "src/ProgressBar.svelte";
+    const file$7 = "src/ProgressBar.svelte";
 
-    function create_fragment$6(ctx) {
+    function create_fragment$8(ctx) {
     	let div1;
     	let div0;
 
@@ -17956,9 +18073,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div1 = element("div");
     			div0 = element("div");
     			attr_dev(div0, "class", "w-12/12 bg-purple-500 py-1 rounded-full");
-    			add_location(div0, file$5, 1, 2, 41);
+    			add_location(div0, file$7, 1, 2, 41);
     			attr_dev(div1, "class", "bg-gray-400 rounded-full");
-    			add_location(div1, file$5, 0, 0, 0);
+    			add_location(div1, file$7, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17977,7 +18094,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$6.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -17986,7 +18103,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    function instance$6($$self, $$props) {
+    function instance$8($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ProgressBar", slots, []);
     	const writable_props = [];
@@ -18001,61 +18118,60 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     class ProgressBar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ProgressBar",
     			options,
-    			id: create_fragment$6.name
+    			id: create_fragment$8.name
     		});
     	}
     }
 
-    const file$4 = "src/SlotLeaseChart.svelte";
+    const file$6 = "src/SlotLeaseChart.svelte";
 
-    function get_each_context$3(ctx, list, i) {
+    function get_each_context$4(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[7] = list[i];
+    	child_ctx[8] = list[i];
+    	child_ctx[10] = i;
     	return child_ctx;
     }
 
     function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
+    	child_ctx[11] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_2$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[14] = list[i];
     	return child_ctx;
     }
 
-    // (37:6) {#each allSlots as slot (slot.idx)}
-    function create_each_block_2$1(key_1, ctx) {
+    // (37:6) {#each allSlots as slot}
+    function create_each_block_2$1(ctx) {
     	let td;
     	let div1;
     	let p0;
     	let t0;
-    	let t1_value = /*slot*/ ctx[13].idx + "";
+    	let t1_value = /*slot*/ ctx[14].idx + "";
     	let t1;
     	let t2;
     	let p1;
-    	let t3_value = /*slot*/ ctx[13].startBlock + "";
+    	let t3_value = /*slot*/ ctx[14].startBlock + "";
     	let t3;
     	let t4;
-    	let t5_value = /*slot*/ ctx[13].startBlock + /*leasePeriod*/ ctx[5] + "";
+    	let t5_value = /*slot*/ ctx[14].startBlock + /*leasePeriod*/ ctx[5] + "";
     	let t5;
     	let t6;
     	let div0;
-    	let t7_value = getDateFromBlockNum(/*slot*/ ctx[13].startBlock, /*$lastBlockNum*/ ctx[2], /*$lastBlockTime*/ ctx[4]) + "";
+    	let t7_value = getDateFromBlockNum(/*slot*/ ctx[14].startBlock, /*$lastBlockNum*/ ctx[1], /*$lastBlockTime*/ ctx[4]) + "";
     	let t7;
     	let t8;
 
     	const block = {
-    		key: key_1,
-    		first: null,
     		c: function create() {
     			td = element("td");
     			div1 = element("div");
@@ -18072,15 +18188,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t7 = text(t7_value);
     			t8 = space();
     			attr_dev(p0, "class", "text-lg");
-    			add_location(p0, file$4, 39, 10, 1345);
+    			add_location(p0, file$6, 39, 10, 1513);
     			attr_dev(p1, "class", "text-gray-400 text-xs");
-    			add_location(p1, file$4, 40, 10, 1394);
+    			add_location(p1, file$6, 40, 10, 1562);
     			attr_dev(div0, "class", "slot-time text-gray-400 text-xs svelte-dxv2mm");
-    			add_location(div0, file$4, 41, 10, 1493);
+    			add_location(div0, file$6, 41, 10, 1661);
     			attr_dev(div1, "class", "slot-head svelte-dxv2mm");
-    			add_location(div1, file$4, 38, 8, 1311);
-    			add_location(td, file$4, 37, 6, 1298);
-    			this.first = td;
+    			add_location(div1, file$6, 38, 8, 1479);
+    			add_location(td, file$6, 37, 6, 1466);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, td, anchor);
@@ -18098,12 +18213,11 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			append_dev(div0, t7);
     			append_dev(td, t8);
     		},
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty & /*allSlots*/ 8 && t1_value !== (t1_value = /*slot*/ ctx[13].idx + "")) set_data_dev(t1, t1_value);
-    			if (dirty & /*allSlots*/ 8 && t3_value !== (t3_value = /*slot*/ ctx[13].startBlock + "")) set_data_dev(t3, t3_value);
-    			if (dirty & /*allSlots*/ 8 && t5_value !== (t5_value = /*slot*/ ctx[13].startBlock + /*leasePeriod*/ ctx[5] + "")) set_data_dev(t5, t5_value);
-    			if (dirty & /*allSlots, $lastBlockNum, $lastBlockTime*/ 28 && t7_value !== (t7_value = getDateFromBlockNum(/*slot*/ ctx[13].startBlock, /*$lastBlockNum*/ ctx[2], /*$lastBlockTime*/ ctx[4]) + "")) set_data_dev(t7, t7_value);
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*allSlots*/ 8 && t1_value !== (t1_value = /*slot*/ ctx[14].idx + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*allSlots*/ 8 && t3_value !== (t3_value = /*slot*/ ctx[14].startBlock + "")) set_data_dev(t3, t3_value);
+    			if (dirty & /*allSlots*/ 8 && t5_value !== (t5_value = /*slot*/ ctx[14].startBlock + /*leasePeriod*/ ctx[5] + "")) set_data_dev(t5, t5_value);
+    			if (dirty & /*allSlots, $lastBlockNum, $lastBlockTime*/ 26 && t7_value !== (t7_value = getDateFromBlockNum(/*slot*/ ctx[14].startBlock, /*$lastBlockNum*/ ctx[1], /*$lastBlockTime*/ ctx[4]) + "")) set_data_dev(t7, t7_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(td);
@@ -18114,7 +18228,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block_2$1.name,
     		type: "each",
-    		source: "(37:6) {#each allSlots as slot (slot.idx)}",
+    		source: "(37:6) {#each allSlots as slot}",
     		ctx
     	});
 
@@ -18140,13 +18254,13 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div1 = element("div");
     			div0 = element("div");
     			div0.textContent = "No parachain leased yet";
-    			add_location(td0, file$4, 49, 6, 1723);
-    			add_location(div0, file$4, 52, 10, 1849);
+    			add_location(td0, file$6, 49, 6, 1891);
+    			add_location(div0, file$6, 52, 10, 2017);
     			attr_dev(div1, "class", "flex empty-content justify-center items-center svelte-dxv2mm");
-    			add_location(div1, file$4, 51, 8, 1778);
+    			add_location(div1, file$6, 51, 8, 1946);
     			attr_dev(td1, "colspan", td1_colspan_value = /*allSlots*/ ctx[3].length);
-    			add_location(td1, file$4, 50, 6, 1739);
-    			add_location(tr, file$4, 48, 4, 1712);
+    			add_location(td1, file$6, 50, 6, 1907);
+    			add_location(tr, file$6, 48, 4, 1880);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -18178,7 +18292,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     }
 
     // (68:8) {#if span > 0}
-    function create_if_block$3(ctx) {
+    function create_if_block$4(ctx) {
     	let progressbar;
     	let current;
     	progressbar = new ProgressBar({ $$inline: true });
@@ -18207,7 +18321,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(68:8) {#if span > 0}",
     		ctx
@@ -18221,14 +18335,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let td;
     	let td_colspan_value;
     	let current;
-    	let if_block = /*span*/ ctx[10] > 0 && create_if_block$3(ctx);
+    	let if_block = /*span*/ ctx[11] > 0 && create_if_block$4(ctx);
 
     	const block = {
     		c: function create() {
     			td = element("td");
     			if (if_block) if_block.c();
-    			attr_dev(td, "colspan", td_colspan_value = /*span*/ ctx[10]);
-    			add_location(td, file$4, 66, 6, 2346);
+    			attr_dev(td, "colspan", td_colspan_value = /*span*/ ctx[11]);
+    			add_location(td, file$6, 66, 6, 2560);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, td, anchor);
@@ -18236,13 +18350,13 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (/*span*/ ctx[10] > 0) {
+    			if (/*span*/ ctx[11] > 0) {
     				if (if_block) {
-    					if (dirty & /*slotIdxs, activeLeases*/ 3) {
+    					if (dirty & /*slotIdxs, activeLeases*/ 5) {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$3(ctx);
+    					if_block = create_if_block$4(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(td, null);
@@ -18257,7 +18371,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     				check_outros();
     			}
 
-    			if (!current || dirty & /*slotIdxs, activeLeases*/ 3 && td_colspan_value !== (td_colspan_value = /*span*/ ctx[10])) {
+    			if (!current || dirty & /*slotIdxs, activeLeases*/ 5 && td_colspan_value !== (td_colspan_value = /*span*/ ctx[11])) {
     				attr_dev(td, "colspan", td_colspan_value);
     			}
     		},
@@ -18287,8 +18401,8 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    // (58:4) {#each activeLeases as lease (lease.id)}
-    function create_each_block$3(key_1, ctx) {
+    // (58:4) {#each activeLeases as lease, idx (lease.id)}
+    function create_each_block$4(key_1, ctx) {
     	let tr;
     	let td;
     	let div1;
@@ -18297,12 +18411,13 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let img_alt_value;
     	let t0;
     	let div0;
-    	let t1_value = /*lease*/ ctx[7].parachain.paraId + "";
+    	let t1_value = /*lease*/ ctx[8].parachain.paraId + "";
     	let t1;
     	let t2;
     	let t3;
+    	let tr_class_value;
     	let current;
-    	let each_value_1 = getColSpan(/*slotIdxs*/ ctx[1], /*lease*/ ctx[7].slots);
+    	let each_value_1 = getColSpan(/*slotIdxs*/ ctx[0], /*lease*/ ctx[8].slots);
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -18334,17 +18449,18 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t3 = space();
     			attr_dev(img, "class", "mx-1 rounded-full");
     			if (img.src !== (img_src_value = "./ksm-logo.png")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", img_alt_value = /*lease*/ ctx[7].parachain.paraId);
+    			attr_dev(img, "alt", img_alt_value = /*lease*/ ctx[8].parachain.paraId);
     			attr_dev(img, "width", "22");
     			attr_dev(img, "height", "22");
-    			add_location(img, file$4, 61, 10, 2074);
-    			attr_dev(div0, "class", "text-gray-400 text-lg");
-    			add_location(div0, file$4, 62, 10, 2191);
+    			add_location(img, file$6, 61, 10, 2288);
+    			attr_dev(div0, "class", "text-gray-400 text-xs");
+    			add_location(div0, file$6, 62, 10, 2405);
     			attr_dev(div1, "class", "flex justify-center items-center");
-    			add_location(div1, file$4, 60, 8, 2017);
+    			add_location(div1, file$6, 60, 8, 2231);
     			attr_dev(td, "class", "py-4");
-    			add_location(td, file$4, 59, 6, 1991);
-    			add_location(tr, file$4, 58, 4, 1980);
+    			add_location(td, file$6, 59, 6, 2205);
+    			attr_dev(tr, "class", tr_class_value = /*idx*/ ctx[10] % 2 > 0 ? "bg-gray-100" : "");
+    			add_location(tr, file$6, 58, 4, 2153);
     			this.first = tr;
     		},
     		m: function mount(target, anchor) {
@@ -18367,14 +18483,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (!current || dirty & /*activeLeases*/ 1 && img_alt_value !== (img_alt_value = /*lease*/ ctx[7].parachain.paraId)) {
+    			if (!current || dirty & /*activeLeases*/ 4 && img_alt_value !== (img_alt_value = /*lease*/ ctx[8].parachain.paraId)) {
     				attr_dev(img, "alt", img_alt_value);
     			}
 
-    			if ((!current || dirty & /*activeLeases*/ 1) && t1_value !== (t1_value = /*lease*/ ctx[7].parachain.paraId + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*activeLeases*/ 4) && t1_value !== (t1_value = /*lease*/ ctx[8].parachain.paraId + "")) set_data_dev(t1, t1_value);
 
-    			if (dirty & /*getColSpan, slotIdxs, activeLeases*/ 3) {
-    				each_value_1 = getColSpan(/*slotIdxs*/ ctx[1], /*lease*/ ctx[7].slots);
+    			if (dirty & /*getColSpan, slotIdxs, activeLeases*/ 5) {
+    				each_value_1 = getColSpan(/*slotIdxs*/ ctx[0], /*lease*/ ctx[8].slots);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -18399,6 +18515,10 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     				}
 
     				check_outros();
+    			}
+
+    			if (!current || dirty & /*activeLeases*/ 4 && tr_class_value !== (tr_class_value = /*idx*/ ctx[10] % 2 > 0 ? "bg-gray-100" : "")) {
+    				attr_dev(tr, "class", tr_class_value);
     			}
     		},
     		i: function intro(local) {
@@ -18427,23 +18547,21 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$3.name,
+    		id: create_each_block$4.name,
     		type: "each",
-    		source: "(58:4) {#each activeLeases as lease (lease.id)}",
+    		source: "(58:4) {#each activeLeases as lease, idx (lease.id)}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$5(ctx) {
+    function create_fragment$7(ctx) {
     	let div;
     	let table;
     	let tr;
     	let th;
     	let t0;
-    	let each_blocks_1 = [];
-    	let each0_lookup = new Map();
     	let t1;
     	let t2;
     	let each_blocks = [];
@@ -18451,25 +18569,22 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let current;
     	let each_value_2 = /*allSlots*/ ctx[3];
     	validate_each_argument(each_value_2);
-    	const get_key = ctx => /*slot*/ ctx[13].idx;
-    	validate_each_keys(ctx, each_value_2, get_each_context_2$1, get_key);
+    	let each_blocks_1 = [];
 
     	for (let i = 0; i < each_value_2.length; i += 1) {
-    		let child_ctx = get_each_context_2$1(ctx, each_value_2, i);
-    		let key = get_key(child_ctx);
-    		each0_lookup.set(key, each_blocks_1[i] = create_each_block_2$1(key, child_ctx));
+    		each_blocks_1[i] = create_each_block_2$1(get_each_context_2$1(ctx, each_value_2, i));
     	}
 
-    	let if_block = !/*activeLeases*/ ctx[0].length && create_if_block_1$2(ctx);
-    	let each_value = /*activeLeases*/ ctx[0];
+    	let if_block = !/*activeLeases*/ ctx[2].length && create_if_block_1$2(ctx);
+    	let each_value = /*activeLeases*/ ctx[2];
     	validate_each_argument(each_value);
-    	const get_key_1 = ctx => /*lease*/ ctx[7].id;
-    	validate_each_keys(ctx, each_value, get_each_context$3, get_key_1);
+    	const get_key = ctx => /*lease*/ ctx[8].id;
+    	validate_each_keys(ctx, each_value, get_each_context$4, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$3(ctx, each_value, i);
-    		let key = get_key_1(child_ctx);
-    		each1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+    		let child_ctx = get_each_context$4(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each1_lookup.set(key, each_blocks[i] = create_each_block$4(key, child_ctx));
     	}
 
     	const block = {
@@ -18493,12 +18608,12 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			}
 
     			attr_dev(th, "class", "empty-head svelte-dxv2mm");
-    			add_location(th, file$4, 35, 6, 1221);
-    			add_location(tr, file$4, 34, 4, 1210);
+    			add_location(th, file$6, 35, 6, 1400);
+    			add_location(tr, file$6, 34, 4, 1389);
     			attr_dev(table, "class", "w-full text-center");
-    			add_location(table, file$4, 33, 2, 1171);
-    			attr_dev(div, "class", "box overflow-x-scroll p-2");
-    			add_location(div, file$4, 32, 0, 1129);
+    			add_location(table, file$6, 33, 2, 1350);
+    			attr_dev(div, "class", "box overflow-x-scroll py-2");
+    			add_location(div, file$6, 32, 0, 1307);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -18525,14 +18640,31 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*getDateFromBlockNum, allSlots, $lastBlockNum, $lastBlockTime, leasePeriod*/ 60) {
+    			if (dirty & /*getDateFromBlockNum, allSlots, $lastBlockNum, $lastBlockTime, leasePeriod*/ 58) {
     				each_value_2 = /*allSlots*/ ctx[3];
     				validate_each_argument(each_value_2);
-    				validate_each_keys(ctx, each_value_2, get_each_context_2$1, get_key);
-    				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_2, each0_lookup, tr, destroy_block, create_each_block_2$1, null, get_each_context_2$1);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2$1(ctx, each_value_2, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks_1[i] = create_each_block_2$1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(tr, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_2.length;
     			}
 
-    			if (!/*activeLeases*/ ctx[0].length) {
+    			if (!/*activeLeases*/ ctx[2].length) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -18545,12 +18677,12 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     				if_block = null;
     			}
 
-    			if (dirty & /*getColSpan, slotIdxs, activeLeases*/ 3) {
-    				each_value = /*activeLeases*/ ctx[0];
+    			if (dirty & /*activeLeases, getColSpan, slotIdxs*/ 5) {
+    				each_value = /*activeLeases*/ ctx[2];
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$3, get_key_1);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key_1, 1, ctx, each_value, each1_lookup, table, outro_and_destroy_block, create_each_block$3, null, get_each_context$3);
+    				validate_each_keys(ctx, each_value, get_each_context$4, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each1_lookup, table, outro_and_destroy_block, create_each_block$4, null, get_each_context$4);
     				check_outros();
     			}
     		},
@@ -18572,11 +18704,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].d();
-    			}
-
+    			destroy_each(each_blocks_1, detaching);
     			if (if_block) if_block.d();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -18587,7 +18715,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$5.name,
+    		id: create_fragment$7.name,
     		type: "component",
     		source: "",
     		ctx
@@ -18596,17 +18724,17 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$7($$self, $$props, $$invalidate) {
     	let $lastBlockNum;
     	let $lastBlockTime;
     	validate_store(lastBlockNum, "lastBlockNum");
-    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(2, $lastBlockNum = $$value));
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(1, $lastBlockNum = $$value));
     	validate_store(lastBlockTime, "lastBlockTime");
     	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(4, $lastBlockTime = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SlotLeaseChart", slots, []);
     	let { leases } = $$props;
-    	const { leasePeriod } = config;
+    	const { leasePeriod, leasesPerSlot } = config;
     	let activeLeases, slotIdxs, allSlots;
     	const writable_props = ["leases"];
 
@@ -18620,6 +18748,8 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	$$self.$capture_state = () => ({
     		range,
+    		minBy,
+    		maxBy,
     		config,
     		ProgressBar,
     		lastBlockNum,
@@ -18628,6 +18758,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		getColSpan,
     		leases,
     		leasePeriod,
+    		leasesPerSlot,
     		activeLeases,
     		slotIdxs,
     		allSlots,
@@ -18637,8 +18768,8 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	$$self.$inject_state = $$props => {
     		if ("leases" in $$props) $$invalidate(6, leases = $$props.leases);
-    		if ("activeLeases" in $$props) $$invalidate(0, activeLeases = $$props.activeLeases);
-    		if ("slotIdxs" in $$props) $$invalidate(1, slotIdxs = $$props.slotIdxs);
+    		if ("activeLeases" in $$props) $$invalidate(2, activeLeases = $$props.activeLeases);
+    		if ("slotIdxs" in $$props) $$invalidate(0, slotIdxs = $$props.slotIdxs);
     		if ("allSlots" in $$props) $$invalidate(3, allSlots = $$props.allSlots);
     	};
 
@@ -18647,28 +18778,25 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$lastBlockNum, leases, activeLeases, slotIdxs*/ 71) {
+    		if ($$self.$$.dirty & /*leases, $lastBlockNum, slotIdxs*/ 67) {
     			{
-    				const defaultSlotEnd = Math.floor($lastBlockNum / leasePeriod);
-    				const defaultSlotStart = Math.max(defaultSlotEnd - 4, 0);
-
-    				$$invalidate(0, activeLeases = leases.filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum).map(({ firstSlot, lastSlot, ...rest }) => ({
-    					slots: range(firstSlot, lastSlot + 1),
+    				$$invalidate(2, activeLeases = leases.// .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
+    				map(({ firstSlot, lastSlot, ...rest }) => ({
+    					slots: range(firstSlot, lastSlot),
     					firstSlot,
     					lastSlot,
     					...rest
     				})));
 
-    				const [first, last] = activeLeases.reduce(
-    					([earliest, lastest], { firstSlot, lastSlot }) => {
-    						const first = Math.min(earliest, firstSlot);
-    						const last = Math.max(lastest, lastSlot);
-    						return [first, last];
-    					},
-    					[defaultSlotStart, defaultSlotEnd]
-    				);
+    				const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
+    				const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
+    				const leaseSlotStart = minBy(leases, "firstSlot")?.firstSlot;
+    				const leaseSlotEnd = maxBy(leases, "lastSlot")?.lastSlot;
+    				const slotStart = Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
+    				const slotEnd = Math.max(leaseSlotEnd || defaultSlotEnd, defaultSlotEnd);
 
-    				$$invalidate(1, slotIdxs = range(first, last + 1));
+    				// console.log({ leaseSlotStart, leaseSlotEnd, defaultSlotStart, defaultSlotEnd, slotStart, slotEnd });
+    				$$invalidate(0, slotIdxs = range(slotStart, slotEnd + 1));
 
     				$$invalidate(3, allSlots = slotIdxs.map(slotIdx => ({
     					idx: slotIdx,
@@ -18679,9 +18807,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	};
 
     	return [
-    		activeLeases,
     		slotIdxs,
     		$lastBlockNum,
+    		activeLeases,
     		allSlots,
     		$lastBlockTime,
     		leasePeriod,
@@ -18692,13 +18820,13 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     class SlotLeaseChart extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { leases: 6 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { leases: 6 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SlotLeaseChart",
     			options,
-    			id: create_fragment$5.name
+    			id: create_fragment$7.name
     		});
 
     		const { ctx } = this.$$;
@@ -18718,7 +18846,510 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	}
     }
 
-    const { Object: Object_1 } = globals;
+    const file$5 = "src/ChevronIcon.svelte";
+
+    function create_fragment$6(ctx) {
+    	let svg;
+    	let polyline;
+
+    	const block = {
+    		c: function create() {
+    			svg = svg_element("svg");
+    			polyline = svg_element("polyline");
+    			attr_dev(polyline, "points", "9 18 15 12 9 6");
+    			add_location(polyline, file$5, 10, 57, 258);
+    			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
+    			attr_dev(svg, "width", "24");
+    			attr_dev(svg, "height", "24");
+    			attr_dev(svg, "viewBox", "0 0 24 24");
+    			attr_dev(svg, "fill", "none");
+    			attr_dev(svg, "stroke", "currentColor");
+    			attr_dev(svg, "stroke-width", "1.5");
+    			attr_dev(svg, "stroke-linecap", "round");
+    			attr_dev(svg, "stroke-linejoin", "round");
+    			attr_dev(svg, "class", "feather feather-chevron-right breadcrumb__icon");
+    			add_location(svg, file$5, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, svg, anchor);
+    			append_dev(svg, polyline);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(svg);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$6($$self, $$props) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("ChevronIcon", slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ChevronIcon> was created with unknown prop '${key}'`);
+    	});
+
+    	return [];
+    }
+
+    class ChevronIcon extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "ChevronIcon",
+    			options,
+    			id: create_fragment$6.name
+    		});
+    	}
+    }
+
+    const { console: console_1$1 } = globals;
+    const file$4 = "src/Breadcrumb.svelte";
+
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[3] = list[i];
+    	return child_ctx;
+    }
+
+    // (17:6) {:else}
+    function create_else_block$3(ctx) {
+    	let span;
+    	let t_value = /*link*/ ctx[3].title + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t = text(t_value);
+    			add_location(span, file$4, 17, 8, 392);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*links*/ 1 && t_value !== (t_value = /*link*/ ctx[3].title + "")) set_data_dev(t, t_value);
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$3.name,
+    		type: "else",
+    		source: "(17:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (15:6) {#if link.path}
+    function create_if_block$3(ctx) {
+    	let link;
+    	let chevronicon;
+    	let current;
+
+    	link = new Link({
+    			props: {
+    				to: /*link*/ ctx[3].path,
+    				$$slots: { default: [create_default_slot$2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	chevronicon = new ChevronIcon({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(link.$$.fragment);
+    			create_component(chevronicon.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(link, target, anchor);
+    			mount_component(chevronicon, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const link_changes = {};
+    			if (dirty & /*links*/ 1) link_changes.to = /*link*/ ctx[3].path;
+
+    			if (dirty & /*$$scope, links*/ 65) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(link.$$.fragment, local);
+    			transition_in(chevronicon.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(link.$$.fragment, local);
+    			transition_out(chevronicon.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(link, detaching);
+    			destroy_component(chevronicon, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$3.name,
+    		type: "if",
+    		source: "(15:6) {#if link.path}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (16:8) <Link to={link.path}>
+    function create_default_slot$2(ctx) {
+    	let t_value = /*link*/ ctx[3].title + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*links*/ 1 && t_value !== (t_value = /*link*/ ctx[3].title + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$2.name,
+    		type: "slot",
+    		source: "(16:8) <Link to={link.path}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (14:4) {#each links as link}
+    function create_each_block$3(ctx) {
+    	let current_block_type_index;
+    	let if_block;
+    	let if_block_anchor;
+    	let current;
+    	const if_block_creators = [create_if_block$3, create_else_block$3];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*link*/ ctx[3].path) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$3.name,
+    		type: "each",
+    		source: "(14:4) {#each links as link}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$5(ctx) {
+    	let div3;
+    	let div0;
+    	let t0;
+    	let div2;
+    	let t1;
+    	let t2;
+    	let div1;
+    	let t3;
+    	let t4;
+    	let current;
+    	let each_value = /*links*/ ctx[0];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div0 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t0 = space();
+    			div2 = element("div");
+    			t1 = text(/*$timeStr*/ ctx[1]);
+    			t2 = space();
+    			div1 = element("div");
+    			t3 = text("Block: ");
+    			t4 = text(/*$lastBlockNum*/ ctx[2]);
+    			add_location(div0, file$4, 12, 2, 252);
+    			attr_dev(div1, "class", "text-gray-400 text-xs");
+    			add_location(div1, file$4, 23, 4, 504);
+    			attr_dev(div2, "class", "text-right flex-1");
+    			add_location(div2, file$4, 21, 2, 453);
+    			attr_dev(div3, "class", "top-bar");
+    			add_location(div3, file$4, 11, 0, 228);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div0);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div0, null);
+    			}
+
+    			append_dev(div3, t0);
+    			append_dev(div3, div2);
+    			append_dev(div2, t1);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div1, t3);
+    			append_dev(div1, t4);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*links*/ 1) {
+    				each_value = /*links*/ ctx[0];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$3(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block$3(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(div0, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+
+    			if (!current || dirty & /*$timeStr*/ 2) set_data_dev(t1, /*$timeStr*/ ctx[1]);
+    			if (!current || dirty & /*$lastBlockNum*/ 4) set_data_dev(t4, /*$lastBlockNum*/ ctx[2]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	let $timeStr;
+    	let $lastBlockNum;
+    	validate_store(timeStr, "timeStr");
+    	component_subscribe($$self, timeStr, $$value => $$invalidate(1, $timeStr = $$value));
+    	validate_store(lastBlockNum, "lastBlockNum");
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(2, $lastBlockNum = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Breadcrumb", slots, []);
+    	let { links = [] } = $$props;
+    	const writable_props = ["links"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<Breadcrumb> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("links" in $$props) $$invalidate(0, links = $$props.links);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Link,
+    		ChevronIcon,
+    		timeStr,
+    		lastBlockNum,
+    		links,
+    		$timeStr,
+    		$lastBlockNum
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("links" in $$props) $$invalidate(0, links = $$props.links);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*links*/ 1) {
+    			{
+    				console.log(links);
+    			}
+    		}
+    	};
+
+    	return [links, $timeStr, $lastBlockNum];
+    }
+
+    class Breadcrumb extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { links: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Breadcrumb",
+    			options,
+    			id: create_fragment$5.name
+    		});
+    	}
+
+    	get links() {
+    		throw new Error("<Breadcrumb>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set links(value) {
+    		throw new Error("<Breadcrumb>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    const { Object: Object_1, console: console_1 } = globals;
     const file$3 = "src/AuctionPage.svelte";
 
     function get_each_context$2(ctx, list, i) {
@@ -18740,7 +19371,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return child_ctx;
     }
 
-    // (91:2) {:else}
+    // (78:2) {:else}
     function create_else_block$2(ctx) {
     	let div;
     	let slotleasechart;
@@ -18763,7 +19394,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(div, "class", "box mt-4");
-    			add_location(div, file$3, 91, 2, 3008);
+    			add_location(div, file$3, 78, 2, 2635);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -18825,14 +19456,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(91:2) {:else}",
+    		source: "(78:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (89:0) {#if $activeAuctions.fetching && !chronicle}
+    // (76:2) {#if $activeAuctions.fetching && !chronicle}
     function create_if_block$2(ctx) {
     	let loading;
     	let current;
@@ -18865,14 +19496,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(89:0) {#if $activeAuctions.fetching && !chronicle}",
+    		source: "(76:2) {#if $activeAuctions.fetching && !chronicle}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (95:2) {#if $curAuction}
+    // (82:2) {#if $curAuction}
     function create_if_block_1$1(ctx) {
     	let div20;
     	let div12;
@@ -18902,7 +19533,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let div7;
     	let t13;
     	let div8;
-    	let t14_value = /*$chronicle*/ ctx[6]?.curBlockNum + "";
+    	let t14_value = /*$chronicle*/ ctx[5]?.curBlockNum + "";
     	let t14;
     	let t15;
     	let auctionprogressindicator;
@@ -18925,7 +19556,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			props: {
     				closingStart: /*$curAuction*/ ctx[1]?.closingStart,
     				closingEnd: /*$curAuction*/ ctx[1]?.closingEnd,
-    				curBlockNum: /*$chronicle*/ ctx[6]?.curBlockNum,
+    				curBlockNum: /*$chronicle*/ ctx[5]?.curBlockNum,
     				auctionStart: /*$curAuction*/ ctx[1]?.blockNum
     			},
     			$$inline: true
@@ -19015,50 +19646,50 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			}
 
     			attr_dev(h2, "class", "text-lg font-medium mr-5");
-    			add_location(h2, file$3, 98, 8, 3267);
+    			add_location(h2, file$3, 85, 8, 2894);
     			attr_dev(div0, "class", "block sm:flex items-center h-10");
-    			add_location(div0, file$3, 97, 6, 3213);
+    			add_location(div0, file$3, 84, 6, 2840);
     			attr_dev(div1, "class", "mt-1 text-gray-600 dark:text-gray-600 text-center");
-    			add_location(div1, file$3, 104, 12, 3501);
+    			add_location(div1, file$3, 91, 12, 3128);
     			attr_dev(div2, "class", "text-3xl font-bold mt-4 text-center");
-    			add_location(div2, file$3, 105, 12, 3596);
+    			add_location(div2, file$3, 92, 12, 3223);
     			attr_dev(div3, "class", "justify-center");
-    			add_location(div3, file$3, 103, 10, 3460);
+    			add_location(div3, file$3, 90, 10, 3087);
     			attr_dev(div4, "class", "mt-1 text-gray-600 dark:text-gray-600 text-center");
-    			add_location(div4, file$3, 108, 12, 3743);
+    			add_location(div4, file$3, 95, 12, 3370);
     			attr_dev(div5, "class", "text-3xl font-bold mt-4 text-center");
-    			add_location(div5, file$3, 109, 12, 3838);
+    			add_location(div5, file$3, 96, 12, 3465);
     			attr_dev(div6, "class", "justify-center");
-    			add_location(div6, file$3, 107, 10, 3702);
+    			add_location(div6, file$3, 94, 10, 3329);
     			attr_dev(div7, "class", "mt-1 text-gray-600 dark:text-gray-600 text-center");
-    			add_location(div7, file$3, 112, 12, 4025);
+    			add_location(div7, file$3, 99, 12, 3652);
     			attr_dev(div8, "class", "text-3xl font-bold mt-4 text-center");
-    			add_location(div8, file$3, 113, 12, 4120);
+    			add_location(div8, file$3, 100, 12, 3747);
     			attr_dev(div9, "class", "justify-center");
-    			add_location(div9, file$3, 111, 10, 3984);
+    			add_location(div9, file$3, 98, 10, 3611);
     			attr_dev(div10, "class", "box grid grid-cols-5 gap-4 divide-x divide-gray-200 p-4");
-    			add_location(div10, file$3, 102, 8, 3380);
+    			add_location(div10, file$3, 89, 8, 3007);
     			attr_dev(div11, "class", "mt-4 sm:mt-1");
-    			add_location(div11, file$3, 101, 6, 3345);
+    			add_location(div11, file$3, 88, 6, 2972);
     			attr_dev(div12, "class", "col-span-12 lg:col-span-12 xl:col-span-12 mt-2");
-    			add_location(div12, file$3, 96, 4, 3146);
-    			add_location(p0, file$3, 121, 8, 4554);
+    			add_location(div12, file$3, 83, 4, 2773);
+    			add_location(p0, file$3, 108, 8, 4181);
     			attr_dev(div13, "class", "py-2 text-lg");
-    			add_location(div13, file$3, 120, 6, 4519);
+    			add_location(div13, file$3, 107, 6, 4146);
     			attr_dev(div14, "class", "");
-    			add_location(div14, file$3, 124, 8, 4617);
+    			add_location(div14, file$3, 111, 8, 4244);
     			attr_dev(div15, "class", "");
-    			add_location(div15, file$3, 123, 6, 4594);
+    			add_location(div15, file$3, 110, 6, 4221);
     			attr_dev(div16, "class", "col-span-8 m:col-span-12 s:col-span-12 my-4");
-    			add_location(div16, file$3, 119, 4, 4455);
-    			add_location(p1, file$3, 142, 8, 5188);
+    			add_location(div16, file$3, 106, 4, 4082);
+    			add_location(p1, file$3, 129, 8, 4815);
     			attr_dev(div17, "class", "py-2 text-lg");
-    			add_location(div17, file$3, 141, 6, 5153);
-    			add_location(div18, file$3, 144, 6, 5224);
+    			add_location(div17, file$3, 128, 6, 4780);
+    			add_location(div18, file$3, 131, 6, 4851);
     			attr_dev(div19, "class", "col-span-4 m:col-span-12 s:col-span-12 mt-4");
-    			add_location(div19, file$3, 140, 4, 5089);
+    			add_location(div19, file$3, 127, 4, 4716);
     			attr_dev(div20, "class", "grid grid-cols-12 gap-6");
-    			add_location(div20, file$3, 95, 2, 3104);
+    			add_location(div20, file$3, 82, 2, 2731);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div20, anchor);
@@ -19118,11 +19749,11 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			if ((!current || dirty & /*$curAuction*/ 2) && t4_value !== (t4_value = (/*$curAuction*/ ctx[1]?.id || "") + "")) set_data_dev(t4, t4_value);
     			if ((!current || dirty & /*$curAuction*/ 2) && t8_value !== (t8_value = (/*$curAuction*/ ctx[1]?.slotsStart || "") + "")) set_data_dev(t8, t8_value);
     			if ((!current || dirty & /*$curAuction*/ 2) && t10_value !== (t10_value = (/*$curAuction*/ ctx[1]?.slotsEnd || "") + "")) set_data_dev(t10, t10_value);
-    			if ((!current || dirty & /*$chronicle*/ 64) && t14_value !== (t14_value = /*$chronicle*/ ctx[6]?.curBlockNum + "")) set_data_dev(t14, t14_value);
+    			if ((!current || dirty & /*$chronicle*/ 32) && t14_value !== (t14_value = /*$chronicle*/ ctx[5]?.curBlockNum + "")) set_data_dev(t14, t14_value);
     			const auctionprogressindicator_changes = {};
     			if (dirty & /*$curAuction*/ 2) auctionprogressindicator_changes.closingStart = /*$curAuction*/ ctx[1]?.closingStart;
     			if (dirty & /*$curAuction*/ 2) auctionprogressindicator_changes.closingEnd = /*$curAuction*/ ctx[1]?.closingEnd;
-    			if (dirty & /*$chronicle*/ 64) auctionprogressindicator_changes.curBlockNum = /*$chronicle*/ ctx[6]?.curBlockNum;
+    			if (dirty & /*$chronicle*/ 32) auctionprogressindicator_changes.curBlockNum = /*$chronicle*/ ctx[5]?.curBlockNum;
     			if (dirty & /*$curAuction*/ 2) auctionprogressindicator_changes.auctionStart = /*$curAuction*/ ctx[1]?.blockNum;
     			auctionprogressindicator.$set(auctionprogressindicator_changes);
 
@@ -19224,14 +19855,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(95:2) {#if $curAuction}",
+    		source: "(82:2) {#if $curAuction}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (132:14) {#each slots as slot }
+    // (119:14) {#each slots as slot }
     function create_each_block_2(ctx) {
     	let auctionslot;
     	let current;
@@ -19277,14 +19908,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(132:14) {#each slots as slot }",
+    		source: "(119:14) {#each slots as slot }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (126:8) {#each groupedSlots as slots, groupIdx}
+    // (113:8) {#each groupedSlots as slots, groupIdx}
     function create_each_block_1(ctx) {
     	let div2;
     	let div0;
@@ -19323,13 +19954,13 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			}
 
     			t3 = space();
-    			add_location(p, file$3, 128, 14, 4773);
+    			add_location(p, file$3, 115, 14, 4400);
     			attr_dev(div0, "class", "pl-4 text-base");
-    			add_location(div0, file$3, 127, 12, 4730);
+    			add_location(div0, file$3, 114, 12, 4357);
     			attr_dev(div1, "class", "grid grid-cols-12 gap-6 gap-y-8 p-4");
-    			add_location(div1, file$3, 130, 12, 4832);
+    			add_location(div1, file$3, 117, 12, 4459);
     			attr_dev(div2, "class", "box mb-6 py-4");
-    			add_location(div2, file$3, 126, 10, 4690);
+    			add_location(div2, file$3, 113, 10, 4317);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -19406,14 +20037,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(126:8) {#each groupedSlots as slots, groupIdx}",
+    		source: "(113:8) {#each groupedSlots as slots, groupIdx}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (146:8) {#each latestBids as bid}
+    // (133:8) {#each latestBids as bid}
     function create_each_block$2(ctx) {
     	let bidcard;
     	let current;
@@ -19459,7 +20090,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(146:8) {#each latestBids as bid}",
+    		source: "(133:8) {#each latestBids as bid}",
     		ctx
     	});
 
@@ -19467,21 +20098,20 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     }
 
     function create_fragment$4(ctx) {
-    	let div3;
-    	let div2;
-    	let div0;
-    	let t0;
-    	let svg;
-    	let polyline;
-    	let t1;
-    	let a;
-    	let t3;
-    	let div1;
-    	let t4;
-    	let t5;
+    	let div;
+    	let breadcrumb;
+    	let t;
     	let current_block_type_index;
     	let if_block;
     	let current;
+
+    	breadcrumb = new Breadcrumb({
+    			props: {
+    				links: [{ title: "Parachain", path: "/" }, { title: "Auction" }]
+    			},
+    			$$inline: true
+    		});
+
     	const if_block_creators = [create_if_block$2, create_else_block$2];
     	const if_blocks = [];
 
@@ -19495,65 +20125,24 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
-    			div2 = element("div");
-    			div0 = element("div");
-    			t0 = text("Parachain ");
-    			svg = svg_element("svg");
-    			polyline = svg_element("polyline");
-    			t1 = space();
-    			a = element("a");
-    			a.textContent = "Auction";
-    			t3 = space();
-    			div1 = element("div");
-    			t4 = text(/*$timeStr*/ ctx[5]);
-    			t5 = space();
+    			div = element("div");
+    			create_component(breadcrumb.$$.fragment);
+    			t = space();
     			if_block.c();
-    			attr_dev(polyline, "points", "9 18 15 12 9 6");
-    			add_location(polyline, file$3, 81, 63, 2751);
-    			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(svg, "width", "24");
-    			attr_dev(svg, "height", "24");
-    			attr_dev(svg, "viewBox", "0 0 24 24");
-    			attr_dev(svg, "fill", "none");
-    			attr_dev(svg, "stroke", "currentColor");
-    			attr_dev(svg, "stroke-width", "1.5");
-    			attr_dev(svg, "stroke-linecap", "round");
-    			attr_dev(svg, "stroke-linejoin", "round");
-    			attr_dev(svg, "class", "feather feather-chevron-right breadcrumb__icon");
-    			add_location(svg, file$3, 71, 16, 2433);
-    			attr_dev(a, "href", "/");
-    			attr_dev(a, "class", "breadcrumb--active");
-    			add_location(a, file$3, 82, 8, 2801);
-    			add_location(div0, file$3, 70, 4, 2411);
-    			attr_dev(div1, "class", "text-right flex-1");
-    			add_location(div1, file$3, 84, 4, 2867);
-    			attr_dev(div2, "class", "top-bar");
-    			add_location(div2, file$3, 69, 2, 2385);
-    			attr_dev(div3, "class", "content");
-    			add_location(div3, file$3, 68, 0, 2361);
+    			attr_dev(div, "class", "content");
+    			add_location(div, file$3, 73, 0, 2459);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div2);
-    			append_dev(div2, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, svg);
-    			append_dev(svg, polyline);
-    			append_dev(div0, t1);
-    			append_dev(div0, a);
-    			append_dev(div2, t3);
-    			append_dev(div2, div1);
-    			append_dev(div1, t4);
-    			append_dev(div3, t5);
-    			if_blocks[current_block_type_index].m(div3, null);
+    			insert_dev(target, div, anchor);
+    			mount_component(breadcrumb, div, null);
+    			append_dev(div, t);
+    			if_blocks[current_block_type_index].m(div, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*$timeStr*/ 32) set_data_dev(t4, /*$timeStr*/ ctx[5]);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
 
@@ -19577,20 +20166,23 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     				}
 
     				transition_in(if_block, 1);
-    				if_block.m(div3, null);
+    				if_block.m(div, null);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(breadcrumb.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(breadcrumb.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div);
+    			destroy_component(breadcrumb);
     			if_blocks[current_block_type_index].d();
     		}
     	};
@@ -19613,17 +20205,16 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let latestBids;
     	let $activeAuctions;
     	let $curAuction;
-    	let $timeStr;
     	let $chronicle;
     	validate_store(curAuction, "curAuction");
     	component_subscribe($$self, curAuction, $$value => $$invalidate(1, $curAuction = $$value));
-    	validate_store(timeStr, "timeStr");
-    	component_subscribe($$self, timeStr, $$value => $$invalidate(5, $timeStr = $$value));
     	validate_store(chronicle, "chronicle");
-    	component_subscribe($$self, chronicle, $$value => $$invalidate(6, $chronicle = $$value));
+    	component_subscribe($$self, chronicle, $$value => $$invalidate(5, $chronicle = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("AuctionPage", slots, []);
     	let timer = 0;
+    	let { location } = $$props;
+    	console.log(location);
     	let slotLeases = [];
 
     	const activeAuction = {
@@ -19660,11 +20251,15 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		};
     	});
 
-    	const writable_props = [];
+    	const writable_props = ["location"];
 
     	Object_1.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<AuctionPage> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<AuctionPage> was created with unknown prop '${key}'`);
     	});
+
+    	$$self.$$set = $$props => {
+    		if ("location" in $$props) $$invalidate(7, location = $$props.location);
+    	};
 
     	$$self.$capture_state = () => ({
     		operationStore,
@@ -19683,7 +20278,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		onMount,
     		Loading,
     		SlotLeaseChart,
+    		Breadcrumb,
     		timer,
+    		location,
     		slotLeases,
     		activeAuction,
     		activeAuctions,
@@ -19693,12 +20290,12 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		slotsWithWiningBid,
     		groupedSlots,
     		latestBids,
-    		$timeStr,
     		$chronicle
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("timer" in $$props) timer = $$props.timer;
+    		if ("location" in $$props) $$invalidate(7, location = $$props.location);
     		if ("slotLeases" in $$props) $$invalidate(2, slotLeases = $$props.slotLeases);
     		if ("slotsCombination" in $$props) $$invalidate(8, slotsCombination = $$props.slotsCombination);
     		if ("slotsWithWiningBid" in $$props) $$invalidate(9, slotsWithWiningBid = $$props.slotsWithWiningBid);
@@ -19773,9 +20370,9 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		slotLeases,
     		groupedSlots,
     		latestBids,
-    		$timeStr,
     		$chronicle,
     		activeAuctions,
+    		location,
     		slotsCombination,
     		slotsWithWiningBid
     	];
@@ -19784,7 +20381,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     class AuctionPage extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { location: 7 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -19792,6 +20389,21 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			options,
     			id: create_fragment$4.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*location*/ ctx[7] === undefined && !("location" in props)) {
+    			console_1.warn("<AuctionPage> was created without expected prop 'location'");
+    		}
+    	}
+
+    	get location() {
+    		throw new Error("<AuctionPage>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set location(value) {
+    		throw new Error("<AuctionPage>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -19799,11 +20411,11 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[6] = list[i];
+    	child_ctx[5] = list[i];
     	return child_ctx;
     }
 
-    // (39:2) {:else}
+    // (21:2) {:else}
     function create_else_block$1(ctx) {
     	let div;
     	let table;
@@ -19831,7 +20443,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let current;
     	let each_value = /*crowdloans*/ ctx[1];
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*crowdloan*/ ctx[6].id;
+    	const get_key = ctx => /*crowdloan*/ ctx[5].id;
     	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -19877,28 +20489,28 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			}
 
     			attr_dev(th0, "class", "whitespace-nowrap");
-    			add_location(th0, file$2, 43, 10, 1287);
+    			add_location(th0, file$2, 25, 10, 850);
     			attr_dev(th1, "class", "whitespace-nowrap");
-    			add_location(th1, file$2, 44, 10, 1342);
+    			add_location(th1, file$2, 26, 10, 905);
     			attr_dev(th2, "class", "text-center whitespace-nowrap");
-    			add_location(th2, file$2, 45, 10, 1395);
+    			add_location(th2, file$2, 27, 10, 958);
     			attr_dev(th3, "class", "text-center whitespace-nowrap");
-    			add_location(th3, file$2, 46, 10, 1463);
+    			add_location(th3, file$2, 28, 10, 1026);
     			attr_dev(th4, "class", "text-right whitespace-nowrap");
-    			add_location(th4, file$2, 47, 10, 1530);
+    			add_location(th4, file$2, 29, 10, 1093);
     			attr_dev(th5, "class", "text-right whitespace-nowrap");
-    			add_location(th5, file$2, 48, 10, 1599);
+    			add_location(th5, file$2, 30, 10, 1162);
     			attr_dev(th6, "class", "text-center whitespace-nowrap");
-    			add_location(th6, file$2, 49, 10, 1660);
+    			add_location(th6, file$2, 31, 10, 1223);
     			attr_dev(th7, "class", "text-center whitespace-nowrap");
-    			add_location(th7, file$2, 50, 10, 1724);
-    			add_location(tr, file$2, 42, 8, 1272);
-    			add_location(thead, file$2, 41, 6, 1256);
-    			add_location(tbody, file$2, 53, 6, 1819);
+    			add_location(th7, file$2, 32, 10, 1287);
+    			add_location(tr, file$2, 24, 8, 835);
+    			add_location(thead, file$2, 23, 6, 819);
+    			add_location(tbody, file$2, 35, 6, 1382);
     			attr_dev(table, "class", "table table-report -mt-2");
-    			add_location(table, file$2, 40, 4, 1209);
+    			add_location(table, file$2, 22, 4, 772);
     			attr_dev(div, "class", "mt-6");
-    			add_location(div, file$2, 39, 2, 1186);
+    			add_location(div, file$2, 21, 2, 749);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -19930,7 +20542,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*crowdloans, getDateFromBlockNum, $lastBlockNum, $lastBlockTime*/ 26) {
+    			if (dirty & /*crowdloans, getDateFromBlockNum, $lastBlockNum, $lastBlockTime*/ 14) {
     				each_value = /*crowdloans*/ ctx[1];
     				validate_each_argument(each_value);
     				group_outros();
@@ -19968,14 +20580,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(39:2) {:else}",
+    		source: "(21:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (37:2) {#if $crowdloanOps.fetching }
+    // (19:2) {#if $crowdloanOps.fetching }
     function create_if_block$1(ctx) {
     	let loading;
     	let current;
@@ -20008,15 +20620,15 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(37:2) {#if $crowdloanOps.fetching }",
+    		source: "(19:2) {#if $crowdloanOps.fetching }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (80:14) <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">
-    function create_default_slot$2(ctx) {
+    // (62:14) <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">
+    function create_default_slot$1(ctx) {
     	let t;
 
     	const block = {
@@ -20033,16 +20645,16 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$2.name,
+    		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(80:14) <Link to=\\\"/crowdloan/{crowdloan.id}\\\" class=\\\"btn text-sm\\\">",
+    		source: "(62:14) <Link to=\\\"/crowdloan/{crowdloan.id}\\\" class=\\\"btn text-sm\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (55:8) {#each crowdloans as crowdloan (crowdloan.id) }
+    // (37:8) {#each crowdloans as crowdloan (crowdloan.id) }
     function create_each_block$1(key_1, ctx) {
     	let tr;
     	let td0;
@@ -20050,23 +20662,23 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let div0;
     	let t0;
     	let div1;
-    	let t1_value = /*crowdloan*/ ctx[6].parachain.paraId + "";
+    	let t1_value = /*crowdloan*/ ctx[5].parachain.paraId + "";
     	let t1;
     	let t2;
     	let td1;
     	let div3;
-    	let t3_value = /*crowdloan*/ ctx[6].depositor + "";
+    	let t3_value = /*crowdloan*/ ctx[5].depositor + "";
     	let t3;
     	let div3_title_value;
     	let t4;
     	let td2;
     	let div4;
-    	let t5_value = /*crowdloan*/ ctx[6].firstSlot + "";
+    	let t5_value = /*crowdloan*/ ctx[5].firstSlot + "";
     	let t5;
     	let t6;
     	let td3;
     	let div5;
-    	let t7_value = /*crowdloan*/ ctx[6].lastSlot + "";
+    	let t7_value = /*crowdloan*/ ctx[5].lastSlot + "";
     	let t7;
     	let t8;
     	let td4;
@@ -20076,22 +20688,22 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let token1;
     	let t10;
     	let div7;
-    	let t11_value = (/*crowdloan*/ ctx[6].raised / /*crowdloan*/ ctx[6].cap * 100).toFixed(2) + "";
+    	let t11_value = (/*crowdloan*/ ctx[5].raised / /*crowdloan*/ ctx[5].cap * 100).toFixed(2) + "";
     	let t11;
     	let t12;
     	let t13;
     	let td5;
     	let div8;
-    	let t14_value = /*crowdloan*/ ctx[6].lockExpiredBlock + "";
+    	let t14_value = /*crowdloan*/ ctx[5].lockExpiredBlock + "";
     	let t14;
     	let t15;
     	let div9;
-    	let t16_value = getDateFromBlockNum(/*crowdloan*/ ctx[6].lockExpiredBlock, /*$lastBlockNum*/ ctx[3], /*$lastBlockTime*/ ctx[4]) + "";
+    	let t16_value = getDateFromBlockNum(/*crowdloan*/ ctx[5].lockExpiredBlock, /*$lastBlockNum*/ ctx[2], /*$lastBlockTime*/ ctx[3]) + "";
     	let t16;
     	let t17;
     	let td6;
     	let div10;
-    	let t18_value = (/*crowdloan*/ ctx[6].retiring ? "Retired" : "Active") + "";
+    	let t18_value = (/*crowdloan*/ ctx[5].retiring ? "Retired" : "Active") + "";
     	let t18;
     	let t19;
     	let td7;
@@ -20101,7 +20713,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	token0 = new Token({
     			props: {
-    				value: /*crowdloan*/ ctx[6].raised,
+    				value: /*crowdloan*/ ctx[5].raised,
     				allowZero: true,
     				addSymbol: false
     			},
@@ -20111,16 +20723,16 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	token1 = new Token({
     			props: {
     				allowZero: true,
-    				value: /*crowdloan*/ ctx[6].cap
+    				value: /*crowdloan*/ ctx[5].cap
     			},
     			$$inline: true
     		});
 
     	link = new Link({
     			props: {
-    				to: "/crowdloan/" + /*crowdloan*/ ctx[6].id,
+    				to: "/crowdloan/" + /*crowdloan*/ ctx[5].id,
     				class: "btn text-sm",
-    				$$slots: { default: [create_default_slot$2] },
+    				$$slots: { default: [create_default_slot$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -20174,42 +20786,42 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			td7 = element("td");
     			create_component(link.$$.fragment);
     			t20 = space();
-    			add_location(div0, file$2, 58, 16, 2013);
-    			add_location(div1, file$2, 59, 16, 2041);
+    			add_location(div0, file$2, 40, 16, 1576);
+    			add_location(div1, file$2, 41, 16, 1604);
     			attr_dev(div2, "class", "text-center flex");
-    			add_location(div2, file$2, 57, 14, 1966);
+    			add_location(div2, file$2, 39, 14, 1529);
     			attr_dev(td0, "class", "w-40");
-    			add_location(td0, file$2, 56, 12, 1934);
+    			add_location(td0, file$2, 38, 12, 1497);
     			attr_dev(div3, "class", "text-gray-600 whitespace-nowrap ellipsis-text w-40 svelte-1b6jv3z");
-    			attr_dev(div3, "title", div3_title_value = /*crowdloan*/ ctx[6].depositor);
-    			add_location(div3, file$2, 63, 14, 2160);
+    			attr_dev(div3, "title", div3_title_value = /*crowdloan*/ ctx[5].depositor);
+    			add_location(div3, file$2, 45, 14, 1723);
     			attr_dev(td1, "class", "");
-    			add_location(td1, file$2, 62, 12, 2132);
+    			add_location(td1, file$2, 44, 12, 1695);
     			attr_dev(div4, "class", "text-center ");
-    			add_location(div4, file$2, 65, 16, 2314);
-    			add_location(td2, file$2, 65, 12, 2310);
+    			add_location(div4, file$2, 47, 16, 1877);
+    			add_location(td2, file$2, 47, 12, 1873);
     			attr_dev(div5, "class", "text-center ");
-    			add_location(div5, file$2, 66, 16, 2389);
-    			add_location(td3, file$2, 66, 12, 2385);
+    			add_location(div5, file$2, 48, 16, 1952);
+    			add_location(td3, file$2, 48, 12, 1948);
     			attr_dev(div6, "class", "text-right");
-    			add_location(div6, file$2, 68, 14, 2478);
+    			add_location(div6, file$2, 50, 14, 2041);
     			attr_dev(div7, "class", "text-right");
-    			add_location(div7, file$2, 69, 14, 2643);
-    			add_location(td4, file$2, 67, 12, 2459);
+    			add_location(div7, file$2, 51, 14, 2206);
+    			add_location(td4, file$2, 49, 12, 2022);
     			attr_dev(div8, "class", "text-right");
-    			add_location(div8, file$2, 72, 14, 2788);
+    			add_location(div8, file$2, 54, 14, 2351);
     			attr_dev(div9, "class", "text-right text-gray-600");
-    			add_location(div9, file$2, 73, 14, 2861);
+    			add_location(div9, file$2, 55, 14, 2424);
     			attr_dev(td5, "class", "");
-    			add_location(td5, file$2, 71, 12, 2760);
+    			add_location(td5, file$2, 53, 12, 2323);
     			attr_dev(div10, "class", "flex justify-center items-center");
-    			add_location(div10, file$2, 76, 14, 3044);
+    			add_location(div10, file$2, 58, 14, 2607);
     			attr_dev(td6, "class", "");
-    			add_location(td6, file$2, 75, 12, 3016);
+    			add_location(td6, file$2, 57, 12, 2579);
     			attr_dev(td7, "class", "text-center");
-    			add_location(td7, file$2, 78, 12, 3170);
+    			add_location(td7, file$2, 60, 12, 2733);
     			attr_dev(tr, "class", "intro-x zoom-in");
-    			add_location(tr, file$2, 55, 10, 1893);
+    			add_location(tr, file$2, 37, 10, 1456);
     			this.first = tr;
     		},
     		m: function mount(target, anchor) {
@@ -20261,29 +20873,29 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if ((!current || dirty & /*crowdloans*/ 2) && t1_value !== (t1_value = /*crowdloan*/ ctx[6].parachain.paraId + "")) set_data_dev(t1, t1_value);
-    			if ((!current || dirty & /*crowdloans*/ 2) && t3_value !== (t3_value = /*crowdloan*/ ctx[6].depositor + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t1_value !== (t1_value = /*crowdloan*/ ctx[5].parachain.paraId + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t3_value !== (t3_value = /*crowdloan*/ ctx[5].depositor + "")) set_data_dev(t3, t3_value);
 
-    			if (!current || dirty & /*crowdloans*/ 2 && div3_title_value !== (div3_title_value = /*crowdloan*/ ctx[6].depositor)) {
+    			if (!current || dirty & /*crowdloans*/ 2 && div3_title_value !== (div3_title_value = /*crowdloan*/ ctx[5].depositor)) {
     				attr_dev(div3, "title", div3_title_value);
     			}
 
-    			if ((!current || dirty & /*crowdloans*/ 2) && t5_value !== (t5_value = /*crowdloan*/ ctx[6].firstSlot + "")) set_data_dev(t5, t5_value);
-    			if ((!current || dirty & /*crowdloans*/ 2) && t7_value !== (t7_value = /*crowdloan*/ ctx[6].lastSlot + "")) set_data_dev(t7, t7_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t5_value !== (t5_value = /*crowdloan*/ ctx[5].firstSlot + "")) set_data_dev(t5, t5_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t7_value !== (t7_value = /*crowdloan*/ ctx[5].lastSlot + "")) set_data_dev(t7, t7_value);
     			const token0_changes = {};
-    			if (dirty & /*crowdloans*/ 2) token0_changes.value = /*crowdloan*/ ctx[6].raised;
+    			if (dirty & /*crowdloans*/ 2) token0_changes.value = /*crowdloan*/ ctx[5].raised;
     			token0.$set(token0_changes);
     			const token1_changes = {};
-    			if (dirty & /*crowdloans*/ 2) token1_changes.value = /*crowdloan*/ ctx[6].cap;
+    			if (dirty & /*crowdloans*/ 2) token1_changes.value = /*crowdloan*/ ctx[5].cap;
     			token1.$set(token1_changes);
-    			if ((!current || dirty & /*crowdloans*/ 2) && t11_value !== (t11_value = (/*crowdloan*/ ctx[6].raised / /*crowdloan*/ ctx[6].cap * 100).toFixed(2) + "")) set_data_dev(t11, t11_value);
-    			if ((!current || dirty & /*crowdloans*/ 2) && t14_value !== (t14_value = /*crowdloan*/ ctx[6].lockExpiredBlock + "")) set_data_dev(t14, t14_value);
-    			if ((!current || dirty & /*crowdloans, $lastBlockNum, $lastBlockTime*/ 26) && t16_value !== (t16_value = getDateFromBlockNum(/*crowdloan*/ ctx[6].lockExpiredBlock, /*$lastBlockNum*/ ctx[3], /*$lastBlockTime*/ ctx[4]) + "")) set_data_dev(t16, t16_value);
-    			if ((!current || dirty & /*crowdloans*/ 2) && t18_value !== (t18_value = (/*crowdloan*/ ctx[6].retiring ? "Retired" : "Active") + "")) set_data_dev(t18, t18_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t11_value !== (t11_value = (/*crowdloan*/ ctx[5].raised / /*crowdloan*/ ctx[5].cap * 100).toFixed(2) + "")) set_data_dev(t11, t11_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t14_value !== (t14_value = /*crowdloan*/ ctx[5].lockExpiredBlock + "")) set_data_dev(t14, t14_value);
+    			if ((!current || dirty & /*crowdloans, $lastBlockNum, $lastBlockTime*/ 14) && t16_value !== (t16_value = getDateFromBlockNum(/*crowdloan*/ ctx[5].lockExpiredBlock, /*$lastBlockNum*/ ctx[2], /*$lastBlockTime*/ ctx[3]) + "")) set_data_dev(t16, t16_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t18_value !== (t18_value = (/*crowdloan*/ ctx[5].retiring ? "Retired" : "Active") + "")) set_data_dev(t18, t18_value);
     			const link_changes = {};
-    			if (dirty & /*crowdloans*/ 2) link_changes.to = "/crowdloan/" + /*crowdloan*/ ctx[6].id;
+    			if (dirty & /*crowdloans*/ 2) link_changes.to = "/crowdloan/" + /*crowdloan*/ ctx[5].id;
 
-    			if (dirty & /*$$scope*/ 512) {
+    			if (dirty & /*$$scope*/ 256) {
     				link_changes.$$scope = { dirty, ctx };
     			}
 
@@ -20314,7 +20926,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(55:8) {#each crowdloans as crowdloan (crowdloan.id) }",
+    		source: "(37:8) {#each crowdloans as crowdloan (crowdloan.id) }",
     		ctx
     	});
 
@@ -20322,21 +20934,20 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     }
 
     function create_fragment$3(ctx) {
-    	let div3;
-    	let div2;
-    	let div0;
-    	let t0;
-    	let svg;
-    	let polyline;
-    	let t1;
-    	let a;
-    	let t3;
-    	let div1;
-    	let t4;
-    	let t5;
+    	let div;
+    	let breadcrumb;
+    	let t;
     	let current_block_type_index;
     	let if_block;
     	let current;
+
+    	breadcrumb = new Breadcrumb({
+    			props: {
+    				links: [{ title: "Parachain", path: "/" }, { title: "Crowdloan" }]
+    			},
+    			$$inline: true
+    		});
+
     	const if_block_creators = [create_if_block$1, create_else_block$1];
     	const if_blocks = [];
 
@@ -20350,65 +20961,24 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
-    			div2 = element("div");
-    			div0 = element("div");
-    			t0 = text("Parachain ");
-    			svg = svg_element("svg");
-    			polyline = svg_element("polyline");
-    			t1 = space();
-    			a = element("a");
-    			a.textContent = "Crowdloan";
-    			t3 = space();
-    			div1 = element("div");
-    			t4 = text(/*$timeStr*/ ctx[2]);
-    			t5 = space();
+    			div = element("div");
+    			create_component(breadcrumb.$$.fragment);
+    			t = space();
     			if_block.c();
-    			attr_dev(polyline, "points", "9 18 15 12 9 6");
-    			add_location(polyline, file$2, 28, 63, 940);
-    			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(svg, "width", "24");
-    			attr_dev(svg, "height", "24");
-    			attr_dev(svg, "viewBox", "0 0 24 24");
-    			attr_dev(svg, "fill", "none");
-    			attr_dev(svg, "stroke", "currentColor");
-    			attr_dev(svg, "stroke-width", "1.5");
-    			attr_dev(svg, "stroke-linecap", "round");
-    			attr_dev(svg, "stroke-linejoin", "round");
-    			attr_dev(svg, "class", "feather feather-chevron-right breadcrumb__icon");
-    			add_location(svg, file$2, 18, 16, 622);
-    			attr_dev(a, "href", "/");
-    			attr_dev(a, "class", "breadcrumb--active");
-    			add_location(a, file$2, 29, 8, 990);
-    			add_location(div0, file$2, 17, 4, 600);
-    			attr_dev(div1, "class", "text-right flex-1");
-    			add_location(div1, file$2, 31, 4, 1058);
-    			attr_dev(div2, "class", "top-bar");
-    			add_location(div2, file$2, 16, 2, 574);
-    			attr_dev(div3, "class", "content");
-    			add_location(div3, file$2, 15, 0, 550);
+    			attr_dev(div, "class", "content");
+    			add_location(div, file$2, 16, 0, 589);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div2);
-    			append_dev(div2, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, svg);
-    			append_dev(svg, polyline);
-    			append_dev(div0, t1);
-    			append_dev(div0, a);
-    			append_dev(div2, t3);
-    			append_dev(div2, div1);
-    			append_dev(div1, t4);
-    			append_dev(div3, t5);
-    			if_blocks[current_block_type_index].m(div3, null);
+    			insert_dev(target, div, anchor);
+    			mount_component(breadcrumb, div, null);
+    			append_dev(div, t);
+    			if_blocks[current_block_type_index].m(div, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*$timeStr*/ 4) set_data_dev(t4, /*$timeStr*/ ctx[2]);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
 
@@ -20432,20 +21002,23 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     				}
 
     				transition_in(if_block, 1);
-    				if_block.m(div3, null);
+    				if_block.m(div, null);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(breadcrumb.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(breadcrumb.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div);
+    			destroy_component(breadcrumb);
     			if_blocks[current_block_type_index].d();
     		}
     	};
@@ -20464,15 +21037,12 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     function instance$3($$self, $$props, $$invalidate) {
     	let crowdloans;
     	let $crowdloanOps;
-    	let $timeStr;
     	let $lastBlockNum;
     	let $lastBlockTime;
-    	validate_store(timeStr, "timeStr");
-    	component_subscribe($$self, timeStr, $$value => $$invalidate(2, $timeStr = $$value));
     	validate_store(lastBlockNum, "lastBlockNum");
-    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(3, $lastBlockNum = $$value));
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(2, $lastBlockNum = $$value));
     	validate_store(lastBlockTime, "lastBlockTime");
-    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(4, $lastBlockTime = $$value));
+    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(3, $lastBlockTime = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("CrowdloanPage", slots, []);
     	const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: "network-only" });
@@ -20488,7 +21058,6 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	$$self.$capture_state = () => ({
     		operationStore,
     		query,
-    		timeStr,
     		lastBlockNum,
     		lastBlockTime,
     		CROWDLOAN_QUERY,
@@ -20496,10 +21065,10 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		getDateFromBlockNum,
     		Link,
     		Loading,
+    		Breadcrumb,
     		crowdloanOps,
     		crowdloans,
     		$crowdloanOps,
-    		$timeStr,
     		$lastBlockNum,
     		$lastBlockTime
     	});
@@ -20518,14 +21087,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		}
     	};
 
-    	return [
-    		$crowdloanOps,
-    		crowdloans,
-    		$timeStr,
-    		$lastBlockNum,
-    		$lastBlockTime,
-    		crowdloanOps
-    	];
+    	return [$crowdloanOps, crowdloans, $lastBlockNum, $lastBlockTime, crowdloanOps];
     }
 
     class CrowdloanPage extends SvelteComponentDev {
@@ -20546,39 +21108,12 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[9] = list[i];
-    	child_ctx[11] = i;
+    	child_ctx[8] = list[i];
+    	child_ctx[10] = i;
     	return child_ctx;
     }
 
-    // (50:8) <Link to="/crowdloan" class="breadcrumb--active">
-    function create_default_slot$1(ctx) {
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			t = text("Crowdloan");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, t, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot$1.name,
-    		type: "slot",
-    		source: "(50:8) <Link to=\\\"/crowdloan\\\" class=\\\"breadcrumb--active\\\">",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (70:2) {:else}
+    // (41:2) {:else}
     function create_else_block(ctx) {
     	let div2;
     	let div0;
@@ -20635,24 +21170,24 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			tbody = element("tbody");
     			if_block.c();
     			attr_dev(div0, "class", "text-lg mb-4");
-    			add_location(div0, file$1, 71, 4, 2003);
+    			add_location(div0, file$1, 42, 4, 1195);
     			attr_dev(th0, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap");
-    			add_location(th0, file$1, 76, 12, 2162);
+    			add_location(th0, file$1, 47, 12, 1354);
     			attr_dev(th1, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
-    			add_location(th1, file$1, 77, 12, 2251);
+    			add_location(th1, file$1, 48, 12, 1443);
     			attr_dev(th2, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
-    			add_location(th2, file$1, 78, 12, 2346);
+    			add_location(th2, file$1, 49, 12, 1538);
     			attr_dev(th3, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
-    			add_location(th3, file$1, 79, 12, 2440);
-    			add_location(tr, file$1, 75, 10, 2145);
-    			add_location(thead, file$1, 74, 8, 2127);
-    			add_location(tbody, file$1, 82, 8, 2572);
+    			add_location(th3, file$1, 50, 12, 1632);
+    			add_location(tr, file$1, 46, 10, 1337);
+    			add_location(thead, file$1, 45, 8, 1319);
+    			add_location(tbody, file$1, 53, 8, 1764);
     			attr_dev(table, "class", "table");
-    			add_location(table, file$1, 73, 6, 2097);
+    			add_location(table, file$1, 44, 6, 1289);
     			attr_dev(div1, "class", "overflow-x-auto");
-    			add_location(div1, file$1, 72, 4, 2060);
+    			add_location(div1, file$1, 43, 4, 1252);
     			attr_dev(div2, "class", "mt-6");
-    			add_location(div2, file$1, 70, 2, 1980);
+    			add_location(div2, file$1, 41, 2, 1172);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -20720,14 +21255,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(70:2) {:else}",
+    		source: "(41:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (68:2) {#if $contributionsOps.fetching}
+    // (39:2) {#if $contributionsOps.fetching}
     function create_if_block(ctx) {
     	let loading;
     	let current;
@@ -20760,14 +21295,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(68:2) {#if $contributionsOps.fetching}",
+    		source: "(39:2) {#if $contributionsOps.fetching}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (96:10) {:else}
+    // (67:10) {:else}
     function create_else_block_1(ctx) {
     	let tr;
     	let td;
@@ -20780,11 +21315,11 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div = element("div");
     			div.textContent = "No contributions found";
     			attr_dev(div, "class", "py-5 text-xl text-gray-600");
-    			add_location(div, file$1, 97, 48, 3482);
+    			add_location(div, file$1, 68, 48, 2674);
     			attr_dev(td, "colspan", "4");
     			attr_dev(td, "class", "text-center");
-    			add_location(td, file$1, 97, 12, 3446);
-    			add_location(tr, file$1, 96, 10, 3429);
+    			add_location(td, file$1, 68, 12, 2638);
+    			add_location(tr, file$1, 67, 10, 2621);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -20803,14 +21338,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(96:10) {:else}",
+    		source: "(67:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (84:10) {#if contributions?.length}
+    // (55:10) {#if contributions?.length}
     function create_if_block_1(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
@@ -20818,7 +21353,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let current;
     	let each_value = /*contributions*/ ctx[2];
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*contribution*/ ctx[9].id;
+    	const get_key = ctx => /*contribution*/ ctx[8].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -20844,7 +21379,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*contributions, getDateFromBlockNum, $lastBlockNum, $lastBlockTime, Big, fund*/ 108) {
+    			if (dirty & /*contributions, getDateFromBlockNum, $lastBlockNum, $lastBlockTime, Big, fund*/ 60) {
     				each_value = /*contributions*/ ctx[2];
     				validate_each_argument(each_value);
     				group_outros();
@@ -20882,35 +21417,35 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(84:10) {#if contributions?.length}",
+    		source: "(55:10) {#if contributions?.length}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (85:10) {#each contributions as contribution, i (contribution.id)}
+    // (56:10) {#each contributions as contribution, i (contribution.id)}
     function create_each_block(key_1, ctx) {
     	let tr;
     	let td0;
-    	let t0_value = /*contribution*/ ctx[9].account + "";
+    	let t0_value = /*contribution*/ ctx[8].account + "";
     	let t0;
     	let t1;
     	let td1;
     	let token;
     	let t2;
     	let td2;
-    	let t3_value = big(/*contribution*/ ctx[9].amount).div(/*fund*/ ctx[3].raised).times(100).toFixed(4) + "";
+    	let t3_value = big(/*contribution*/ ctx[8].amount).div(/*fund*/ ctx[3].raised).times(100).toFixed(4) + "";
     	let t3;
     	let t4;
     	let t5;
     	let td3;
     	let div0;
-    	let t6_value = /*contribution*/ ctx[9].blockNum + "";
+    	let t6_value = /*contribution*/ ctx[8].blockNum + "";
     	let t6;
     	let t7;
     	let div1;
-    	let t8_value = getDateFromBlockNum(/*contribution*/ ctx[9].blockNum, /*$lastBlockNum*/ ctx[5], /*$lastBlockTime*/ ctx[6]) + "";
+    	let t8_value = getDateFromBlockNum(/*contribution*/ ctx[8].blockNum, /*$lastBlockNum*/ ctx[4], /*$lastBlockTime*/ ctx[5]) + "";
     	let t8;
     	let t9;
     	let tr_class_value;
@@ -20919,7 +21454,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	token = new Token({
     			props: {
     				allowZero: true,
-    				value: /*contribution*/ ctx[9].amount
+    				value: /*contribution*/ ctx[8].amount
     			},
     			$$inline: true
     		});
@@ -20947,19 +21482,19 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t8 = text(t8_value);
     			t9 = space();
     			attr_dev(td0, "class", "border-b dark:border-dark-5");
-    			add_location(td0, file$1, 86, 12, 2771);
+    			add_location(td0, file$1, 57, 12, 1963);
     			attr_dev(td1, "class", "border-b dark:border-dark-5 text-right");
-    			add_location(td1, file$1, 87, 12, 2851);
+    			add_location(td1, file$1, 58, 12, 2043);
     			attr_dev(td2, "class", "border-b dark:border-dark-5 text-right");
-    			add_location(td2, file$1, 88, 12, 2974);
+    			add_location(td2, file$1, 59, 12, 2166);
     			attr_dev(div0, "class", "text-right");
-    			add_location(div0, file$1, 90, 14, 3175);
+    			add_location(div0, file$1, 61, 14, 2367);
     			attr_dev(div1, "class", "text-right");
-    			add_location(div1, file$1, 91, 14, 3243);
+    			add_location(div1, file$1, 62, 14, 2435);
     			attr_dev(td3, "class", "border-b dark:border-dark-5 text-right");
-    			add_location(td3, file$1, 89, 12, 3109);
-    			attr_dev(tr, "class", tr_class_value = "" + ((/*i*/ ctx[11] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"));
-    			add_location(tr, file$1, 85, 10, 2697);
+    			add_location(td3, file$1, 60, 12, 2301);
+    			attr_dev(tr, "class", tr_class_value = "" + ((/*i*/ ctx[10] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"));
+    			add_location(tr, file$1, 56, 10, 1889);
     			this.first = tr;
     		},
     		m: function mount(target, anchor) {
@@ -20985,15 +21520,15 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if ((!current || dirty & /*contributions*/ 4) && t0_value !== (t0_value = /*contribution*/ ctx[9].account + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*contributions*/ 4) && t0_value !== (t0_value = /*contribution*/ ctx[8].account + "")) set_data_dev(t0, t0_value);
     			const token_changes = {};
-    			if (dirty & /*contributions*/ 4) token_changes.value = /*contribution*/ ctx[9].amount;
+    			if (dirty & /*contributions*/ 4) token_changes.value = /*contribution*/ ctx[8].amount;
     			token.$set(token_changes);
-    			if ((!current || dirty & /*contributions, fund*/ 12) && t3_value !== (t3_value = big(/*contribution*/ ctx[9].amount).div(/*fund*/ ctx[3].raised).times(100).toFixed(4) + "")) set_data_dev(t3, t3_value);
-    			if ((!current || dirty & /*contributions*/ 4) && t6_value !== (t6_value = /*contribution*/ ctx[9].blockNum + "")) set_data_dev(t6, t6_value);
-    			if ((!current || dirty & /*contributions, $lastBlockNum, $lastBlockTime*/ 100) && t8_value !== (t8_value = getDateFromBlockNum(/*contribution*/ ctx[9].blockNum, /*$lastBlockNum*/ ctx[5], /*$lastBlockTime*/ ctx[6]) + "")) set_data_dev(t8, t8_value);
+    			if ((!current || dirty & /*contributions, fund*/ 12) && t3_value !== (t3_value = big(/*contribution*/ ctx[8].amount).div(/*fund*/ ctx[3].raised).times(100).toFixed(4) + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*contributions*/ 4) && t6_value !== (t6_value = /*contribution*/ ctx[8].blockNum + "")) set_data_dev(t6, t6_value);
+    			if ((!current || dirty & /*contributions, $lastBlockNum, $lastBlockTime*/ 52) && t8_value !== (t8_value = getDateFromBlockNum(/*contribution*/ ctx[8].blockNum, /*$lastBlockNum*/ ctx[4], /*$lastBlockTime*/ ctx[5]) + "")) set_data_dev(t8, t8_value);
 
-    			if (!current || dirty & /*contributions*/ 4 && tr_class_value !== (tr_class_value = "" + ((/*i*/ ctx[11] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"))) {
+    			if (!current || dirty & /*contributions*/ 4 && tr_class_value !== (tr_class_value = "" + ((/*i*/ ctx[10] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"))) {
     				attr_dev(tr, "class", tr_class_value);
     			}
     		},
@@ -21016,7 +21551,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(85:10) {#each contributions as contribution, i (contribution.id)}",
+    		source: "(56:10) {#each contributions as contribution, i (contribution.id)}",
     		ctx
     	});
 
@@ -21024,33 +21559,20 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     }
 
     function create_fragment$2(ctx) {
-    	let div3;
-    	let div2;
-    	let div0;
-    	let t0;
-    	let svg0;
-    	let polyline0;
-    	let t1;
-    	let link;
-    	let t2;
-    	let svg1;
-    	let polyline1;
-    	let t3;
-    	let t4;
-    	let t5;
-    	let div1;
-    	let t6;
-    	let t7;
+    	let div;
+    	let breadcrumb;
+    	let t;
     	let current_block_type_index;
     	let if_block;
     	let current;
 
-    	link = new Link({
+    	breadcrumb = new Breadcrumb({
     			props: {
-    				to: "/crowdloan",
-    				class: "breadcrumb--active",
-    				$$slots: { default: [create_default_slot$1] },
-    				$$scope: { ctx }
+    				links: [
+    					{ title: "Parachain", path: "/" },
+    					{ title: "Crowdloan", path: "/crowdloan" },
+    					{ title: /*fundId*/ ctx[0] }
+    				]
     			},
     			$$inline: true
     		});
@@ -21068,92 +21590,33 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
-    			div2 = element("div");
-    			div0 = element("div");
-    			t0 = text("Parachain ");
-    			svg0 = svg_element("svg");
-    			polyline0 = svg_element("polyline");
-    			t1 = space();
-    			create_component(link.$$.fragment);
-    			t2 = space();
-    			svg1 = svg_element("svg");
-    			polyline1 = svg_element("polyline");
-    			t3 = space();
-    			t4 = text(/*fundId*/ ctx[0]);
-    			t5 = space();
-    			div1 = element("div");
-    			t6 = text(/*$timeStr*/ ctx[4]);
-    			t7 = space();
+    			div = element("div");
+    			create_component(breadcrumb.$$.fragment);
+    			t = space();
     			if_block.c();
-    			attr_dev(polyline0, "points", "9 18 15 12 9 6");
-    			add_location(polyline0, file$1, 48, 63, 1363);
-    			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(svg0, "width", "24");
-    			attr_dev(svg0, "height", "24");
-    			attr_dev(svg0, "viewBox", "0 0 24 24");
-    			attr_dev(svg0, "fill", "none");
-    			attr_dev(svg0, "stroke", "currentColor");
-    			attr_dev(svg0, "stroke-width", "1.5");
-    			attr_dev(svg0, "stroke-linecap", "round");
-    			attr_dev(svg0, "stroke-linejoin", "round");
-    			attr_dev(svg0, "class", "feather feather-chevron-right breadcrumb__icon");
-    			add_location(svg0, file$1, 38, 16, 1045);
-    			attr_dev(polyline1, "points", "9 18 15 12 9 6");
-    			add_location(polyline1, file$1, 59, 61, 1777);
-    			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(svg1, "width", "24");
-    			attr_dev(svg1, "height", "24");
-    			attr_dev(svg1, "viewBox", "0 0 24 24");
-    			attr_dev(svg1, "fill", "none");
-    			attr_dev(svg1, "stroke", "currentColor");
-    			attr_dev(svg1, "stroke-width", "1.5");
-    			attr_dev(svg1, "stroke-linecap", "round");
-    			attr_dev(svg1, "stroke-linejoin", "round");
-    			attr_dev(svg1, "class", "feather feather-chevron-right breadcrumb__icon");
-    			add_location(svg1, file$1, 49, 74, 1479);
-    			add_location(div0, file$1, 37, 4, 1023);
-    			attr_dev(div1, "class", "text-right flex-1");
-    			add_location(div1, file$1, 62, 4, 1849);
-    			attr_dev(div2, "class", "top-bar");
-    			add_location(div2, file$1, 36, 2, 997);
-    			attr_dev(div3, "class", "content");
-    			add_location(div3, file$1, 35, 0, 973);
+    			attr_dev(div, "class", "content");
+    			add_location(div, file$1, 35, 0, 969);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div2);
-    			append_dev(div2, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, svg0);
-    			append_dev(svg0, polyline0);
-    			append_dev(div0, t1);
-    			mount_component(link, div0, null);
-    			append_dev(div0, t2);
-    			append_dev(div0, svg1);
-    			append_dev(svg1, polyline1);
-    			append_dev(div0, t3);
-    			append_dev(div0, t4);
-    			append_dev(div2, t5);
-    			append_dev(div2, div1);
-    			append_dev(div1, t6);
-    			append_dev(div3, t7);
-    			if_blocks[current_block_type_index].m(div3, null);
+    			insert_dev(target, div, anchor);
+    			mount_component(breadcrumb, div, null);
+    			append_dev(div, t);
+    			if_blocks[current_block_type_index].m(div, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const link_changes = {};
+    			const breadcrumb_changes = {};
 
-    			if (dirty & /*$$scope*/ 4096) {
-    				link_changes.$$scope = { dirty, ctx };
-    			}
+    			if (dirty & /*fundId*/ 1) breadcrumb_changes.links = [
+    				{ title: "Parachain", path: "/" },
+    				{ title: "Crowdloan", path: "/crowdloan" },
+    				{ title: /*fundId*/ ctx[0] }
+    			];
 
-    			link.$set(link_changes);
-    			if (!current || dirty & /*fundId*/ 1) set_data_dev(t4, /*fundId*/ ctx[0]);
-    			if (!current || dirty & /*$timeStr*/ 16) set_data_dev(t6, /*$timeStr*/ ctx[4]);
+    			breadcrumb.$set(breadcrumb_changes);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
 
@@ -21177,23 +21640,23 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     				}
 
     				transition_in(if_block, 1);
-    				if_block.m(div3, null);
+    				if_block.m(div, null);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(link.$$.fragment, local);
+    			transition_in(breadcrumb.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(link.$$.fragment, local);
+    			transition_out(breadcrumb.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
-    			destroy_component(link);
+    			if (detaching) detach_dev(div);
+    			destroy_component(breadcrumb);
     			if_blocks[current_block_type_index].d();
     		}
     	};
@@ -21211,15 +21674,12 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     function instance$2($$self, $$props, $$invalidate) {
     	let $contributionsOps;
-    	let $timeStr;
     	let $lastBlockNum;
     	let $lastBlockTime;
-    	validate_store(timeStr, "timeStr");
-    	component_subscribe($$self, timeStr, $$value => $$invalidate(4, $timeStr = $$value));
     	validate_store(lastBlockNum, "lastBlockNum");
-    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(5, $lastBlockNum = $$value));
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(4, $lastBlockNum = $$value));
     	validate_store(lastBlockTime, "lastBlockTime");
-    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(6, $lastBlockTime = $$value));
+    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(5, $lastBlockTime = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ContributorPage", slots, []);
     	let { fundId } = $$props;
@@ -21247,23 +21707,21 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	$$self.$capture_state = () => ({
     		operationStore,
     		query,
-    		timeStr,
     		lastBlockNum,
     		lastBlockTime,
     		CONTRIBUTORS_QUERY,
     		Token,
     		Big: big,
-    		Link,
     		normalize,
     		getDateFromBlockNum,
     		Loading,
+    		Breadcrumb,
     		fundId,
     		params,
     		contributions,
     		fund,
     		contributionsOps,
     		$contributionsOps,
-    		$timeStr,
     		$lastBlockNum,
     		$lastBlockTime
     	});
@@ -21295,7 +21753,6 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		$contributionsOps,
     		contributions,
     		fund,
-    		$timeStr,
     		$lastBlockNum,
     		$lastBlockTime,
     		contributionsOps
@@ -21395,7 +21852,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div = element("div");
     			create_component(sidemenu.$$.fragment);
     			attr_dev(div, "slot", "side-menu");
-    			add_location(div, file, 56, 6, 1454);
+    			add_location(div, file, 56, 6, 1471);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -21434,7 +21891,10 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	let current;
 
     	contributorpage = new ContributorPage({
-    			props: { fundId: /*params*/ ctx[3].id },
+    			props: {
+    				fundId: /*params*/ ctx[3].id,
+    				path: /*params*/ ctx[3]
+    			},
     			$$inline: true
     		});
 
@@ -21449,6 +21909,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		p: function update(ctx, dirty) {
     			const contributorpage_changes = {};
     			if (dirty & /*params*/ 8) contributorpage_changes.fundId = /*params*/ ctx[3].id;
+    			if (dirty & /*params*/ 8) contributorpage_changes.path = /*params*/ ctx[3];
     			contributorpage.$set(contributorpage_changes);
     		},
     		i: function intro(local) {
@@ -21523,7 +21984,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t1 = space();
     			create_component(route2.$$.fragment);
     			attr_dev(div, "slot", "content");
-    			add_location(div, file, 57, 6, 1501);
+    			add_location(div, file, 57, 6, 1518);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -21575,7 +22036,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    // (54:0) <Router>
+    // (54:0) <Router primary={false} >
     function create_default_slot(ctx) {
     	let main;
     	let layout;
@@ -21597,7 +22058,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			main = element("main");
     			create_component(layout.$$.fragment);
     			attr_dev(main, "class", "main");
-    			add_location(main, file, 54, 2, 1415);
+    			add_location(main, file, 54, 2, 1432);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
@@ -21632,7 +22093,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(54:0) <Router>",
+    		source: "(54:0) <Router primary={false} >",
     		ctx
     	});
 
@@ -21648,6 +22109,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	router = new Router({
     			props: {
+    				primary: false,
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},

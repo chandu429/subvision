@@ -12,8 +12,13 @@
   import { onMount } from 'svelte';
   import Loading from './Loading.svelte';
   import SlotLeaseChart from './SlotLeaseChart.svelte';
+  import Breadcrumb from './Breadcrumb.svelte';
 
   let timer = 0;
+
+  export let location;
+
+  console.log(location);
 
   let slotLeases = [];
 
@@ -67,27 +72,9 @@
 </script>
 
 <div class="content">
-  <div class="top-bar">
-    <div>
-      Parachain <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-chevron-right breadcrumb__icon"><polyline points="9 18 15 12 9 6" /></svg
-      > <a href="/" class="breadcrumb--active">Auction</a>
-    </div>
-    <div class="text-right flex-1">
-      {$timeStr}
-    </div>
-  </div>
-{#if $activeAuctions.fetching && !chronicle} 
-  <Loading />
+  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Auction'}]}/>
+  {#if $activeAuctions.fetching && !chronicle} 
+    <Loading />
   {:else}
   <div class="box mt-4">
     <SlotLeaseChart leases={slotLeases}/>

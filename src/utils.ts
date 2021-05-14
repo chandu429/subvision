@@ -104,5 +104,6 @@ export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => 
   const span = occupied.filter((val) => !!val).reduce((all, cur) => all + cur, 0);
   const startIdx = occupied.findIndex((val) => !!val);
   const result = occupied.slice(0, startIdx).concat(span);
+  // console.log(allSlots, curSlots, result);
   return result;
 };

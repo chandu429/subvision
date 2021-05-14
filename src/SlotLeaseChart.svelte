@@ -1,40 +1,40 @@
 <script>
-  import { range } from 'lodash-es';
+  import { range, minBy, maxBy } from 'lodash-es';
   import { config } from './constants';
   import ProgressBar from './ProgressBar.svelte';
   import { lastBlockNum, lastBlockTime } from './stores';
   import { getDateFromBlockNum, getColSpan } from './utils';
   export let leases;
-  const { leasePeriod } = config;
+  const { leasePeriod, leasesPerSlot } = config;
 
   let activeLeases, slotIdxs, allSlots;
 
   $: {
 
-    const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
-    const defaultSlotEnd = defaultSlotStart + 4;
-
     activeLeases = leases
-      .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
-      .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot+1), firstSlot, lastSlot, ...rest }));
+      // .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
+      .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot), firstSlot, lastSlot, ...rest }));
 
-    const [first, last] = activeLeases.reduce(([earliest, lastest], {firstSlot, lastSlot}) => {
-      const first = Math.min(earliest, firstSlot);
-      const last = Math.max(lastest, lastSlot);
-      return [first, last];
-    }, [defaultSlotStart, defaultSlotEnd]);
+    const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
+    const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
 
-    slotIdxs = range(first, last+1);
+    const leaseSlotStart = minBy(leases, "firstSlot")?.firstSlot;
+    const leaseSlotEnd = maxBy(leases, "lastSlot")?.lastSlot;
+    
+    const slotStart = Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
+    const slotEnd = Math.max(leaseSlotEnd || defaultSlotEnd, defaultSlotEnd);
+    
+    // console.log({ leaseSlotStart, leaseSlotEnd, defaultSlotStart, defaultSlotEnd, slotStart, slotEnd });
+    slotIdxs = range(slotStart, slotEnd+1);
     allSlots = slotIdxs.map((slotIdx) => ({ idx: slotIdx, startBlock: slotIdx * leasePeriod }));
-
   }
 </script>
 
-<div class="box overflow-x-scroll p-2">
+<div class="box overflow-x-scroll py-2">
   <table class="w-full text-center">
     <tr>
       <th class="empty-head"></th>
-      {#each allSlots as slot (slot.idx)}
+      {#each allSlots as slot}
       <td>
         <div class="slot-head">
           <p class="text-lg">Slot {slot.idx}</p>
@@ -55,12 +55,12 @@
       </td>
     </tr>
     {/if}
-    {#each activeLeases as lease (lease.id)}
-    <tr>
+    {#each activeLeases as lease, idx (lease.id)}
+    <tr class="{idx % 2 > 0 ? 'bg-gray-100':''}">
       <td class="py-4">
         <div class="flex justify-center items-center">
           <img class="mx-1 rounded-full" src="./ksm-logo.png" alt="{lease.parachain.paraId}" width="22" height="22">
-          <div class="text-gray-400 text-lg">{lease.parachain.paraId}</div>
+          <div class="text-gray-400 text-xs">{lease.parachain.paraId}</div>
         </div>
       </td>
       {#each getColSpan(slotIdxs, lease.slots) as span}

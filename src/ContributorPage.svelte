@@ -1,13 +1,13 @@
 <script>
   import { operationStore, query } from '@urql/svelte';
-  import { timeStr, lastBlockNum, lastBlockTime } from './stores.ts';
+  import { lastBlockNum, lastBlockTime } from './stores.ts';
   import { CONTRIBUTORS_QUERY } from './queries.ts';
   import Token from './Token.svelte';
   import Big from 'big.js';
-  import { Link } from 'svelte-navigator';
   import { normalize } from './utils.ts';
   import { getDateFromBlockNum } from './utils';
   import Loading from './Loading.svelte';
+  import Breadcrumb from './Breadcrumb.svelte';
 
   export let fundId;
 
@@ -34,36 +34,7 @@
 </script>
 
 <div class="content">
-  <div class="top-bar">
-    <div>
-      Parachain <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-chevron-right breadcrumb__icon"><polyline points="9 18 15 12 9 6" /></svg
-      > <Link to="/crowdloan" class="breadcrumb--active">Crowdloan</Link> <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="feather feather-chevron-right breadcrumb__icon"><polyline points="9 18 15 12 9 6" /></svg
-    > {fundId}
-    </div>
-    <div class="text-right flex-1">
-      {$timeStr}
-    </div>
-  </div>
+  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fundId, }]}/>
 
   {#if $contributionsOps.fetching}
   <Loading />

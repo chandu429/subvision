@@ -1,11 +1,12 @@
 <script>
   import { operationStore, query } from '@urql/svelte';
-  import { timeStr, lastBlockNum, lastBlockTime } from './stores.ts';
+  import { lastBlockNum, lastBlockTime } from './stores.ts';
   import { CROWDLOAN_QUERY } from './queries.ts';
   import Token from './Token.svelte';
   import { getDateFromBlockNum } from './utils';
   import { Link } from 'svelte-navigator';
   import Loading from './Loading.svelte';
+  import Breadcrumb from './Breadcrumb.svelte';
 
   const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: 'network-only'})
   query(crowdloanOps);
@@ -14,26 +15,7 @@
 </script>
 
 <div class="content">
-  <div class="top-bar">
-    <div>
-      Parachain <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-chevron-right breadcrumb__icon"><polyline points="9 18 15 12 9 6" /></svg
-      > <a href="/" class="breadcrumb--active">Crowdloan</a>
-    </div>
-    <div class="text-right flex-1">
-      {$timeStr}
-    </div>
-  </div>
-
+  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan'}]}/>
   {#if $crowdloanOps.fetching }
   <Loading />
   {:else}

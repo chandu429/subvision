@@ -51,7 +51,7 @@
 
 <Tailwind />
 
-<Router>
+<Router primary={false} >
   <main class="main">
     <Layout>
       <div slot="side-menu"><SideMenu /></div>
@@ -59,7 +59,7 @@
         <Route path="/" component={AuctionPage} />
         <Route path="/crowdloan" component={CrowdloanPage} />
         <Route path="/crowdloan/:id" let:params>
-          <ContributorPage fundId={params.id} />
+          <ContributorPage fundId={params.id} path={params}/>
         </Route>
       </div>
     </Layout>

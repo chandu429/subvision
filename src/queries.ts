@@ -14,6 +14,7 @@ export const AUCTION_QUERY = `
 query ($auctionStatusFilter: AuctionFilter) {
   parachainLeaseds {
     nodes {
+      id
       parachain {
         paraId
       }
