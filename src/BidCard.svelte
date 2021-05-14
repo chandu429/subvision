@@ -1,7 +1,7 @@
 
 <script>
   import { now } from 'svelte/internal';
-import Token from './Token.svelte';
+  import Token from './Token.svelte';
   import { getTimeDiffInWord } from './utils';
   export let bidder, firstSlot, lastSlot, createdAt, amount, parachain, isCrowdloan;
   const { paraId } = parachain || {};
@@ -19,7 +19,7 @@ import Token from './Token.svelte';
     {#if isCrowdloan }
       <div class="text-gray-600">From Crowdloan {paraId}</div>
     {:else}
-      <div class="text-gray-600 fixed-width"><span alt="{bidder}">From bidder {bidder}</span></div>
+      <div class="text-gray-600 ellipsis-text"><span alt="{bidder}">From bidder {bidder}</span></div>
     {/if}
   </div>
 </div>
@@ -27,7 +27,7 @@ import Token from './Token.svelte';
 
 
 <style>
-  .fixed-width {
+  .ellipsis-text {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;

@@ -66,3 +66,43 @@ export const getTimeDiffInWord = (timeDeltaMs: number): string => {
 
   return units.map(getTimeUnitInWord).join(' ');
 };
+
+export const getDateFromBlockNum = (blockNum: number, curBlockNum: number, timestamp?: string) => {
+  const diff = blockNum - curBlockNum;
+  const timeDiff = diff * 6000;
+  const date = timestamp ? new Date(timestamp) : new Date();
+  return formatter.format(new Date(date.getTime() + timeDiff)).replace(',', ' ');
+};
+
+export const formatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour12: false,
+  hour: 'numeric',
+  minute: '2-digit',
+  second: '2-digit'
+});
+
+export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => {
+  const { result: occupied } = allSlots.reduce(
+    ({ result, idx }, cur) => {
+      if (cur === curSlots[idx]) {
+        return {
+          result: result.concat(1),
+          idx: idx + 1
+        };
+      }
+      return {
+        result: result.concat(0),
+        idx
+      };
+    },
+    { result: [], idx: 0 }
+  );
+
+  const span = occupied.filter((val) => !!val).reduce((all, cur) => all + cur, 0);
+  const startIdx = occupied.findIndex((val) => !!val);
+  const result = occupied.slice(0, startIdx).concat(span);
+  return result;
+};

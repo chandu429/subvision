@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { Link } from 'svelte-navigator';
+  import { Link, useLocation } from 'svelte-navigator';
+  const location = useLocation();
+  $: path = $location.pathname;
 </script>
 
 <nav class="side-nav">
@@ -19,16 +21,16 @@
       </a>
       <ul class="side-menu__sub-open">
         <li>
-          <a href="/" class="side-menu side-menu--active">
+          <Link to="/" class="side-menu {path === '/' ? 'side-menu--active' : ''}">
             <div class="side-menu__icon"><i data-feather="activity" /></div>
             <div class="side-menu__title">Auction</div>
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/crowdloan" class="side-menu">
+          <Link to="/crowdloan" class="side-menu {path.startsWith('/crowdloan') ? 'side-menu--active' : '' }">
             <div class="side-menu__icon"><i data-feather="activity" /></div>
             <div class="side-menu__title">Crowdloan</div>
-          </a>
+          </Link>
         </li>
       </ul>
     </li>

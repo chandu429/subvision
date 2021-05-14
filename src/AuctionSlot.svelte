@@ -18,7 +18,7 @@
   $: blockEnd = lastSlot * config.leasePeriod;
 </script>
 
-<div class="rounded-lg p-2 col-span-6 zoom-in" style="background-color: {bgColor}; border: 1px solid {borderColor}">
+<div class="rounded-lg p-2 col-span-6" style="background-color: {bgColor}; border: 1px solid {borderColor}">
   <div class="grid grid-cols-5 mb-2">
     <div class="col-span-3 text-base">Slot {slots.join(' - ')}</div>
     <div class="col-span-2 text-gray-400 text-xs text-right">Block: {leaseStart || blockStart} - {leaseEnd || blockEnd}</div>

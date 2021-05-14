@@ -1,10 +1,26 @@
 import { gql } from '@apollo/client';
 
-export const AUCTION_QUERY = `
-query ($auctionStatusFilter: AuctionFilter) {
+export const CHRONICLE_QUERY = `
+query {
   chronicle(id: "ChronicleKey"){
     curAuctionId
     curBlockNum
+    updatedAt
+  }
+}
+`;
+
+export const AUCTION_QUERY = `
+query ($auctionStatusFilter: AuctionFilter) {
+  parachainLeaseds {
+    nodes {
+      parachain {
+        paraId
+      }
+      firstSlot
+      lastSlot
+      winningAmount
+    }
   }
   auctions (filter: $auctionStatusFilter, first: 1) {
     nodes {
@@ -61,5 +77,66 @@ fragment parachainFields on Parachain {
   deposit
   creationBlock
   createdAt
+}
+`;
+
+export const CROWDLOAN_QUERY = `
+query {
+  crowdloans(orderBy: BLOCK_NUM_DESC) {
+    nodes {
+      id
+      parachain {
+        paraId
+        manager
+      }
+      retiring
+      depositor
+      verifier
+      cap
+      raised
+      lockExpiredBlock
+      blockNum
+      createdAt
+    }
+  }
+}
+`;
+
+export const CONTRIBUTORS_QUERY = `
+query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
+  crowdloan (id: $fundId) {
+    id
+    parachain {
+      paraId
+      manager
+    }
+    retiring
+    depositor
+    verifier
+    cap
+    raised
+    lockExpiredBlock
+    createdAt
+  }
+	contributions (filter: $fundIdFilter, orderBy: BLOCK_NUM_DESC) {
+    nodes {
+      id
+      account
+      amount
+      createdAt
+      blockNum
+      parachain {
+        paraId
+        manager
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
 }
 `;

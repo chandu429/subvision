@@ -4,7 +4,7 @@ var app = (function () {
     'use strict';
 
     (function() {
-        const env = {"NODE_ENV":"production"};
+        const env = {};
         try {
             if (process) {
                 process.env = Object.assign({}, process.env);
@@ -370,6 +370,101 @@ var app = (function () {
         : typeof globalThis !== 'undefined'
             ? globalThis
             : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
+    function validate_each_keys(ctx, list, get_context, get_key) {
+        const keys = new Set();
+        for (let i = 0; i < list.length; i++) {
+            const key = get_key(get_context(ctx, list, i));
+            if (keys.has(key)) {
+                throw new Error('Cannot have duplicate keys in a keyed each');
+            }
+            keys.add(key);
+        }
+    }
 
     function get_spread_update(levels, updates) {
         const update = {};
@@ -1584,10 +1679,10 @@ var app = (function () {
     	"white-space:nowrap;" +
     	"border:0;";
 
-    const file$b = "node_modules/svelte-navigator/src/Router.svelte";
+    const file$g = "node_modules/svelte-navigator/src/Router.svelte";
 
     // (195:0) {#if isTopLevelRouter && manageFocus && a11yConfig.announcements}
-    function create_if_block$4(ctx) {
+    function create_if_block$7(ctx) {
     	let div;
     	let t;
 
@@ -1599,7 +1694,7 @@ var app = (function () {
     			attr_dev(div, "aria-atomic", "true");
     			attr_dev(div, "aria-live", "polite");
     			attr_dev(div, "style", visuallyHiddenStyle);
-    			add_location(div, file$b, 195, 1, 5906);
+    			add_location(div, file$g, 195, 1, 5906);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1615,7 +1710,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$7.name,
     		type: "if",
     		source: "(195:0) {#if isTopLevelRouter && manageFocus && a11yConfig.announcements}",
     		ctx
@@ -1624,7 +1719,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$c(ctx) {
+    function create_fragment$h(ctx) {
     	let div;
     	let t0;
     	let t1;
@@ -1632,7 +1727,7 @@ var app = (function () {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[20].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[19], null);
-    	let if_block = /*isTopLevelRouter*/ ctx[2] && /*manageFocus*/ ctx[4] && /*a11yConfig*/ ctx[1].announcements && create_if_block$4(ctx);
+    	let if_block = /*isTopLevelRouter*/ ctx[2] && /*manageFocus*/ ctx[4] && /*a11yConfig*/ ctx[1].announcements && create_if_block$7(ctx);
 
     	const block = {
     		c: function create() {
@@ -1645,7 +1740,7 @@ var app = (function () {
     			set_style(div, "display", "none");
     			attr_dev(div, "aria-hidden", "true");
     			attr_dev(div, "data-svnav-router", /*routerId*/ ctx[3]);
-    			add_location(div, file$b, 190, 0, 5750);
+    			add_location(div, file$g, 190, 0, 5750);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1693,7 +1788,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$c.name,
+    		id: create_fragment$h.name,
     		type: "component",
     		source: "",
     		ctx
@@ -1705,7 +1800,7 @@ var app = (function () {
     const createId$1 = createCounter();
     const defaultBasepath = "/";
 
-    function instance$c($$self, $$props, $$invalidate) {
+    function instance$h($$self, $$props, $$invalidate) {
     	let $location;
     	let $routes;
     	let $prevLocation;
@@ -1996,8 +2091,8 @@ var app = (function () {
     		init(
     			this,
     			options,
-    			instance$c,
-    			create_fragment$c,
+    			instance$h,
+    			create_fragment$h,
     			safe_not_equal,
     			{
     				basepath: 10,
@@ -2013,7 +2108,7 @@ var app = (function () {
     			component: this,
     			tagName: "Router",
     			options,
-    			id: create_fragment$c.name
+    			id: create_fragment$h.name
     		});
     	}
 
@@ -2273,7 +2368,35 @@ var app = (function () {
     	return navigateRelative;
     }
 
-    const file$a = "node_modules/svelte-navigator/src/Route.svelte";
+    /**
+     * Access the parent Routes matched params and wildcards
+     * @returns {import("svelte/store").Readable<{
+         [param: string]: any;
+       }>} A readable store containing the matched parameters and wildcards
+     *
+     * @example
+      ```html
+      <!--
+        Somewhere inside <Route path="user/:id/*splat" />
+        with a current url of "/myApp/user/123/pauls-profile"
+      -->
+      <script>
+        import { useParams } from "svelte-navigator";
+
+        const params = useParams();
+
+        $: console.log($params); // -> { id: "123", splat: "pauls-profile" }
+      </script>
+
+      <h3>Welcome user {$params.id}! bleep bloop...</h3>
+      ```
+     */
+    function useParams() {
+    	usePreflightCheck(USE_PARAMS_ID, null, ROUTE, ROUTE_ID);
+    	return toReadonly(ROUTE_PARAMS);
+    }
+
+    const file$f = "node_modules/svelte-navigator/src/Route.svelte";
 
     const get_default_slot_changes = dirty => ({
     	params: dirty & /*$params*/ 16,
@@ -2287,14 +2410,14 @@ var app = (function () {
     });
 
     // (97:0) {#if isActive}
-    function create_if_block$3(ctx) {
+    function create_if_block$6(ctx) {
     	let router;
     	let current;
 
     	router = new Router({
     			props: {
     				primary: /*primary*/ ctx[1],
-    				$$slots: { default: [create_default_slot$3] },
+    				$$slots: { default: [create_default_slot$5] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -2334,7 +2457,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$6.name,
     		type: "if",
     		source: "(97:0) {#if isActive}",
     		ctx
@@ -2344,7 +2467,7 @@ var app = (function () {
     }
 
     // (113:2) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$4(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[17].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[18], get_default_slot_context);
@@ -2383,7 +2506,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$4.name,
     		type: "else",
     		source: "(113:2) {:else}",
     		ctx
@@ -2393,7 +2516,7 @@ var app = (function () {
     }
 
     // (105:2) {#if component !== null}
-    function create_if_block_1$1(ctx) {
+    function create_if_block_1$3(ctx) {
     	let switch_instance;
     	let switch_instance_anchor;
     	let current;
@@ -2488,7 +2611,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$1.name,
+    		id: create_if_block_1$3.name,
     		type: "if",
     		source: "(105:2) {#if component !== null}",
     		ctx
@@ -2498,12 +2621,12 @@ var app = (function () {
     }
 
     // (98:1) <Router {primary}>
-    function create_default_slot$3(ctx) {
+    function create_default_slot$5(ctx) {
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block_1$1, create_else_block$2];
+    	const if_block_creators = [create_if_block_1$3, create_else_block$4];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -2568,7 +2691,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$3.name,
+    		id: create_default_slot$5.name,
     		type: "slot",
     		source: "(98:1) <Router {primary}>",
     		ctx
@@ -2577,13 +2700,13 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$b(ctx) {
+    function create_fragment$g(ctx) {
     	let div0;
     	let t0;
     	let t1;
     	let div1;
     	let current;
-    	let if_block = /*isActive*/ ctx[3] && create_if_block$3(ctx);
+    	let if_block = /*isActive*/ ctx[3] && create_if_block$6(ctx);
 
     	const block = {
     		c: function create() {
@@ -2595,11 +2718,11 @@ var app = (function () {
     			set_style(div0, "display", "none");
     			attr_dev(div0, "aria-hidden", "true");
     			attr_dev(div0, "data-svnav-route-start", /*id*/ ctx[5]);
-    			add_location(div0, file$a, 95, 0, 2622);
+    			add_location(div0, file$f, 95, 0, 2622);
     			set_style(div1, "display", "none");
     			attr_dev(div1, "aria-hidden", "true");
     			attr_dev(div1, "data-svnav-route-end", /*id*/ ctx[5]);
-    			add_location(div1, file$a, 121, 0, 3295);
+    			add_location(div1, file$f, 121, 0, 3295);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2621,7 +2744,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$3(ctx);
+    					if_block = create_if_block$6(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(t1.parentNode, t1);
@@ -2656,7 +2779,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2667,7 +2790,7 @@ var app = (function () {
 
     const createId = createCounter();
 
-    function instance$b($$self, $$props, $$invalidate) {
+    function instance$g($$self, $$props, $$invalidate) {
     	let isActive;
     	const omit_props_names = ["path","component","meta","primary"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -2855,7 +2978,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
+    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
     			path: 12,
     			component: 0,
     			meta: 13,
@@ -2866,7 +2989,7 @@ var app = (function () {
     			component: this,
     			tagName: "Route",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$g.name
     		});
     	}
 
@@ -2903,9 +3026,9 @@ var app = (function () {
     	}
     }
 
-    const file$9 = "node_modules/svelte-navigator/src/Link.svelte";
+    const file$e = "node_modules/svelte-navigator/src/Link.svelte";
 
-    function create_fragment$a(ctx) {
+    function create_fragment$f(ctx) {
     	let a;
     	let current;
     	let mounted;
@@ -2924,7 +3047,7 @@ var app = (function () {
     			a = element("a");
     			if (default_slot) default_slot.c();
     			set_attributes(a, a_data);
-    			add_location(a, file$9, 63, 0, 1735);
+    			add_location(a, file$e, 63, 0, 1735);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2975,7 +3098,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2984,7 +3107,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$a($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let href;
     	let isPartiallyCurrent;
     	let isCurrent;
@@ -3134,13 +3257,13 @@ var app = (function () {
     class Link extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { to: 5, replace: 6, state: 7, getProps: 8 });
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, { to: 5, replace: 6, state: 7, getProps: 8 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Link",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$f.name
     		});
 
     		const { ctx } = this.$$;
@@ -3184,10 +3307,10 @@ var app = (function () {
     	}
     }
 
-    const file$8 = "src/MobileMenu.svelte";
+    const file$d = "src/MobileMenu.svelte";
 
     // (5:2) <Link to="/" class="flex mr-auto">
-    function create_default_slot$2(ctx) {
+    function create_default_slot$4(ctx) {
     	let img;
     	let img_src_value;
 
@@ -3197,7 +3320,7 @@ var app = (function () {
     			attr_dev(img, "alt", "Subvisio");
     			attr_dev(img, "class", "w-6");
     			if (img.src !== (img_src_value = "/logo.svg")) attr_dev(img, "src", img_src_value);
-    			add_location(img, file$8, 5, 4, 141);
+    			add_location(img, file$d, 5, 4, 141);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -3209,7 +3332,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$2.name,
+    		id: create_default_slot$4.name,
     		type: "slot",
     		source: "(5:2) <Link to=\\\"/\\\" class=\\\"flex mr-auto\\\">",
     		ctx
@@ -3218,7 +3341,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$9(ctx) {
+    function create_fragment$e(ctx) {
     	let div0;
     	let link;
     	let t0;
@@ -3815,7 +3938,7 @@ var app = (function () {
     			props: {
     				to: "/",
     				class: "flex mr-auto",
-    				$$slots: { default: [create_default_slot$2] },
+    				$$slots: { default: [create_default_slot$4] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4475,858 +4598,858 @@ var app = (function () {
     			div152.textContent = "Image Zoom";
     			attr_dev(i0, "data-feather", "bar-chart-2");
     			attr_dev(i0, "class", "w-8 h-8 text-white transform -rotate-90");
-    			add_location(i0, file$8, 8, 4, 247);
+    			add_location(i0, file$d, 8, 4, 247);
     			attr_dev(a0, "href", "/#");
     			attr_dev(a0, "id", "mobile-menu-toggler");
-    			add_location(a0, file$8, 7, 2, 204);
+    			add_location(a0, file$d, 7, 2, 204);
     			attr_dev(div0, "class", "mobile-menu-bar");
-    			add_location(div0, file$8, 3, 0, 70);
+    			add_location(div0, file$d, 3, 0, 70);
     			attr_dev(i1, "data-feather", "home");
-    			add_location(i1, file$8, 14, 30, 460);
+    			add_location(i1, file$d, 14, 30, 460);
     			attr_dev(div1, "class", "menu__icon");
-    			add_location(div1, file$8, 14, 6, 436);
+    			add_location(div1, file$d, 14, 6, 436);
     			attr_dev(i2, "data-feather", "chevron-down");
     			attr_dev(i2, "class", "menu__sub-icon");
-    			add_location(i2, file$8, 15, 41, 533);
+    			add_location(i2, file$d, 15, 41, 533);
     			attr_dev(div2, "class", "menu__title");
-    			add_location(div2, file$8, 15, 6, 498);
+    			add_location(div2, file$d, 15, 6, 498);
     			attr_dev(a1, "href", "/#");
     			attr_dev(a1, "class", "menu");
-    			add_location(a1, file$8, 13, 4, 403);
+    			add_location(a1, file$d, 13, 4, 403);
     			attr_dev(i3, "data-feather", "activity");
-    			add_location(i3, file$8, 20, 34, 725);
+    			add_location(i3, file$d, 20, 34, 725);
     			attr_dev(div3, "class", "menu__icon");
-    			add_location(div3, file$8, 20, 10, 701);
+    			add_location(div3, file$d, 20, 10, 701);
     			attr_dev(div4, "class", "menu__title");
-    			add_location(div4, file$8, 21, 10, 771);
+    			add_location(div4, file$d, 21, 10, 771);
     			attr_dev(a2, "href", "index.html");
     			attr_dev(a2, "class", "menu");
-    			add_location(a2, file$8, 19, 8, 656);
-    			add_location(li0, file$8, 18, 6, 643);
+    			add_location(a2, file$d, 19, 8, 656);
+    			add_location(li0, file$d, 18, 6, 643);
     			attr_dev(i4, "data-feather", "activity");
-    			add_location(i4, file$8, 26, 34, 960);
+    			add_location(i4, file$d, 26, 34, 960);
     			attr_dev(div5, "class", "menu__icon");
-    			add_location(div5, file$8, 26, 10, 936);
+    			add_location(div5, file$d, 26, 10, 936);
     			attr_dev(div6, "class", "menu__title");
-    			add_location(div6, file$8, 27, 10, 1006);
+    			add_location(div6, file$d, 27, 10, 1006);
     			attr_dev(a3, "href", "side-menu-light-dashboard-overview-2.html");
     			attr_dev(a3, "class", "menu");
-    			add_location(a3, file$8, 25, 8, 860);
-    			add_location(li1, file$8, 24, 6, 847);
+    			add_location(a3, file$d, 25, 8, 860);
+    			add_location(li1, file$d, 24, 6, 847);
     			attr_dev(ul0, "class", "menu__sub-open");
-    			add_location(ul0, file$8, 17, 4, 609);
-    			add_location(li2, file$8, 12, 2, 394);
+    			add_location(ul0, file$d, 17, 4, 609);
+    			add_location(li2, file$d, 12, 2, 394);
     			attr_dev(i5, "data-feather", "box");
-    			add_location(i5, file$8, 34, 30, 1179);
+    			add_location(i5, file$d, 34, 30, 1179);
     			attr_dev(div7, "class", "menu__icon");
-    			add_location(div7, file$8, 34, 6, 1155);
+    			add_location(div7, file$d, 34, 6, 1155);
     			attr_dev(i6, "data-feather", "chevron-down");
     			attr_dev(i6, "class", "menu__sub-icon");
-    			add_location(i6, file$8, 35, 43, 1253);
+    			add_location(i6, file$d, 35, 43, 1253);
     			attr_dev(div8, "class", "menu__title");
-    			add_location(div8, file$8, 35, 6, 1216);
+    			add_location(div8, file$d, 35, 6, 1216);
     			attr_dev(a4, "href", "/#");
     			attr_dev(a4, "class", "menu menu--active");
-    			add_location(a4, file$8, 33, 4, 1109);
+    			add_location(a4, file$d, 33, 4, 1109);
     			attr_dev(i7, "data-feather", "activity");
-    			add_location(i7, file$8, 40, 34, 1444);
+    			add_location(i7, file$d, 40, 34, 1444);
     			attr_dev(div9, "class", "menu__icon");
-    			add_location(div9, file$8, 40, 10, 1420);
+    			add_location(div9, file$d, 40, 10, 1420);
     			attr_dev(div10, "class", "menu__title");
-    			add_location(div10, file$8, 41, 10, 1490);
+    			add_location(div10, file$d, 41, 10, 1490);
     			attr_dev(a5, "href", "index.html");
     			attr_dev(a5, "class", "menu menu--active");
-    			add_location(a5, file$8, 39, 8, 1362);
-    			add_location(li3, file$8, 38, 6, 1349);
+    			add_location(a5, file$d, 39, 8, 1362);
+    			add_location(li3, file$d, 38, 6, 1349);
     			attr_dev(i8, "data-feather", "activity");
-    			add_location(i8, file$8, 46, 34, 1690);
+    			add_location(i8, file$d, 46, 34, 1690);
     			attr_dev(div11, "class", "menu__icon");
-    			add_location(div11, file$8, 46, 10, 1666);
+    			add_location(div11, file$d, 46, 10, 1666);
     			attr_dev(div12, "class", "menu__title");
-    			add_location(div12, file$8, 47, 10, 1736);
+    			add_location(div12, file$d, 47, 10, 1736);
     			attr_dev(a6, "href", "simple-menu-light-dashboard-overview-1.html");
     			attr_dev(a6, "class", "menu menu--active");
-    			add_location(a6, file$8, 45, 8, 1575);
-    			add_location(li4, file$8, 44, 6, 1562);
+    			add_location(a6, file$d, 45, 8, 1575);
+    			add_location(li4, file$d, 44, 6, 1562);
     			attr_dev(i9, "data-feather", "activity");
-    			add_location(i9, file$8, 52, 34, 1935);
+    			add_location(i9, file$d, 52, 34, 1935);
     			attr_dev(div13, "class", "menu__icon");
-    			add_location(div13, file$8, 52, 10, 1911);
+    			add_location(div13, file$d, 52, 10, 1911);
     			attr_dev(div14, "class", "menu__title");
-    			add_location(div14, file$8, 53, 10, 1981);
+    			add_location(div14, file$d, 53, 10, 1981);
     			attr_dev(a7, "href", "top-menu-light-dashboard-overview-1.html");
     			attr_dev(a7, "class", "menu menu--active");
-    			add_location(a7, file$8, 51, 8, 1823);
-    			add_location(li5, file$8, 50, 6, 1810);
+    			add_location(a7, file$d, 51, 8, 1823);
+    			add_location(li5, file$d, 50, 6, 1810);
     			attr_dev(ul1, "class", "");
-    			add_location(ul1, file$8, 37, 4, 1329);
-    			add_location(li6, file$8, 32, 2, 1100);
+    			add_location(ul1, file$d, 37, 4, 1329);
+    			add_location(li6, file$d, 32, 2, 1100);
     			attr_dev(i10, "data-feather", "inbox");
-    			add_location(i10, file$8, 60, 30, 2156);
+    			add_location(i10, file$d, 60, 30, 2156);
     			attr_dev(div15, "class", "menu__icon");
-    			add_location(div15, file$8, 60, 6, 2132);
+    			add_location(div15, file$d, 60, 6, 2132);
     			attr_dev(div16, "class", "menu__title");
-    			add_location(div16, file$8, 61, 6, 2195);
+    			add_location(div16, file$d, 61, 6, 2195);
     			attr_dev(a8, "href", "side-menu-light-inbox.html");
     			attr_dev(a8, "class", "menu");
-    			add_location(a8, file$8, 59, 4, 2075);
-    			add_location(li7, file$8, 58, 2, 2066);
+    			add_location(a8, file$d, 59, 4, 2075);
+    			add_location(li7, file$d, 58, 2, 2066);
     			attr_dev(i11, "data-feather", "hard-drive");
-    			add_location(i11, file$8, 66, 30, 2348);
+    			add_location(i11, file$d, 66, 30, 2348);
     			attr_dev(div17, "class", "menu__icon");
-    			add_location(div17, file$8, 66, 6, 2324);
+    			add_location(div17, file$d, 66, 6, 2324);
     			attr_dev(div18, "class", "menu__title");
-    			add_location(div18, file$8, 67, 6, 2392);
+    			add_location(div18, file$d, 67, 6, 2392);
     			attr_dev(a9, "href", "side-menu-light-file-manager.html");
     			attr_dev(a9, "class", "menu");
-    			add_location(a9, file$8, 65, 4, 2260);
-    			add_location(li8, file$8, 64, 2, 2251);
+    			add_location(a9, file$d, 65, 4, 2260);
+    			add_location(li8, file$d, 64, 2, 2251);
     			attr_dev(i12, "data-feather", "credit-card");
-    			add_location(i12, file$8, 72, 30, 2553);
+    			add_location(i12, file$d, 72, 30, 2553);
     			attr_dev(div19, "class", "menu__icon");
-    			add_location(div19, file$8, 72, 6, 2529);
+    			add_location(div19, file$d, 72, 6, 2529);
     			attr_dev(div20, "class", "menu__title");
-    			add_location(div20, file$8, 73, 6, 2598);
+    			add_location(div20, file$d, 73, 6, 2598);
     			attr_dev(a10, "href", "side-menu-light-point-of-sale.html");
     			attr_dev(a10, "class", "menu");
-    			add_location(a10, file$8, 71, 4, 2464);
-    			add_location(li9, file$8, 70, 2, 2455);
+    			add_location(a10, file$d, 71, 4, 2464);
+    			add_location(li9, file$d, 70, 2, 2455);
     			attr_dev(i13, "data-feather", "message-square");
-    			add_location(i13, file$8, 78, 30, 2751);
+    			add_location(i13, file$d, 78, 30, 2751);
     			attr_dev(div21, "class", "menu__icon");
-    			add_location(div21, file$8, 78, 6, 2727);
+    			add_location(div21, file$d, 78, 6, 2727);
     			attr_dev(div22, "class", "menu__title");
-    			add_location(div22, file$8, 79, 6, 2799);
+    			add_location(div22, file$d, 79, 6, 2799);
     			attr_dev(a11, "href", "side-menu-light-chat.html");
     			attr_dev(a11, "class", "menu");
-    			add_location(a11, file$8, 77, 4, 2671);
-    			add_location(li10, file$8, 76, 2, 2662);
+    			add_location(a11, file$d, 77, 4, 2671);
+    			add_location(li10, file$d, 76, 2, 2662);
     			attr_dev(i14, "data-feather", "file-text");
-    			add_location(i14, file$8, 84, 30, 2943);
+    			add_location(i14, file$d, 84, 30, 2943);
     			attr_dev(div23, "class", "menu__icon");
-    			add_location(div23, file$8, 84, 6, 2919);
+    			add_location(div23, file$d, 84, 6, 2919);
     			attr_dev(div24, "class", "menu__title");
-    			add_location(div24, file$8, 85, 6, 2986);
+    			add_location(div24, file$d, 85, 6, 2986);
     			attr_dev(a12, "href", "side-menu-light-post.html");
     			attr_dev(a12, "class", "menu");
-    			add_location(a12, file$8, 83, 4, 2863);
-    			add_location(li11, file$8, 82, 2, 2854);
+    			add_location(a12, file$d, 83, 4, 2863);
+    			add_location(li11, file$d, 82, 2, 2854);
     			attr_dev(i15, "data-feather", "calendar");
-    			add_location(i15, file$8, 90, 30, 3134);
+    			add_location(i15, file$d, 90, 30, 3134);
     			attr_dev(div25, "class", "menu__icon");
-    			add_location(div25, file$8, 90, 6, 3110);
+    			add_location(div25, file$d, 90, 6, 3110);
     			attr_dev(div26, "class", "menu__title");
-    			add_location(div26, file$8, 91, 6, 3176);
+    			add_location(div26, file$d, 91, 6, 3176);
     			attr_dev(a13, "href", "side-menu-light-calendar.html");
     			attr_dev(a13, "class", "menu");
-    			add_location(a13, file$8, 89, 4, 3050);
-    			add_location(li12, file$8, 88, 2, 3041);
+    			add_location(a13, file$d, 89, 4, 3050);
+    			add_location(li12, file$d, 88, 2, 3041);
     			attr_dev(li13, "class", "menu__devider my-6");
-    			add_location(li13, file$8, 94, 2, 3235);
+    			add_location(li13, file$d, 94, 2, 3235);
     			attr_dev(i16, "data-feather", "edit");
-    			add_location(i16, file$8, 97, 30, 3337);
+    			add_location(i16, file$d, 97, 30, 3337);
     			attr_dev(div27, "class", "menu__icon");
-    			add_location(div27, file$8, 97, 6, 3313);
+    			add_location(div27, file$d, 97, 6, 3313);
     			attr_dev(i17, "data-feather", "chevron-down");
     			attr_dev(i17, "class", "menu__sub-icon");
-    			add_location(i17, file$8, 98, 36, 3405);
+    			add_location(i17, file$d, 98, 36, 3405);
     			attr_dev(div28, "class", "menu__title");
-    			add_location(div28, file$8, 98, 6, 3375);
+    			add_location(div28, file$d, 98, 6, 3375);
     			attr_dev(a14, "href", "/#");
     			attr_dev(a14, "class", "menu");
-    			add_location(a14, file$8, 96, 4, 3280);
+    			add_location(a14, file$d, 96, 4, 3280);
     			attr_dev(i18, "data-feather", "activity");
-    			add_location(i18, file$8, 103, 34, 3608);
+    			add_location(i18, file$d, 103, 34, 3608);
     			attr_dev(div29, "class", "menu__icon");
-    			add_location(div29, file$8, 103, 10, 3584);
+    			add_location(div29, file$d, 103, 10, 3584);
     			attr_dev(div30, "class", "menu__title");
-    			add_location(div30, file$8, 104, 10, 3654);
+    			add_location(div30, file$d, 104, 10, 3654);
     			attr_dev(a15, "href", "side-menu-light-crud-data-list.html");
     			attr_dev(a15, "class", "menu");
-    			add_location(a15, file$8, 102, 8, 3514);
-    			add_location(li14, file$8, 101, 6, 3501);
+    			add_location(a15, file$d, 102, 8, 3514);
+    			add_location(li14, file$d, 101, 6, 3501);
     			attr_dev(i19, "data-feather", "activity");
-    			add_location(i19, file$8, 109, 34, 3828);
+    			add_location(i19, file$d, 109, 34, 3828);
     			attr_dev(div31, "class", "menu__icon");
-    			add_location(div31, file$8, 109, 10, 3804);
+    			add_location(div31, file$d, 109, 10, 3804);
     			attr_dev(div32, "class", "menu__title");
-    			add_location(div32, file$8, 110, 10, 3874);
+    			add_location(div32, file$d, 110, 10, 3874);
     			attr_dev(a16, "href", "side-menu-light-crud-form.html");
     			attr_dev(a16, "class", "menu");
-    			add_location(a16, file$8, 108, 8, 3739);
-    			add_location(li15, file$8, 107, 6, 3726);
+    			add_location(a16, file$d, 108, 8, 3739);
+    			add_location(li15, file$d, 107, 6, 3726);
     			attr_dev(ul2, "class", "");
-    			add_location(ul2, file$8, 100, 4, 3481);
-    			add_location(li16, file$8, 95, 2, 3271);
+    			add_location(ul2, file$d, 100, 4, 3481);
+    			add_location(li16, file$d, 95, 2, 3271);
     			attr_dev(i20, "data-feather", "users");
-    			add_location(i20, file$8, 117, 30, 4021);
+    			add_location(i20, file$d, 117, 30, 4021);
     			attr_dev(div33, "class", "menu__icon");
-    			add_location(div33, file$8, 117, 6, 3997);
+    			add_location(div33, file$d, 117, 6, 3997);
     			attr_dev(i21, "data-feather", "chevron-down");
     			attr_dev(i21, "class", "menu__sub-icon");
-    			add_location(i21, file$8, 118, 37, 4091);
+    			add_location(i21, file$d, 118, 37, 4091);
     			attr_dev(div34, "class", "menu__title");
-    			add_location(div34, file$8, 118, 6, 4060);
+    			add_location(div34, file$d, 118, 6, 4060);
     			attr_dev(a17, "href", "/#");
     			attr_dev(a17, "class", "menu");
-    			add_location(a17, file$8, 116, 4, 3964);
+    			add_location(a17, file$d, 116, 4, 3964);
     			attr_dev(i22, "data-feather", "activity");
-    			add_location(i22, file$8, 123, 34, 4294);
+    			add_location(i22, file$d, 123, 34, 4294);
     			attr_dev(div35, "class", "menu__icon");
-    			add_location(div35, file$8, 123, 10, 4270);
+    			add_location(div35, file$d, 123, 10, 4270);
     			attr_dev(div36, "class", "menu__title");
-    			add_location(div36, file$8, 124, 10, 4340);
+    			add_location(div36, file$d, 124, 10, 4340);
     			attr_dev(a18, "href", "side-menu-light-users-layout-1.html");
     			attr_dev(a18, "class", "menu");
-    			add_location(a18, file$8, 122, 8, 4200);
-    			add_location(li17, file$8, 121, 6, 4187);
+    			add_location(a18, file$d, 122, 8, 4200);
+    			add_location(li17, file$d, 121, 6, 4187);
     			attr_dev(i23, "data-feather", "activity");
-    			add_location(i23, file$8, 129, 34, 4518);
+    			add_location(i23, file$d, 129, 34, 4518);
     			attr_dev(div37, "class", "menu__icon");
-    			add_location(div37, file$8, 129, 10, 4494);
+    			add_location(div37, file$d, 129, 10, 4494);
     			attr_dev(div38, "class", "menu__title");
-    			add_location(div38, file$8, 130, 10, 4564);
+    			add_location(div38, file$d, 130, 10, 4564);
     			attr_dev(a19, "href", "side-menu-light-users-layout-2.html");
     			attr_dev(a19, "class", "menu");
-    			add_location(a19, file$8, 128, 8, 4424);
-    			add_location(li18, file$8, 127, 6, 4411);
+    			add_location(a19, file$d, 128, 8, 4424);
+    			add_location(li18, file$d, 127, 6, 4411);
     			attr_dev(i24, "data-feather", "activity");
-    			add_location(i24, file$8, 135, 34, 4742);
+    			add_location(i24, file$d, 135, 34, 4742);
     			attr_dev(div39, "class", "menu__icon");
-    			add_location(div39, file$8, 135, 10, 4718);
+    			add_location(div39, file$d, 135, 10, 4718);
     			attr_dev(div40, "class", "menu__title");
-    			add_location(div40, file$8, 136, 10, 4788);
+    			add_location(div40, file$d, 136, 10, 4788);
     			attr_dev(a20, "href", "side-menu-light-users-layout-3.html");
     			attr_dev(a20, "class", "menu");
-    			add_location(a20, file$8, 134, 8, 4648);
-    			add_location(li19, file$8, 133, 6, 4635);
+    			add_location(a20, file$d, 134, 8, 4648);
+    			add_location(li19, file$d, 133, 6, 4635);
     			attr_dev(ul3, "class", "");
-    			add_location(ul3, file$8, 120, 4, 4167);
-    			add_location(li20, file$8, 115, 2, 3955);
+    			add_location(ul3, file$d, 120, 4, 4167);
+    			add_location(li20, file$d, 115, 2, 3955);
     			attr_dev(i25, "data-feather", "trello");
-    			add_location(i25, file$8, 143, 30, 4939);
+    			add_location(i25, file$d, 143, 30, 4939);
     			attr_dev(div41, "class", "menu__icon");
-    			add_location(div41, file$8, 143, 6, 4915);
+    			add_location(div41, file$d, 143, 6, 4915);
     			attr_dev(i26, "data-feather", "chevron-down");
     			attr_dev(i26, "class", "menu__sub-icon");
-    			add_location(i26, file$8, 144, 39, 5012);
+    			add_location(i26, file$d, 144, 39, 5012);
     			attr_dev(div42, "class", "menu__title");
-    			add_location(div42, file$8, 144, 6, 4979);
+    			add_location(div42, file$d, 144, 6, 4979);
     			attr_dev(a21, "href", "/#");
     			attr_dev(a21, "class", "menu");
-    			add_location(a21, file$8, 142, 4, 4882);
+    			add_location(a21, file$d, 142, 4, 4882);
     			attr_dev(i27, "data-feather", "activity");
-    			add_location(i27, file$8, 149, 34, 5219);
+    			add_location(i27, file$d, 149, 34, 5219);
     			attr_dev(div43, "class", "menu__icon");
-    			add_location(div43, file$8, 149, 10, 5195);
+    			add_location(div43, file$d, 149, 10, 5195);
     			attr_dev(div44, "class", "menu__title");
-    			add_location(div44, file$8, 150, 10, 5265);
+    			add_location(div44, file$d, 150, 10, 5265);
     			attr_dev(a22, "href", "side-menu-light-profile-overview-1.html");
     			attr_dev(a22, "class", "menu");
-    			add_location(a22, file$8, 148, 8, 5121);
-    			add_location(li21, file$8, 147, 6, 5108);
+    			add_location(a22, file$d, 148, 8, 5121);
+    			add_location(li21, file$d, 147, 6, 5108);
     			attr_dev(i28, "data-feather", "activity");
-    			add_location(i28, file$8, 155, 34, 5449);
+    			add_location(i28, file$d, 155, 34, 5449);
     			attr_dev(div45, "class", "menu__icon");
-    			add_location(div45, file$8, 155, 10, 5425);
+    			add_location(div45, file$d, 155, 10, 5425);
     			attr_dev(div46, "class", "menu__title");
-    			add_location(div46, file$8, 156, 10, 5495);
+    			add_location(div46, file$d, 156, 10, 5495);
     			attr_dev(a23, "href", "side-menu-light-profile-overview-2.html");
     			attr_dev(a23, "class", "menu");
-    			add_location(a23, file$8, 154, 8, 5351);
-    			add_location(li22, file$8, 153, 6, 5338);
+    			add_location(a23, file$d, 154, 8, 5351);
+    			add_location(li22, file$d, 153, 6, 5338);
     			attr_dev(i29, "data-feather", "activity");
-    			add_location(i29, file$8, 161, 34, 5679);
+    			add_location(i29, file$d, 161, 34, 5679);
     			attr_dev(div47, "class", "menu__icon");
-    			add_location(div47, file$8, 161, 10, 5655);
+    			add_location(div47, file$d, 161, 10, 5655);
     			attr_dev(div48, "class", "menu__title");
-    			add_location(div48, file$8, 162, 10, 5725);
+    			add_location(div48, file$d, 162, 10, 5725);
     			attr_dev(a24, "href", "side-menu-light-profile-overview-3.html");
     			attr_dev(a24, "class", "menu");
-    			add_location(a24, file$8, 160, 8, 5581);
-    			add_location(li23, file$8, 159, 6, 5568);
+    			add_location(a24, file$d, 160, 8, 5581);
+    			add_location(li23, file$d, 159, 6, 5568);
     			attr_dev(ul4, "class", "");
-    			add_location(ul4, file$8, 146, 4, 5088);
-    			add_location(li24, file$8, 141, 2, 4873);
+    			add_location(ul4, file$d, 146, 4, 5088);
+    			add_location(li24, file$d, 141, 2, 4873);
     			attr_dev(i30, "data-feather", "layout");
-    			add_location(i30, file$8, 169, 30, 5878);
+    			add_location(i30, file$d, 169, 30, 5878);
     			attr_dev(div49, "class", "menu__icon");
-    			add_location(div49, file$8, 169, 6, 5854);
+    			add_location(div49, file$d, 169, 6, 5854);
     			attr_dev(i31, "data-feather", "chevron-down");
     			attr_dev(i31, "class", "menu__sub-icon");
-    			add_location(i31, file$8, 170, 37, 5949);
+    			add_location(i31, file$d, 170, 37, 5949);
     			attr_dev(div50, "class", "menu__title");
-    			add_location(div50, file$8, 170, 6, 5918);
+    			add_location(div50, file$d, 170, 6, 5918);
     			attr_dev(a25, "href", "/#");
     			attr_dev(a25, "class", "menu");
-    			add_location(a25, file$8, 168, 4, 5821);
+    			add_location(a25, file$d, 168, 4, 5821);
     			attr_dev(i32, "data-feather", "activity");
-    			add_location(i32, file$8, 175, 34, 6119);
+    			add_location(i32, file$d, 175, 34, 6119);
     			attr_dev(div51, "class", "menu__icon");
-    			add_location(div51, file$8, 175, 10, 6095);
+    			add_location(div51, file$d, 175, 10, 6095);
     			attr_dev(i33, "data-feather", "chevron-down");
     			attr_dev(i33, "class", "menu__sub-icon");
-    			add_location(i33, file$8, 176, 43, 6198);
+    			add_location(i33, file$d, 176, 43, 6198);
     			attr_dev(div52, "class", "menu__title");
-    			add_location(div52, file$8, 176, 10, 6165);
+    			add_location(div52, file$d, 176, 10, 6165);
     			attr_dev(a26, "href", "/#");
     			attr_dev(a26, "class", "menu");
-    			add_location(a26, file$8, 174, 8, 6058);
+    			add_location(a26, file$d, 174, 8, 6058);
     			attr_dev(i34, "data-feather", "zap");
-    			add_location(i34, file$8, 181, 38, 6422);
+    			add_location(i34, file$d, 181, 38, 6422);
     			attr_dev(div53, "class", "menu__icon");
-    			add_location(div53, file$8, 181, 14, 6398);
+    			add_location(div53, file$d, 181, 14, 6398);
     			attr_dev(div54, "class", "menu__title");
-    			add_location(div54, file$8, 182, 14, 6467);
+    			add_location(div54, file$d, 182, 14, 6467);
     			attr_dev(a27, "href", "side-menu-light-wizard-layout-1.html");
     			attr_dev(a27, "class", "menu");
-    			add_location(a27, file$8, 180, 12, 6323);
-    			add_location(li25, file$8, 179, 10, 6306);
+    			add_location(a27, file$d, 180, 12, 6323);
+    			add_location(li25, file$d, 179, 10, 6306);
     			attr_dev(i35, "data-feather", "zap");
-    			add_location(i35, file$8, 187, 38, 6666);
+    			add_location(i35, file$d, 187, 38, 6666);
     			attr_dev(div55, "class", "menu__icon");
-    			add_location(div55, file$8, 187, 14, 6642);
+    			add_location(div55, file$d, 187, 14, 6642);
     			attr_dev(div56, "class", "menu__title");
-    			add_location(div56, file$8, 188, 14, 6711);
+    			add_location(div56, file$d, 188, 14, 6711);
     			attr_dev(a28, "href", "side-menu-light-wizard-layout-2.html");
     			attr_dev(a28, "class", "menu");
-    			add_location(a28, file$8, 186, 12, 6567);
-    			add_location(li26, file$8, 185, 10, 6550);
+    			add_location(a28, file$d, 186, 12, 6567);
+    			add_location(li26, file$d, 185, 10, 6550);
     			attr_dev(i36, "data-feather", "zap");
-    			add_location(i36, file$8, 193, 38, 6910);
+    			add_location(i36, file$d, 193, 38, 6910);
     			attr_dev(div57, "class", "menu__icon");
-    			add_location(div57, file$8, 193, 14, 6886);
+    			add_location(div57, file$d, 193, 14, 6886);
     			attr_dev(div58, "class", "menu__title");
-    			add_location(div58, file$8, 194, 14, 6955);
+    			add_location(div58, file$d, 194, 14, 6955);
     			attr_dev(a29, "href", "side-menu-light-wizard-layout-3.html");
     			attr_dev(a29, "class", "menu");
-    			add_location(a29, file$8, 192, 12, 6811);
-    			add_location(li27, file$8, 191, 10, 6794);
+    			add_location(a29, file$d, 192, 12, 6811);
+    			add_location(li27, file$d, 191, 10, 6794);
     			attr_dev(ul5, "class", "");
-    			add_location(ul5, file$8, 178, 8, 6282);
-    			add_location(li28, file$8, 173, 6, 6045);
+    			add_location(ul5, file$d, 178, 8, 6282);
+    			add_location(li28, file$d, 173, 6, 6045);
     			attr_dev(i37, "data-feather", "activity");
-    			add_location(i37, file$8, 201, 34, 7134);
+    			add_location(i37, file$d, 201, 34, 7134);
     			attr_dev(div59, "class", "menu__icon");
-    			add_location(div59, file$8, 201, 10, 7110);
+    			add_location(div59, file$d, 201, 10, 7110);
     			attr_dev(i38, "data-feather", "chevron-down");
     			attr_dev(i38, "class", "menu__sub-icon");
-    			add_location(i38, file$8, 202, 40, 7210);
+    			add_location(i38, file$d, 202, 40, 7210);
     			attr_dev(div60, "class", "menu__title");
-    			add_location(div60, file$8, 202, 10, 7180);
+    			add_location(div60, file$d, 202, 10, 7180);
     			attr_dev(a30, "href", "/#");
     			attr_dev(a30, "class", "menu");
-    			add_location(a30, file$8, 200, 8, 7073);
+    			add_location(a30, file$d, 200, 8, 7073);
     			attr_dev(i39, "data-feather", "zap");
-    			add_location(i39, file$8, 207, 38, 7432);
+    			add_location(i39, file$d, 207, 38, 7432);
     			attr_dev(div61, "class", "menu__icon");
-    			add_location(div61, file$8, 207, 14, 7408);
+    			add_location(div61, file$d, 207, 14, 7408);
     			attr_dev(div62, "class", "menu__title");
-    			add_location(div62, file$8, 208, 14, 7477);
+    			add_location(div62, file$d, 208, 14, 7477);
     			attr_dev(a31, "href", "side-menu-light-blog-layout-1.html");
     			attr_dev(a31, "class", "menu");
-    			add_location(a31, file$8, 206, 12, 7335);
-    			add_location(li29, file$8, 205, 10, 7318);
+    			add_location(a31, file$d, 206, 12, 7335);
+    			add_location(li29, file$d, 205, 10, 7318);
     			attr_dev(i40, "data-feather", "zap");
-    			add_location(i40, file$8, 213, 38, 7674);
+    			add_location(i40, file$d, 213, 38, 7674);
     			attr_dev(div63, "class", "menu__icon");
-    			add_location(div63, file$8, 213, 14, 7650);
+    			add_location(div63, file$d, 213, 14, 7650);
     			attr_dev(div64, "class", "menu__title");
-    			add_location(div64, file$8, 214, 14, 7719);
+    			add_location(div64, file$d, 214, 14, 7719);
     			attr_dev(a32, "href", "side-menu-light-blog-layout-2.html");
     			attr_dev(a32, "class", "menu");
-    			add_location(a32, file$8, 212, 12, 7577);
-    			add_location(li30, file$8, 211, 10, 7560);
+    			add_location(a32, file$d, 212, 12, 7577);
+    			add_location(li30, file$d, 211, 10, 7560);
     			attr_dev(i41, "data-feather", "zap");
-    			add_location(i41, file$8, 219, 38, 7916);
+    			add_location(i41, file$d, 219, 38, 7916);
     			attr_dev(div65, "class", "menu__icon");
-    			add_location(div65, file$8, 219, 14, 7892);
+    			add_location(div65, file$d, 219, 14, 7892);
     			attr_dev(div66, "class", "menu__title");
-    			add_location(div66, file$8, 220, 14, 7961);
+    			add_location(div66, file$d, 220, 14, 7961);
     			attr_dev(a33, "href", "side-menu-light-blog-layout-3.html");
     			attr_dev(a33, "class", "menu");
-    			add_location(a33, file$8, 218, 12, 7819);
-    			add_location(li31, file$8, 217, 10, 7802);
+    			add_location(a33, file$d, 218, 12, 7819);
+    			add_location(li31, file$d, 217, 10, 7802);
     			attr_dev(ul6, "class", "");
-    			add_location(ul6, file$8, 204, 8, 7294);
-    			add_location(li32, file$8, 199, 6, 7060);
+    			add_location(ul6, file$d, 204, 8, 7294);
+    			add_location(li32, file$d, 199, 6, 7060);
     			attr_dev(i42, "data-feather", "activity");
-    			add_location(i42, file$8, 227, 34, 8140);
+    			add_location(i42, file$d, 227, 34, 8140);
     			attr_dev(div67, "class", "menu__icon");
-    			add_location(div67, file$8, 227, 10, 8116);
+    			add_location(div67, file$d, 227, 10, 8116);
     			attr_dev(i43, "data-feather", "chevron-down");
     			attr_dev(i43, "class", "menu__sub-icon");
-    			add_location(i43, file$8, 228, 43, 8219);
+    			add_location(i43, file$d, 228, 43, 8219);
     			attr_dev(div68, "class", "menu__title");
-    			add_location(div68, file$8, 228, 10, 8186);
+    			add_location(div68, file$d, 228, 10, 8186);
     			attr_dev(a34, "href", "/#");
     			attr_dev(a34, "class", "menu");
-    			add_location(a34, file$8, 226, 8, 8079);
+    			add_location(a34, file$d, 226, 8, 8079);
     			attr_dev(i44, "data-feather", "zap");
-    			add_location(i44, file$8, 233, 38, 8444);
+    			add_location(i44, file$d, 233, 38, 8444);
     			attr_dev(div69, "class", "menu__icon");
-    			add_location(div69, file$8, 233, 14, 8420);
+    			add_location(div69, file$d, 233, 14, 8420);
     			attr_dev(div70, "class", "menu__title");
-    			add_location(div70, file$8, 234, 14, 8489);
+    			add_location(div70, file$d, 234, 14, 8489);
     			attr_dev(a35, "href", "side-menu-light-pricing-layout-1.html");
     			attr_dev(a35, "class", "menu");
-    			add_location(a35, file$8, 232, 12, 8344);
-    			add_location(li33, file$8, 231, 10, 8327);
+    			add_location(a35, file$d, 232, 12, 8344);
+    			add_location(li33, file$d, 231, 10, 8327);
     			attr_dev(i45, "data-feather", "zap");
-    			add_location(i45, file$8, 239, 38, 8689);
+    			add_location(i45, file$d, 239, 38, 8689);
     			attr_dev(div71, "class", "menu__icon");
-    			add_location(div71, file$8, 239, 14, 8665);
+    			add_location(div71, file$d, 239, 14, 8665);
     			attr_dev(div72, "class", "menu__title");
-    			add_location(div72, file$8, 240, 14, 8734);
+    			add_location(div72, file$d, 240, 14, 8734);
     			attr_dev(a36, "href", "side-menu-light-pricing-layout-2.html");
     			attr_dev(a36, "class", "menu");
-    			add_location(a36, file$8, 238, 12, 8589);
-    			add_location(li34, file$8, 237, 10, 8572);
+    			add_location(a36, file$d, 238, 12, 8589);
+    			add_location(li34, file$d, 237, 10, 8572);
     			attr_dev(ul7, "class", "");
-    			add_location(ul7, file$8, 230, 8, 8303);
-    			add_location(li35, file$8, 225, 6, 8066);
+    			add_location(ul7, file$d, 230, 8, 8303);
+    			add_location(li35, file$d, 225, 6, 8066);
     			attr_dev(i46, "data-feather", "activity");
-    			add_location(i46, file$8, 247, 34, 8913);
+    			add_location(i46, file$d, 247, 34, 8913);
     			attr_dev(div73, "class", "menu__icon");
-    			add_location(div73, file$8, 247, 10, 8889);
+    			add_location(div73, file$d, 247, 10, 8889);
     			attr_dev(i47, "data-feather", "chevron-down");
     			attr_dev(i47, "class", "menu__sub-icon");
-    			add_location(i47, file$8, 248, 43, 8992);
+    			add_location(i47, file$d, 248, 43, 8992);
     			attr_dev(div74, "class", "menu__title");
-    			add_location(div74, file$8, 248, 10, 8959);
+    			add_location(div74, file$d, 248, 10, 8959);
     			attr_dev(a37, "href", "/#");
     			attr_dev(a37, "class", "menu");
-    			add_location(a37, file$8, 246, 8, 8852);
+    			add_location(a37, file$d, 246, 8, 8852);
     			attr_dev(i48, "data-feather", "zap");
-    			add_location(i48, file$8, 253, 38, 9217);
+    			add_location(i48, file$d, 253, 38, 9217);
     			attr_dev(div75, "class", "menu__icon");
-    			add_location(div75, file$8, 253, 14, 9193);
+    			add_location(div75, file$d, 253, 14, 9193);
     			attr_dev(div76, "class", "menu__title");
-    			add_location(div76, file$8, 254, 14, 9262);
+    			add_location(div76, file$d, 254, 14, 9262);
     			attr_dev(a38, "href", "side-menu-light-invoice-layout-1.html");
     			attr_dev(a38, "class", "menu");
-    			add_location(a38, file$8, 252, 12, 9117);
-    			add_location(li36, file$8, 251, 10, 9100);
+    			add_location(a38, file$d, 252, 12, 9117);
+    			add_location(li36, file$d, 251, 10, 9100);
     			attr_dev(i49, "data-feather", "zap");
-    			add_location(i49, file$8, 259, 38, 9462);
+    			add_location(i49, file$d, 259, 38, 9462);
     			attr_dev(div77, "class", "menu__icon");
-    			add_location(div77, file$8, 259, 14, 9438);
+    			add_location(div77, file$d, 259, 14, 9438);
     			attr_dev(div78, "class", "menu__title");
-    			add_location(div78, file$8, 260, 14, 9507);
+    			add_location(div78, file$d, 260, 14, 9507);
     			attr_dev(a39, "href", "side-menu-light-invoice-layout-2.html");
     			attr_dev(a39, "class", "menu");
-    			add_location(a39, file$8, 258, 12, 9362);
-    			add_location(li37, file$8, 257, 10, 9345);
+    			add_location(a39, file$d, 258, 12, 9362);
+    			add_location(li37, file$d, 257, 10, 9345);
     			attr_dev(ul8, "class", "");
-    			add_location(ul8, file$8, 250, 8, 9076);
-    			add_location(li38, file$8, 245, 6, 8839);
+    			add_location(ul8, file$d, 250, 8, 9076);
+    			add_location(li38, file$d, 245, 6, 8839);
     			attr_dev(i50, "data-feather", "activity");
-    			add_location(i50, file$8, 267, 34, 9686);
+    			add_location(i50, file$d, 267, 34, 9686);
     			attr_dev(div79, "class", "menu__icon");
-    			add_location(div79, file$8, 267, 10, 9662);
+    			add_location(div79, file$d, 267, 10, 9662);
     			attr_dev(i51, "data-feather", "chevron-down");
     			attr_dev(i51, "class", "menu__sub-icon");
-    			add_location(i51, file$8, 268, 39, 9761);
+    			add_location(i51, file$d, 268, 39, 9761);
     			attr_dev(div80, "class", "menu__title");
-    			add_location(div80, file$8, 268, 10, 9732);
+    			add_location(div80, file$d, 268, 10, 9732);
     			attr_dev(a40, "href", "/#");
     			attr_dev(a40, "class", "menu");
-    			add_location(a40, file$8, 266, 8, 9625);
+    			add_location(a40, file$d, 266, 8, 9625);
     			attr_dev(i52, "data-feather", "zap");
-    			add_location(i52, file$8, 273, 38, 9982);
+    			add_location(i52, file$d, 273, 38, 9982);
     			attr_dev(div81, "class", "menu__icon");
-    			add_location(div81, file$8, 273, 14, 9958);
+    			add_location(div81, file$d, 273, 14, 9958);
     			attr_dev(div82, "class", "menu__title");
-    			add_location(div82, file$8, 274, 14, 10027);
+    			add_location(div82, file$d, 274, 14, 10027);
     			attr_dev(a41, "href", "side-menu-light-faq-layout-1.html");
     			attr_dev(a41, "class", "menu");
-    			add_location(a41, file$8, 272, 12, 9886);
-    			add_location(li39, file$8, 271, 10, 9869);
+    			add_location(a41, file$d, 272, 12, 9886);
+    			add_location(li39, file$d, 271, 10, 9869);
     			attr_dev(i53, "data-feather", "zap");
-    			add_location(i53, file$8, 279, 38, 10223);
+    			add_location(i53, file$d, 279, 38, 10223);
     			attr_dev(div83, "class", "menu__icon");
-    			add_location(div83, file$8, 279, 14, 10199);
+    			add_location(div83, file$d, 279, 14, 10199);
     			attr_dev(div84, "class", "menu__title");
-    			add_location(div84, file$8, 280, 14, 10268);
+    			add_location(div84, file$d, 280, 14, 10268);
     			attr_dev(a42, "href", "side-menu-light-faq-layout-2.html");
     			attr_dev(a42, "class", "menu");
-    			add_location(a42, file$8, 278, 12, 10127);
-    			add_location(li40, file$8, 277, 10, 10110);
+    			add_location(a42, file$d, 278, 12, 10127);
+    			add_location(li40, file$d, 277, 10, 10110);
     			attr_dev(i54, "data-feather", "zap");
-    			add_location(i54, file$8, 285, 38, 10464);
+    			add_location(i54, file$d, 285, 38, 10464);
     			attr_dev(div85, "class", "menu__icon");
-    			add_location(div85, file$8, 285, 14, 10440);
+    			add_location(div85, file$d, 285, 14, 10440);
     			attr_dev(div86, "class", "menu__title");
-    			add_location(div86, file$8, 286, 14, 10509);
+    			add_location(div86, file$d, 286, 14, 10509);
     			attr_dev(a43, "href", "side-menu-light-faq-layout-3.html");
     			attr_dev(a43, "class", "menu");
-    			add_location(a43, file$8, 284, 12, 10368);
-    			add_location(li41, file$8, 283, 10, 10351);
+    			add_location(a43, file$d, 284, 12, 10368);
+    			add_location(li41, file$d, 283, 10, 10351);
     			attr_dev(ul9, "class", "");
-    			add_location(ul9, file$8, 270, 8, 9845);
-    			add_location(li42, file$8, 265, 6, 9612);
+    			add_location(ul9, file$d, 270, 8, 9845);
+    			add_location(li42, file$d, 265, 6, 9612);
     			attr_dev(i55, "data-feather", "activity");
-    			add_location(i55, file$8, 293, 34, 10708);
+    			add_location(i55, file$d, 293, 34, 10708);
     			attr_dev(div87, "class", "menu__icon");
-    			add_location(div87, file$8, 293, 10, 10684);
+    			add_location(div87, file$d, 293, 10, 10684);
     			attr_dev(div88, "class", "menu__title");
-    			add_location(div88, file$8, 294, 10, 10754);
+    			add_location(div88, file$d, 294, 10, 10754);
     			attr_dev(a44, "href", "login-light-login.html");
     			attr_dev(a44, "class", "menu");
-    			add_location(a44, file$8, 292, 8, 10627);
-    			add_location(li43, file$8, 291, 6, 10614);
+    			add_location(a44, file$d, 292, 8, 10627);
+    			add_location(li43, file$d, 291, 6, 10614);
     			attr_dev(i56, "data-feather", "activity");
-    			add_location(i56, file$8, 299, 34, 10919);
+    			add_location(i56, file$d, 299, 34, 10919);
     			attr_dev(div89, "class", "menu__icon");
-    			add_location(div89, file$8, 299, 10, 10895);
+    			add_location(div89, file$d, 299, 10, 10895);
     			attr_dev(div90, "class", "menu__title");
-    			add_location(div90, file$8, 300, 10, 10965);
+    			add_location(div90, file$d, 300, 10, 10965);
     			attr_dev(a45, "href", "login-light-register.html");
     			attr_dev(a45, "class", "menu");
-    			add_location(a45, file$8, 298, 8, 10835);
-    			add_location(li44, file$8, 297, 6, 10822);
+    			add_location(a45, file$d, 298, 8, 10835);
+    			add_location(li44, file$d, 297, 6, 10822);
     			attr_dev(i57, "data-feather", "activity");
-    			add_location(i57, file$8, 305, 34, 11134);
+    			add_location(i57, file$d, 305, 34, 11134);
     			attr_dev(div91, "class", "menu__icon");
-    			add_location(div91, file$8, 305, 10, 11110);
+    			add_location(div91, file$d, 305, 10, 11110);
     			attr_dev(div92, "class", "menu__title");
-    			add_location(div92, file$8, 306, 10, 11180);
+    			add_location(div92, file$d, 306, 10, 11180);
     			attr_dev(a46, "href", "main-light-error-page.html");
     			attr_dev(a46, "class", "menu");
-    			add_location(a46, file$8, 304, 8, 11049);
-    			add_location(li45, file$8, 303, 6, 11036);
+    			add_location(a46, file$d, 304, 8, 11049);
+    			add_location(li45, file$d, 303, 6, 11036);
     			attr_dev(i58, "data-feather", "activity");
-    			add_location(i58, file$8, 311, 34, 11360);
+    			add_location(i58, file$d, 311, 34, 11360);
     			attr_dev(div93, "class", "menu__icon");
-    			add_location(div93, file$8, 311, 10, 11336);
+    			add_location(div93, file$d, 311, 10, 11336);
     			attr_dev(div94, "class", "menu__title");
-    			add_location(div94, file$8, 312, 10, 11406);
+    			add_location(div94, file$d, 312, 10, 11406);
     			attr_dev(a47, "href", "side-menu-light-update-profile.html");
     			attr_dev(a47, "class", "menu");
-    			add_location(a47, file$8, 310, 8, 11266);
-    			add_location(li46, file$8, 309, 6, 11253);
+    			add_location(a47, file$d, 310, 8, 11266);
+    			add_location(li46, file$d, 309, 6, 11253);
     			attr_dev(i59, "data-feather", "activity");
-    			add_location(i59, file$8, 317, 34, 11591);
+    			add_location(i59, file$d, 317, 34, 11591);
     			attr_dev(div95, "class", "menu__icon");
-    			add_location(div95, file$8, 317, 10, 11567);
+    			add_location(div95, file$d, 317, 10, 11567);
     			attr_dev(div96, "class", "menu__title");
-    			add_location(div96, file$8, 318, 10, 11637);
+    			add_location(div96, file$d, 318, 10, 11637);
     			attr_dev(a48, "href", "side-menu-light-change-password.html");
     			attr_dev(a48, "class", "menu");
-    			add_location(a48, file$8, 316, 8, 11496);
-    			add_location(li47, file$8, 315, 6, 11483);
+    			add_location(a48, file$d, 316, 8, 11496);
+    			add_location(li47, file$d, 315, 6, 11483);
     			attr_dev(ul10, "class", "");
-    			add_location(ul10, file$8, 172, 4, 6025);
-    			add_location(li48, file$8, 167, 2, 5812);
+    			add_location(ul10, file$d, 172, 4, 6025);
+    			add_location(li48, file$d, 167, 2, 5812);
     			attr_dev(li49, "class", "menu__devider my-6");
-    			add_location(li49, file$8, 323, 2, 11729);
+    			add_location(li49, file$d, 323, 2, 11729);
     			attr_dev(i60, "data-feather", "inbox");
-    			add_location(i60, file$8, 326, 30, 11831);
+    			add_location(i60, file$d, 326, 30, 11831);
     			attr_dev(div97, "class", "menu__icon");
-    			add_location(div97, file$8, 326, 6, 11807);
+    			add_location(div97, file$d, 326, 6, 11807);
     			attr_dev(i61, "data-feather", "chevron-down");
     			attr_dev(i61, "class", "menu__sub-icon");
-    			add_location(i61, file$8, 327, 42, 11906);
+    			add_location(i61, file$d, 327, 42, 11906);
     			attr_dev(div98, "class", "menu__title");
-    			add_location(div98, file$8, 327, 6, 11870);
+    			add_location(div98, file$d, 327, 6, 11870);
     			attr_dev(a49, "href", "/#");
     			attr_dev(a49, "class", "menu");
-    			add_location(a49, file$8, 325, 4, 11774);
+    			add_location(a49, file$d, 325, 4, 11774);
     			attr_dev(i62, "data-feather", "activity");
-    			add_location(i62, file$8, 332, 34, 12076);
+    			add_location(i62, file$d, 332, 34, 12076);
     			attr_dev(div99, "class", "menu__icon");
-    			add_location(div99, file$8, 332, 10, 12052);
+    			add_location(div99, file$d, 332, 10, 12052);
     			attr_dev(i63, "data-feather", "chevron-down");
     			attr_dev(i63, "class", "menu__sub-icon");
-    			add_location(i63, file$8, 333, 41, 12153);
+    			add_location(i63, file$d, 333, 41, 12153);
     			attr_dev(div100, "class", "menu__title");
-    			add_location(div100, file$8, 333, 10, 12122);
+    			add_location(div100, file$d, 333, 10, 12122);
     			attr_dev(a50, "href", "/#");
     			attr_dev(a50, "class", "menu");
-    			add_location(a50, file$8, 331, 8, 12015);
+    			add_location(a50, file$d, 331, 8, 12015);
     			attr_dev(i64, "data-feather", "zap");
-    			add_location(i64, file$8, 338, 38, 12375);
+    			add_location(i64, file$d, 338, 38, 12375);
     			attr_dev(div101, "class", "menu__icon");
-    			add_location(div101, file$8, 338, 14, 12351);
+    			add_location(div101, file$d, 338, 14, 12351);
     			attr_dev(div102, "class", "menu__title");
-    			add_location(div102, file$8, 339, 14, 12420);
+    			add_location(div102, file$d, 339, 14, 12420);
     			attr_dev(a51, "href", "side-menu-light-regular-table.html");
     			attr_dev(a51, "class", "menu");
-    			add_location(a51, file$8, 337, 12, 12278);
-    			add_location(li50, file$8, 336, 10, 12261);
+    			add_location(a51, file$d, 337, 12, 12278);
+    			add_location(li50, file$d, 336, 10, 12261);
     			attr_dev(i65, "data-feather", "zap");
-    			add_location(i65, file$8, 344, 38, 12618);
+    			add_location(i65, file$d, 344, 38, 12618);
     			attr_dev(div103, "class", "menu__icon");
-    			add_location(div103, file$8, 344, 14, 12594);
+    			add_location(div103, file$d, 344, 14, 12594);
     			attr_dev(div104, "class", "menu__title");
-    			add_location(div104, file$8, 345, 14, 12663);
+    			add_location(div104, file$d, 345, 14, 12663);
     			attr_dev(a52, "href", "side-menu-light-tabulator.html");
     			attr_dev(a52, "class", "menu");
-    			add_location(a52, file$8, 343, 12, 12525);
-    			add_location(li51, file$8, 342, 10, 12508);
+    			add_location(a52, file$d, 343, 12, 12525);
+    			add_location(li51, file$d, 342, 10, 12508);
     			attr_dev(ul11, "class", "");
-    			add_location(ul11, file$8, 335, 8, 12237);
-    			add_location(li52, file$8, 330, 6, 12002);
+    			add_location(ul11, file$d, 335, 8, 12237);
+    			add_location(li52, file$d, 330, 6, 12002);
     			attr_dev(i66, "data-feather", "activity");
-    			add_location(i66, file$8, 352, 34, 12843);
+    			add_location(i66, file$d, 352, 34, 12843);
     			attr_dev(div105, "class", "menu__icon");
-    			add_location(div105, file$8, 352, 10, 12819);
+    			add_location(div105, file$d, 352, 10, 12819);
     			attr_dev(i67, "data-feather", "chevron-down");
     			attr_dev(i67, "class", "menu__sub-icon");
-    			add_location(i67, file$8, 353, 43, 12922);
+    			add_location(i67, file$d, 353, 43, 12922);
     			attr_dev(div106, "class", "menu__title");
-    			add_location(div106, file$8, 353, 10, 12889);
+    			add_location(div106, file$d, 353, 10, 12889);
     			attr_dev(a53, "href", "/#");
     			attr_dev(a53, "class", "menu");
-    			add_location(a53, file$8, 351, 8, 12782);
+    			add_location(a53, file$d, 351, 8, 12782);
     			attr_dev(i68, "data-feather", "zap");
-    			add_location(i68, file$8, 358, 38, 13136);
+    			add_location(i68, file$d, 358, 38, 13136);
     			attr_dev(div107, "class", "menu__icon");
-    			add_location(div107, file$8, 358, 14, 13112);
+    			add_location(div107, file$d, 358, 14, 13112);
     			attr_dev(div108, "class", "menu__title");
-    			add_location(div108, file$8, 359, 14, 13181);
+    			add_location(div108, file$d, 359, 14, 13181);
     			attr_dev(a54, "href", "side-menu-light-modal.html");
     			attr_dev(a54, "class", "menu");
-    			add_location(a54, file$8, 357, 12, 13047);
-    			add_location(li53, file$8, 356, 10, 13030);
+    			add_location(a54, file$d, 357, 12, 13047);
+    			add_location(li53, file$d, 356, 10, 13030);
     			attr_dev(i69, "data-feather", "zap");
-    			add_location(i69, file$8, 364, 38, 13372);
+    			add_location(i69, file$d, 364, 38, 13372);
     			attr_dev(div109, "class", "menu__icon");
-    			add_location(div109, file$8, 364, 14, 13348);
+    			add_location(div109, file$d, 364, 14, 13348);
     			attr_dev(div110, "class", "menu__title");
-    			add_location(div110, file$8, 365, 14, 13417);
+    			add_location(div110, file$d, 365, 14, 13417);
     			attr_dev(a55, "href", "side-menu-light-slide-over.html");
     			attr_dev(a55, "class", "menu");
-    			add_location(a55, file$8, 363, 12, 13278);
-    			add_location(li54, file$8, 362, 10, 13261);
+    			add_location(a55, file$d, 363, 12, 13278);
+    			add_location(li54, file$d, 362, 10, 13261);
     			attr_dev(i70, "data-feather", "zap");
-    			add_location(i70, file$8, 370, 38, 13615);
+    			add_location(i70, file$d, 370, 38, 13615);
     			attr_dev(div111, "class", "menu__icon");
-    			add_location(div111, file$8, 370, 14, 13591);
+    			add_location(div111, file$d, 370, 14, 13591);
     			attr_dev(div112, "class", "menu__title");
-    			add_location(div112, file$8, 371, 14, 13660);
+    			add_location(div112, file$d, 371, 14, 13660);
     			attr_dev(a56, "href", "side-menu-light-notification.html");
     			attr_dev(a56, "class", "menu");
-    			add_location(a56, file$8, 369, 12, 13519);
-    			add_location(li55, file$8, 368, 10, 13502);
+    			add_location(a56, file$d, 369, 12, 13519);
+    			add_location(li55, file$d, 368, 10, 13502);
     			attr_dev(ul12, "class", "");
-    			add_location(ul12, file$8, 355, 8, 13006);
-    			add_location(li56, file$8, 350, 6, 12769);
+    			add_location(ul12, file$d, 355, 8, 13006);
+    			add_location(li56, file$d, 350, 6, 12769);
     			attr_dev(i71, "data-feather", "activity");
-    			add_location(i71, file$8, 378, 34, 13871);
+    			add_location(i71, file$d, 378, 34, 13871);
     			attr_dev(div113, "class", "menu__icon");
-    			add_location(div113, file$8, 378, 10, 13847);
+    			add_location(div113, file$d, 378, 10, 13847);
     			attr_dev(div114, "class", "menu__title");
-    			add_location(div114, file$8, 379, 10, 13917);
+    			add_location(div114, file$d, 379, 10, 13917);
     			attr_dev(a57, "href", "side-menu-light-accordion.html");
     			attr_dev(a57, "class", "menu");
-    			add_location(a57, file$8, 377, 8, 13782);
-    			add_location(li57, file$8, 376, 6, 13769);
+    			add_location(a57, file$d, 377, 8, 13782);
+    			add_location(li57, file$d, 376, 6, 13769);
     			attr_dev(i72, "data-feather", "activity");
-    			add_location(i72, file$8, 384, 34, 14088);
+    			add_location(i72, file$d, 384, 34, 14088);
     			attr_dev(div115, "class", "menu__icon");
-    			add_location(div115, file$8, 384, 10, 14064);
+    			add_location(div115, file$d, 384, 10, 14064);
     			attr_dev(div116, "class", "menu__title");
-    			add_location(div116, file$8, 385, 10, 14134);
+    			add_location(div116, file$d, 385, 10, 14134);
     			attr_dev(a58, "href", "side-menu-light-button.html");
     			attr_dev(a58, "class", "menu");
-    			add_location(a58, file$8, 383, 8, 14002);
-    			add_location(li58, file$8, 382, 6, 13989);
+    			add_location(a58, file$d, 383, 8, 14002);
+    			add_location(li58, file$d, 382, 6, 13989);
     			attr_dev(i73, "data-feather", "activity");
-    			add_location(i73, file$8, 390, 34, 14301);
+    			add_location(i73, file$d, 390, 34, 14301);
     			attr_dev(div117, "class", "menu__icon");
-    			add_location(div117, file$8, 390, 10, 14277);
+    			add_location(div117, file$d, 390, 10, 14277);
     			attr_dev(div118, "class", "menu__title");
-    			add_location(div118, file$8, 391, 10, 14347);
+    			add_location(div118, file$d, 391, 10, 14347);
     			attr_dev(a59, "href", "side-menu-light-alert.html");
     			attr_dev(a59, "class", "menu");
-    			add_location(a59, file$8, 389, 8, 14216);
-    			add_location(li59, file$8, 388, 6, 14203);
+    			add_location(a59, file$d, 389, 8, 14216);
+    			add_location(li59, file$d, 388, 6, 14203);
     			attr_dev(i74, "data-feather", "activity");
-    			add_location(i74, file$8, 396, 34, 14520);
+    			add_location(i74, file$d, 396, 34, 14520);
     			attr_dev(div119, "class", "menu__icon");
-    			add_location(div119, file$8, 396, 10, 14496);
+    			add_location(div119, file$d, 396, 10, 14496);
     			attr_dev(div120, "class", "menu__title");
-    			add_location(div120, file$8, 397, 10, 14566);
+    			add_location(div120, file$d, 397, 10, 14566);
     			attr_dev(a60, "href", "side-menu-light-progress-bar.html");
     			attr_dev(a60, "class", "menu");
-    			add_location(a60, file$8, 395, 8, 14428);
-    			add_location(li60, file$8, 394, 6, 14415);
+    			add_location(a60, file$d, 395, 8, 14428);
+    			add_location(li60, file$d, 394, 6, 14415);
     			attr_dev(i75, "data-feather", "activity");
-    			add_location(i75, file$8, 402, 34, 14741);
+    			add_location(i75, file$d, 402, 34, 14741);
     			attr_dev(div121, "class", "menu__icon");
-    			add_location(div121, file$8, 402, 10, 14717);
+    			add_location(div121, file$d, 402, 10, 14717);
     			attr_dev(div122, "class", "menu__title");
-    			add_location(div122, file$8, 403, 10, 14787);
+    			add_location(div122, file$d, 403, 10, 14787);
     			attr_dev(a61, "href", "side-menu-light-tooltip.html");
     			attr_dev(a61, "class", "menu");
-    			add_location(a61, file$8, 401, 8, 14654);
-    			add_location(li61, file$8, 400, 6, 14641);
+    			add_location(a61, file$d, 401, 8, 14654);
+    			add_location(li61, file$d, 400, 6, 14641);
     			attr_dev(i76, "data-feather", "activity");
-    			add_location(i76, file$8, 408, 34, 14958);
+    			add_location(i76, file$d, 408, 34, 14958);
     			attr_dev(div123, "class", "menu__icon");
-    			add_location(div123, file$8, 408, 10, 14934);
+    			add_location(div123, file$d, 408, 10, 14934);
     			attr_dev(div124, "class", "menu__title");
-    			add_location(div124, file$8, 409, 10, 15004);
+    			add_location(div124, file$d, 409, 10, 15004);
     			attr_dev(a62, "href", "side-menu-light-dropdown.html");
     			attr_dev(a62, "class", "menu");
-    			add_location(a62, file$8, 407, 8, 14870);
-    			add_location(li62, file$8, 406, 6, 14857);
+    			add_location(a62, file$d, 407, 8, 14870);
+    			add_location(li62, file$d, 406, 6, 14857);
     			attr_dev(i77, "data-feather", "activity");
-    			add_location(i77, file$8, 414, 34, 15178);
+    			add_location(i77, file$d, 414, 34, 15178);
     			attr_dev(div125, "class", "menu__icon");
-    			add_location(div125, file$8, 414, 10, 15154);
+    			add_location(div125, file$d, 414, 10, 15154);
     			attr_dev(div126, "class", "menu__title");
-    			add_location(div126, file$8, 415, 10, 15224);
+    			add_location(div126, file$d, 415, 10, 15224);
     			attr_dev(a63, "href", "side-menu-light-typography.html");
     			attr_dev(a63, "class", "menu");
-    			add_location(a63, file$8, 413, 8, 15088);
-    			add_location(li63, file$8, 412, 6, 15075);
+    			add_location(a63, file$d, 413, 8, 15088);
+    			add_location(li63, file$d, 412, 6, 15075);
     			attr_dev(i78, "data-feather", "activity");
-    			add_location(i78, file$8, 420, 34, 15394);
+    			add_location(i78, file$d, 420, 34, 15394);
     			attr_dev(div127, "class", "menu__icon");
-    			add_location(div127, file$8, 420, 10, 15370);
+    			add_location(div127, file$d, 420, 10, 15370);
     			attr_dev(div128, "class", "menu__title");
-    			add_location(div128, file$8, 421, 10, 15440);
+    			add_location(div128, file$d, 421, 10, 15440);
     			attr_dev(a64, "href", "side-menu-light-icon.html");
     			attr_dev(a64, "class", "menu");
-    			add_location(a64, file$8, 419, 8, 15310);
-    			add_location(li64, file$8, 418, 6, 15297);
+    			add_location(a64, file$d, 419, 8, 15310);
+    			add_location(li64, file$d, 418, 6, 15297);
     			attr_dev(i79, "data-feather", "activity");
-    			add_location(i79, file$8, 426, 34, 15612);
+    			add_location(i79, file$d, 426, 34, 15612);
     			attr_dev(div129, "class", "menu__icon");
-    			add_location(div129, file$8, 426, 10, 15588);
+    			add_location(div129, file$d, 426, 10, 15588);
     			attr_dev(div130, "class", "menu__title");
-    			add_location(div130, file$8, 427, 10, 15658);
+    			add_location(div130, file$d, 427, 10, 15658);
     			attr_dev(a65, "href", "side-menu-light-loading-icon.html");
     			attr_dev(a65, "class", "menu");
-    			add_location(a65, file$8, 425, 8, 15520);
-    			add_location(li65, file$8, 424, 6, 15507);
+    			add_location(a65, file$d, 425, 8, 15520);
+    			add_location(li65, file$d, 424, 6, 15507);
     			attr_dev(ul13, "class", "");
-    			add_location(ul13, file$8, 329, 4, 11982);
-    			add_location(li66, file$8, 324, 2, 11765);
+    			add_location(ul13, file$d, 329, 4, 11982);
+    			add_location(li66, file$d, 324, 2, 11765);
     			attr_dev(i80, "data-feather", "sidebar");
-    			add_location(i80, file$8, 434, 30, 15813);
+    			add_location(i80, file$d, 434, 30, 15813);
     			attr_dev(div131, "class", "menu__icon");
-    			add_location(div131, file$8, 434, 6, 15789);
+    			add_location(div131, file$d, 434, 6, 15789);
     			attr_dev(i81, "data-feather", "chevron-down");
     			attr_dev(i81, "class", "menu__sub-icon");
-    			add_location(i81, file$8, 435, 37, 15885);
+    			add_location(i81, file$d, 435, 37, 15885);
     			attr_dev(div132, "class", "menu__title");
-    			add_location(div132, file$8, 435, 6, 15854);
+    			add_location(div132, file$d, 435, 6, 15854);
     			attr_dev(a66, "href", "/#");
     			attr_dev(a66, "class", "menu");
-    			add_location(a66, file$8, 433, 4, 15756);
+    			add_location(a66, file$d, 433, 4, 15756);
     			attr_dev(i82, "data-feather", "activity");
-    			add_location(i82, file$8, 440, 34, 16086);
+    			add_location(i82, file$d, 440, 34, 16086);
     			attr_dev(div133, "class", "menu__icon");
-    			add_location(div133, file$8, 440, 10, 16062);
+    			add_location(div133, file$d, 440, 10, 16062);
     			attr_dev(div134, "class", "menu__title");
-    			add_location(div134, file$8, 441, 10, 16132);
+    			add_location(div134, file$d, 441, 10, 16132);
     			attr_dev(a67, "href", "side-menu-light-regular-form.html");
     			attr_dev(a67, "class", "menu");
-    			add_location(a67, file$8, 439, 8, 15994);
-    			add_location(li67, file$8, 438, 6, 15981);
+    			add_location(a67, file$d, 439, 8, 15994);
+    			add_location(li67, file$d, 438, 6, 15981);
     			attr_dev(i83, "data-feather", "activity");
-    			add_location(i83, file$8, 446, 34, 16310);
+    			add_location(i83, file$d, 446, 34, 16310);
     			attr_dev(div135, "class", "menu__icon");
-    			add_location(div135, file$8, 446, 10, 16286);
+    			add_location(div135, file$d, 446, 10, 16286);
     			attr_dev(div136, "class", "menu__title");
-    			add_location(div136, file$8, 447, 10, 16356);
+    			add_location(div136, file$d, 447, 10, 16356);
     			attr_dev(a68, "href", "side-menu-light-datepicker.html");
     			attr_dev(a68, "class", "menu");
-    			add_location(a68, file$8, 445, 8, 16220);
-    			add_location(li68, file$8, 444, 6, 16207);
+    			add_location(a68, file$d, 445, 8, 16220);
+    			add_location(li68, file$d, 444, 6, 16207);
     			attr_dev(i84, "data-feather", "activity");
-    			add_location(i84, file$8, 452, 34, 16533);
+    			add_location(i84, file$d, 452, 34, 16533);
     			attr_dev(div137, "class", "menu__icon");
-    			add_location(div137, file$8, 452, 10, 16509);
+    			add_location(div137, file$d, 452, 10, 16509);
     			attr_dev(div138, "class", "menu__title");
-    			add_location(div138, file$8, 453, 10, 16579);
+    			add_location(div138, file$d, 453, 10, 16579);
     			attr_dev(a69, "href", "side-menu-light-tail-select.html");
     			attr_dev(a69, "class", "menu");
-    			add_location(a69, file$8, 451, 8, 16442);
-    			add_location(li69, file$8, 450, 6, 16429);
+    			add_location(a69, file$d, 451, 8, 16442);
+    			add_location(li69, file$d, 450, 6, 16429);
     			attr_dev(i85, "data-feather", "activity");
-    			add_location(i85, file$8, 458, 34, 16757);
+    			add_location(i85, file$d, 458, 34, 16757);
     			attr_dev(div139, "class", "menu__icon");
-    			add_location(div139, file$8, 458, 10, 16733);
+    			add_location(div139, file$d, 458, 10, 16733);
     			attr_dev(div140, "class", "menu__title");
-    			add_location(div140, file$8, 459, 10, 16803);
+    			add_location(div140, file$d, 459, 10, 16803);
     			attr_dev(a70, "href", "side-menu-light-file-upload.html");
     			attr_dev(a70, "class", "menu");
-    			add_location(a70, file$8, 457, 8, 16666);
-    			add_location(li70, file$8, 456, 6, 16653);
+    			add_location(a70, file$d, 457, 8, 16666);
+    			add_location(li70, file$d, 456, 6, 16653);
     			attr_dev(i86, "data-feather", "activity");
-    			add_location(i86, file$8, 464, 34, 16984);
+    			add_location(i86, file$d, 464, 34, 16984);
     			attr_dev(div141, "class", "menu__icon");
-    			add_location(div141, file$8, 464, 10, 16960);
+    			add_location(div141, file$d, 464, 10, 16960);
     			attr_dev(div142, "class", "menu__title");
-    			add_location(div142, file$8, 465, 10, 17030);
+    			add_location(div142, file$d, 465, 10, 17030);
     			attr_dev(a71, "href", "side-menu-light-wysiwyg-editor.html");
     			attr_dev(a71, "class", "menu");
-    			add_location(a71, file$8, 463, 8, 16890);
-    			add_location(li71, file$8, 462, 6, 16877);
+    			add_location(a71, file$d, 463, 8, 16890);
+    			add_location(li71, file$d, 462, 6, 16877);
     			attr_dev(i87, "data-feather", "activity");
-    			add_location(i87, file$8, 470, 34, 17210);
+    			add_location(i87, file$d, 470, 34, 17210);
     			attr_dev(div143, "class", "menu__icon");
-    			add_location(div143, file$8, 470, 10, 17186);
+    			add_location(div143, file$d, 470, 10, 17186);
     			attr_dev(div144, "class", "menu__title");
-    			add_location(div144, file$8, 471, 10, 17256);
+    			add_location(div144, file$d, 471, 10, 17256);
     			attr_dev(a72, "href", "side-menu-light-validation.html");
     			attr_dev(a72, "class", "menu");
-    			add_location(a72, file$8, 469, 8, 17120);
-    			add_location(li72, file$8, 468, 6, 17107);
+    			add_location(a72, file$d, 469, 8, 17120);
+    			add_location(li72, file$d, 468, 6, 17107);
     			attr_dev(ul14, "class", "");
-    			add_location(ul14, file$8, 437, 4, 15961);
-    			add_location(li73, file$8, 432, 2, 15747);
+    			add_location(ul14, file$d, 437, 4, 15961);
+    			add_location(li73, file$d, 432, 2, 15747);
     			attr_dev(i88, "data-feather", "hard-drive");
-    			add_location(i88, file$8, 478, 30, 17409);
+    			add_location(i88, file$d, 478, 30, 17409);
     			attr_dev(div145, "class", "menu__icon");
-    			add_location(div145, file$8, 478, 6, 17385);
+    			add_location(div145, file$d, 478, 6, 17385);
     			attr_dev(i89, "data-feather", "chevron-down");
     			attr_dev(i89, "class", "menu__sub-icon");
-    			add_location(i89, file$8, 479, 39, 17486);
+    			add_location(i89, file$d, 479, 39, 17486);
     			attr_dev(div146, "class", "menu__title");
-    			add_location(div146, file$8, 479, 6, 17453);
+    			add_location(div146, file$d, 479, 6, 17453);
     			attr_dev(a73, "href", "/#");
     			attr_dev(a73, "class", "menu");
-    			add_location(a73, file$8, 477, 4, 17352);
+    			add_location(a73, file$d, 477, 4, 17352);
     			attr_dev(i90, "data-feather", "activity");
-    			add_location(i90, file$8, 484, 34, 17680);
+    			add_location(i90, file$d, 484, 34, 17680);
     			attr_dev(div147, "class", "menu__icon");
-    			add_location(div147, file$8, 484, 10, 17656);
+    			add_location(div147, file$d, 484, 10, 17656);
     			attr_dev(div148, "class", "menu__title");
-    			add_location(div148, file$8, 485, 10, 17726);
+    			add_location(div148, file$d, 485, 10, 17726);
     			attr_dev(a74, "href", "side-menu-light-chart.html");
     			attr_dev(a74, "class", "menu");
-    			add_location(a74, file$8, 483, 8, 17595);
-    			add_location(li74, file$8, 482, 6, 17582);
+    			add_location(a74, file$d, 483, 8, 17595);
+    			add_location(li74, file$d, 482, 6, 17582);
     			attr_dev(i91, "data-feather", "activity");
-    			add_location(i91, file$8, 490, 34, 17893);
+    			add_location(i91, file$d, 490, 34, 17893);
     			attr_dev(div149, "class", "menu__icon");
-    			add_location(div149, file$8, 490, 10, 17869);
+    			add_location(div149, file$d, 490, 10, 17869);
     			attr_dev(div150, "class", "menu__title");
-    			add_location(div150, file$8, 491, 10, 17939);
+    			add_location(div150, file$d, 491, 10, 17939);
     			attr_dev(a75, "href", "side-menu-light-slider.html");
     			attr_dev(a75, "class", "menu");
-    			add_location(a75, file$8, 489, 8, 17807);
-    			add_location(li75, file$8, 488, 6, 17794);
+    			add_location(a75, file$d, 489, 8, 17807);
+    			add_location(li75, file$d, 488, 6, 17794);
     			attr_dev(i92, "data-feather", "activity");
-    			add_location(i92, file$8, 496, 34, 18111);
+    			add_location(i92, file$d, 496, 34, 18111);
     			attr_dev(div151, "class", "menu__icon");
-    			add_location(div151, file$8, 496, 10, 18087);
+    			add_location(div151, file$d, 496, 10, 18087);
     			attr_dev(div152, "class", "menu__title");
-    			add_location(div152, file$8, 497, 10, 18157);
+    			add_location(div152, file$d, 497, 10, 18157);
     			attr_dev(a76, "href", "side-menu-light-image-zoom.html");
     			attr_dev(a76, "class", "menu");
-    			add_location(a76, file$8, 495, 8, 18021);
-    			add_location(li76, file$8, 494, 6, 18008);
+    			add_location(a76, file$d, 495, 8, 18021);
+    			add_location(li76, file$d, 494, 6, 18008);
     			attr_dev(ul15, "class", "");
-    			add_location(ul15, file$8, 481, 4, 17562);
-    			add_location(li77, file$8, 476, 2, 17343);
+    			add_location(ul15, file$d, 481, 4, 17562);
+    			add_location(li77, file$d, 476, 2, 17343);
     			attr_dev(ul16, "class", "border-t border-theme-29 py-5 hidden");
-    			add_location(ul16, file$8, 11, 0, 342);
+    			add_location(ul16, file$d, 11, 0, 342);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5952,7 +6075,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -5961,7 +6084,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$e($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("MobileMenu", slots, []);
     	const writable_props = [];
@@ -5977,21 +6100,21 @@ var app = (function () {
     class MobileMenu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, {});
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "MobileMenu",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$e.name
     		});
     	}
     }
 
-    const file$7 = "src/SideMenu.svelte";
+    const file$c = "src/SideMenu.svelte";
 
-    // (5:2) <Link to="/" class="intro-x flex justify-center">
-    function create_default_slot$1(ctx) {
+    // (7:2) <Link to="/" class="intro-x flex justify-center">
+    function create_default_slot_2(ctx) {
     	let img;
     	let img_src_value;
 
@@ -6000,7 +6123,7 @@ var app = (function () {
     			img = element("img");
     			attr_dev(img, "alt", "Subvisio");
     			if (img.src !== (img_src_value = "/logo.svg")) attr_dev(img, "src", img_src_value);
-    			add_location(img, file$7, 5, 4, 149);
+    			add_location(img, file$c, 7, 4, 224);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6012,24 +6135,114 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$1.name,
+    		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(5:2) <Link to=\\\"/\\\" class=\\\"intro-x flex justify-center\\\">",
+    		source: "(7:2) <Link to=\\\"/\\\" class=\\\"intro-x flex justify-center\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$8(ctx) {
+    // (23:10) <Link to="/" class="side-menu {path === '/' ? 'side-menu--active' : ''}">
+    function create_default_slot_1$1(ctx) {
+    	let div0;
+    	let i;
+    	let t0;
+    	let div1;
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			i = element("i");
+    			t0 = space();
+    			div1 = element("div");
+    			div1.textContent = "Auction";
+    			attr_dev(i, "data-feather", "activity");
+    			add_location(i, file$c, 23, 41, 800);
+    			attr_dev(div0, "class", "side-menu__icon");
+    			add_location(div0, file$c, 23, 12, 771);
+    			attr_dev(div1, "class", "side-menu__title");
+    			add_location(div1, file$c, 24, 12, 848);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, i);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div1, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1$1.name,
+    		type: "slot",
+    		source: "(23:10) <Link to=\\\"/\\\" class=\\\"side-menu {path === '/' ? 'side-menu--active' : ''}\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (29:10) <Link to="/crowdloan" class="side-menu {path.startsWith('/crowdloan') ? 'side-menu--active' : '' }">
+    function create_default_slot$3(ctx) {
+    	let div0;
+    	let i;
+    	let t0;
+    	let div1;
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			i = element("i");
+    			t0 = space();
+    			div1 = element("div");
+    			div1.textContent = "Crowdloan";
+    			attr_dev(i, "data-feather", "activity");
+    			add_location(i, file$c, 29, 41, 1089);
+    			attr_dev(div0, "class", "side-menu__icon");
+    			add_location(div0, file$c, 29, 12, 1060);
+    			attr_dev(div1, "class", "side-menu__title");
+    			add_location(div1, file$c, 30, 12, 1137);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, i);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div1, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$3.name,
+    		type: "slot",
+    		source: "(29:10) <Link to=\\\"/crowdloan\\\" class=\\\"side-menu {path.startsWith('/crowdloan') ? 'side-menu--active' : '' }\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$d(ctx) {
     	let nav;
-    	let link;
+    	let link0;
     	let t0;
     	let div0;
     	let t1;
     	let ul1;
     	let li2;
-    	let a0;
+    	let a;
     	let div1;
     	let i0;
     	let t2;
@@ -6040,25 +6253,39 @@ var app = (function () {
     	let t4;
     	let ul0;
     	let li0;
-    	let a1;
-    	let div4;
-    	let i2;
+    	let link1;
     	let t5;
-    	let div5;
-    	let t7;
     	let li1;
-    	let a2;
-    	let div6;
-    	let i3;
-    	let t8;
-    	let div7;
+    	let link2;
     	let current;
 
-    	link = new Link({
+    	link0 = new Link({
     			props: {
     				to: "/",
     				class: "intro-x flex justify-center",
-    				$$slots: { default: [create_default_slot$1] },
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	link1 = new Link({
+    			props: {
+    				to: "/",
+    				class: "side-menu " + (/*path*/ ctx[0] === "/" ? "side-menu--active" : ""),
+    				$$slots: { default: [create_default_slot_1$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	link2 = new Link({
+    			props: {
+    				to: "/crowdloan",
+    				class: "side-menu " + (/*path*/ ctx[0].startsWith("/crowdloan")
+    				? "side-menu--active"
+    				: ""),
+    				$$slots: { default: [create_default_slot$3] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -6067,13 +6294,13 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			nav = element("nav");
-    			create_component(link.$$.fragment);
+    			create_component(link0.$$.fragment);
     			t0 = space();
     			div0 = element("div");
     			t1 = space();
     			ul1 = element("ul");
     			li2 = element("li");
-    			a0 = element("a");
+    			a = element("a");
     			div1 = element("div");
     			i0 = element("i");
     			t2 = space();
@@ -6084,125 +6311,114 @@ var app = (function () {
     			t4 = space();
     			ul0 = element("ul");
     			li0 = element("li");
-    			a1 = element("a");
-    			div4 = element("div");
-    			i2 = element("i");
+    			create_component(link1.$$.fragment);
     			t5 = space();
-    			div5 = element("div");
-    			div5.textContent = "Auction";
-    			t7 = space();
     			li1 = element("li");
-    			a2 = element("a");
-    			div6 = element("div");
-    			i3 = element("i");
-    			t8 = space();
-    			div7 = element("div");
-    			div7.textContent = "Crowdloan";
+    			create_component(link2.$$.fragment);
     			attr_dev(div0, "class", "side-nav__devider my-6");
-    			add_location(div0, file$7, 8, 2, 201);
+    			add_location(div0, file$c, 10, 2, 276);
     			attr_dev(i0, "data-feather", "home");
-    			add_location(i0, file$7, 12, 37, 348);
+    			add_location(i0, file$c, 14, 37, 423);
     			attr_dev(div1, "class", "side-menu__icon");
-    			add_location(div1, file$7, 12, 8, 319);
+    			add_location(div1, file$c, 14, 8, 394);
     			attr_dev(i1, "data-feather", "chevron-down");
-    			add_location(i1, file$7, 15, 43, 482);
+    			add_location(i1, file$c, 17, 43, 557);
     			attr_dev(div2, "class", "side-menu__sub-icon");
-    			add_location(div2, file$7, 15, 10, 449);
+    			add_location(div2, file$c, 17, 10, 524);
     			attr_dev(div3, "class", "side-menu__title");
-    			add_location(div3, file$7, 13, 8, 388);
-    			attr_dev(a0, "href", "/");
-    			attr_dev(a0, "class", "side-menu side-menu--active");
-    			add_location(a0, file$7, 11, 6, 262);
-    			attr_dev(i2, "data-feather", "activity");
-    			add_location(i2, file$7, 21, 41, 700);
-    			attr_dev(div4, "class", "side-menu__icon");
-    			add_location(div4, file$7, 21, 12, 671);
-    			attr_dev(div5, "class", "side-menu__title");
-    			add_location(div5, file$7, 22, 12, 748);
-    			attr_dev(a1, "href", "/");
-    			attr_dev(a1, "class", "side-menu side-menu--active");
-    			add_location(a1, file$7, 20, 10, 610);
-    			add_location(li0, file$7, 19, 8, 595);
-    			attr_dev(i3, "data-feather", "activity");
-    			add_location(i3, file$7, 27, 41, 925);
-    			attr_dev(div6, "class", "side-menu__icon");
-    			add_location(div6, file$7, 27, 12, 896);
-    			attr_dev(div7, "class", "side-menu__title");
-    			add_location(div7, file$7, 28, 12, 973);
-    			attr_dev(a2, "href", "/crowdloan");
-    			attr_dev(a2, "class", "side-menu");
-    			add_location(a2, file$7, 26, 10, 844);
-    			add_location(li1, file$7, 25, 8, 829);
+    			add_location(div3, file$c, 15, 8, 463);
+    			attr_dev(a, "href", "/");
+    			attr_dev(a, "class", "side-menu side-menu--active");
+    			add_location(a, file$c, 13, 6, 337);
+    			add_location(li0, file$c, 21, 8, 670);
+    			add_location(li1, file$c, 27, 8, 932);
     			attr_dev(ul0, "class", "side-menu__sub-open");
-    			add_location(ul0, file$7, 18, 6, 554);
-    			add_location(li2, file$7, 10, 4, 251);
-    			add_location(ul1, file$7, 9, 2, 242);
+    			add_location(ul0, file$c, 20, 6, 629);
+    			add_location(li2, file$c, 12, 4, 326);
+    			add_location(ul1, file$c, 11, 2, 317);
     			attr_dev(nav, "class", "side-nav");
-    			add_location(nav, file$7, 3, 0, 70);
+    			add_location(nav, file$c, 5, 0, 145);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, nav, anchor);
-    			mount_component(link, nav, null);
+    			mount_component(link0, nav, null);
     			append_dev(nav, t0);
     			append_dev(nav, div0);
     			append_dev(nav, t1);
     			append_dev(nav, ul1);
     			append_dev(ul1, li2);
-    			append_dev(li2, a0);
-    			append_dev(a0, div1);
+    			append_dev(li2, a);
+    			append_dev(a, div1);
     			append_dev(div1, i0);
-    			append_dev(a0, t2);
-    			append_dev(a0, div3);
+    			append_dev(a, t2);
+    			append_dev(a, div3);
     			append_dev(div3, t3);
     			append_dev(div3, div2);
     			append_dev(div2, i1);
     			append_dev(li2, t4);
     			append_dev(li2, ul0);
     			append_dev(ul0, li0);
-    			append_dev(li0, a1);
-    			append_dev(a1, div4);
-    			append_dev(div4, i2);
-    			append_dev(a1, t5);
-    			append_dev(a1, div5);
-    			append_dev(ul0, t7);
+    			mount_component(link1, li0, null);
+    			append_dev(ul0, t5);
     			append_dev(ul0, li1);
-    			append_dev(li1, a2);
-    			append_dev(a2, div6);
-    			append_dev(div6, i3);
-    			append_dev(a2, t8);
-    			append_dev(a2, div7);
+    			mount_component(link2, li1, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const link_changes = {};
+    			const link0_changes = {};
 
-    			if (dirty & /*$$scope*/ 1) {
-    				link_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*$$scope*/ 8) {
+    				link0_changes.$$scope = { dirty, ctx };
     			}
 
-    			link.$set(link_changes);
+    			link0.$set(link0_changes);
+    			const link1_changes = {};
+    			if (dirty & /*path*/ 1) link1_changes.class = "side-menu " + (/*path*/ ctx[0] === "/" ? "side-menu--active" : "");
+
+    			if (dirty & /*$$scope*/ 8) {
+    				link1_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link1.$set(link1_changes);
+    			const link2_changes = {};
+
+    			if (dirty & /*path*/ 1) link2_changes.class = "side-menu " + (/*path*/ ctx[0].startsWith("/crowdloan")
+    			? "side-menu--active"
+    			: "");
+
+    			if (dirty & /*$$scope*/ 8) {
+    				link2_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link2.$set(link2_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(link.$$.fragment, local);
+    			transition_in(link0.$$.fragment, local);
+    			transition_in(link1.$$.fragment, local);
+    			transition_in(link2.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(link.$$.fragment, local);
+    			transition_out(link0.$$.fragment, local);
+    			transition_out(link1.$$.fragment, local);
+    			transition_out(link2.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(nav);
-    			destroy_component(link);
+    			destroy_component(link0);
+    			destroy_component(link1);
+    			destroy_component(link2);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$8.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6211,34 +6427,60 @@ var app = (function () {
     	return block;
     }
 
-    function instance$8($$self, $$props, $$invalidate) {
+    function instance$d($$self, $$props, $$invalidate) {
+    	let path;
+    	let $location;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SideMenu", slots, []);
+    	const location = useLocation();
+    	validate_store(location, "location");
+    	component_subscribe($$self, location, value => $$invalidate(2, $location = value));
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<SideMenu> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ Link });
-    	return [];
+    	$$self.$capture_state = () => ({
+    		Link,
+    		useLocation,
+    		location,
+    		path,
+    		$location
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("path" in $$props) $$invalidate(0, path = $$props.path);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$location*/ 4) {
+    			$$invalidate(0, path = $location.pathname);
+    		}
+    	};
+
+    	return [path, location, $location];
     }
 
     class SideMenu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {});
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SideMenu",
     			options,
-    			id: create_fragment$8.name
+    			id: create_fragment$d.name
     		});
     	}
     }
 
-    const file$6 = "src/Layout.svelte";
+    const file$b = "src/Layout.svelte";
     const get_content_slot_changes = dirty => ({});
     const get_content_slot_context = ctx => ({});
     const get_side_menu_slot_changes = dirty => ({});
@@ -6300,7 +6542,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$7(ctx) {
+    function create_fragment$c(ctx) {
     	let div3;
     	let div0;
     	let t0;
@@ -6331,14 +6573,14 @@ var app = (function () {
     			div1 = element("div");
     			if (content_slot_or_fallback) content_slot_or_fallback.c();
     			attr_dev(div0, "class", "mobile-menu md:hidden");
-    			add_location(div0, file$6, 1, 2, 8);
+    			add_location(div0, file$b, 1, 2, 8);
     			attr_dev(nav, "class", "side-nav");
-    			add_location(nav, file$6, 6, 4, 127);
+    			add_location(nav, file$b, 6, 4, 127);
     			attr_dev(div1, "class", "content");
-    			add_location(div1, file$6, 9, 4, 197);
+    			add_location(div1, file$b, 9, 4, 197);
     			attr_dev(div2, "class", "flex");
-    			add_location(div2, file$6, 5, 2, 104);
-    			add_location(div3, file$6, 0, 0, 0);
+    			add_location(div2, file$b, 5, 2, 104);
+    			add_location(div3, file$b, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6410,7 +6652,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$7.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6419,7 +6661,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$7($$self, $$props, $$invalidate) {
+    function instance$c($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Layout", slots, ['mobile-menu','side-menu','content']);
     	const writable_props = [];
@@ -6438,5027 +6680,16 @@ var app = (function () {
     class Layout extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, {});
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Layout",
     			options,
-    			id: create_fragment$7.name
+    			id: create_fragment$c.name
     		});
     	}
     }
-
-    /** Detect free variable `global` from Node.js. */
-    var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
-
-    /** Detect free variable `self`. */
-    var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
-
-    /** Used as a reference to the global object. */
-    var root = freeGlobal || freeSelf || Function('return this')();
-
-    /** Built-in value references. */
-    var Symbol$1 = root.Symbol;
-
-    /** Used for built-in method references. */
-    var objectProto$c = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$9 = objectProto$c.hasOwnProperty;
-
-    /**
-     * Used to resolve the
-     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-     * of values.
-     */
-    var nativeObjectToString$1 = objectProto$c.toString;
-
-    /** Built-in value references. */
-    var symToStringTag$1 = Symbol$1 ? Symbol$1.toStringTag : undefined;
-
-    /**
-     * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @returns {string} Returns the raw `toStringTag`.
-     */
-    function getRawTag(value) {
-      var isOwn = hasOwnProperty$9.call(value, symToStringTag$1),
-          tag = value[symToStringTag$1];
-
-      try {
-        value[symToStringTag$1] = undefined;
-        var unmasked = true;
-      } catch (e) {}
-
-      var result = nativeObjectToString$1.call(value);
-      if (unmasked) {
-        if (isOwn) {
-          value[symToStringTag$1] = tag;
-        } else {
-          delete value[symToStringTag$1];
-        }
-      }
-      return result;
-    }
-
-    /** Used for built-in method references. */
-    var objectProto$b = Object.prototype;
-
-    /**
-     * Used to resolve the
-     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-     * of values.
-     */
-    var nativeObjectToString = objectProto$b.toString;
-
-    /**
-     * Converts `value` to a string using `Object.prototype.toString`.
-     *
-     * @private
-     * @param {*} value The value to convert.
-     * @returns {string} Returns the converted string.
-     */
-    function objectToString(value) {
-      return nativeObjectToString.call(value);
-    }
-
-    /** `Object#toString` result references. */
-    var nullTag = '[object Null]',
-        undefinedTag = '[object Undefined]';
-
-    /** Built-in value references. */
-    var symToStringTag = Symbol$1 ? Symbol$1.toStringTag : undefined;
-
-    /**
-     * The base implementation of `getTag` without fallbacks for buggy environments.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @returns {string} Returns the `toStringTag`.
-     */
-    function baseGetTag(value) {
-      if (value == null) {
-        return value === undefined ? undefinedTag : nullTag;
-      }
-      return (symToStringTag && symToStringTag in Object(value))
-        ? getRawTag(value)
-        : objectToString(value);
-    }
-
-    /**
-     * Checks if `value` is object-like. A value is object-like if it's not `null`
-     * and has a `typeof` result of "object".
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-     * @example
-     *
-     * _.isObjectLike({});
-     * // => true
-     *
-     * _.isObjectLike([1, 2, 3]);
-     * // => true
-     *
-     * _.isObjectLike(_.noop);
-     * // => false
-     *
-     * _.isObjectLike(null);
-     * // => false
-     */
-    function isObjectLike$1(value) {
-      return value != null && typeof value == 'object';
-    }
-
-    /** `Object#toString` result references. */
-    var symbolTag$1 = '[object Symbol]';
-
-    /**
-     * Checks if `value` is classified as a `Symbol` primitive or object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-     * @example
-     *
-     * _.isSymbol(Symbol.iterator);
-     * // => true
-     *
-     * _.isSymbol('abc');
-     * // => false
-     */
-    function isSymbol(value) {
-      return typeof value == 'symbol' ||
-        (isObjectLike$1(value) && baseGetTag(value) == symbolTag$1);
-    }
-
-    /**
-     * A specialized version of `_.map` for arrays without support for iteratee
-     * shorthands.
-     *
-     * @private
-     * @param {Array} [array] The array to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Array} Returns the new mapped array.
-     */
-    function arrayMap(array, iteratee) {
-      var index = -1,
-          length = array == null ? 0 : array.length,
-          result = Array(length);
-
-      while (++index < length) {
-        result[index] = iteratee(array[index], index, array);
-      }
-      return result;
-    }
-
-    /**
-     * Checks if `value` is classified as an `Array` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an array, else `false`.
-     * @example
-     *
-     * _.isArray([1, 2, 3]);
-     * // => true
-     *
-     * _.isArray(document.body.children);
-     * // => false
-     *
-     * _.isArray('abc');
-     * // => false
-     *
-     * _.isArray(_.noop);
-     * // => false
-     */
-    var isArray = Array.isArray;
-
-    /** Used as references for various `Number` constants. */
-    var INFINITY$2 = 1 / 0;
-
-    /** Used to convert symbols to primitives and strings. */
-    var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : undefined,
-        symbolToString = symbolProto$1 ? symbolProto$1.toString : undefined;
-
-    /**
-     * The base implementation of `_.toString` which doesn't convert nullish
-     * values to empty strings.
-     *
-     * @private
-     * @param {*} value The value to process.
-     * @returns {string} Returns the string.
-     */
-    function baseToString(value) {
-      // Exit early for strings to avoid a performance hit in some environments.
-      if (typeof value == 'string') {
-        return value;
-      }
-      if (isArray(value)) {
-        // Recursively convert values (susceptible to call stack limits).
-        return arrayMap(value, baseToString) + '';
-      }
-      if (isSymbol(value)) {
-        return symbolToString ? symbolToString.call(value) : '';
-      }
-      var result = (value + '');
-      return (result == '0' && (1 / value) == -INFINITY$2) ? '-0' : result;
-    }
-
-    /** Used to match a single whitespace character. */
-    var reWhitespace = /\s/;
-
-    /**
-     * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
-     * character of `string`.
-     *
-     * @private
-     * @param {string} string The string to inspect.
-     * @returns {number} Returns the index of the last non-whitespace character.
-     */
-    function trimmedEndIndex(string) {
-      var index = string.length;
-
-      while (index-- && reWhitespace.test(string.charAt(index))) {}
-      return index;
-    }
-
-    /** Used to match leading whitespace. */
-    var reTrimStart = /^\s+/;
-
-    /**
-     * The base implementation of `_.trim`.
-     *
-     * @private
-     * @param {string} string The string to trim.
-     * @returns {string} Returns the trimmed string.
-     */
-    function baseTrim(string) {
-      return string
-        ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
-        : string;
-    }
-
-    /**
-     * Checks if `value` is the
-     * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-     * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-     * @example
-     *
-     * _.isObject({});
-     * // => true
-     *
-     * _.isObject([1, 2, 3]);
-     * // => true
-     *
-     * _.isObject(_.noop);
-     * // => true
-     *
-     * _.isObject(null);
-     * // => false
-     */
-    function isObject(value) {
-      var type = typeof value;
-      return value != null && (type == 'object' || type == 'function');
-    }
-
-    /** Used as references for various `Number` constants. */
-    var NAN = 0 / 0;
-
-    /** Used to detect bad signed hexadecimal string values. */
-    var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-    /** Used to detect binary string values. */
-    var reIsBinary = /^0b[01]+$/i;
-
-    /** Used to detect octal string values. */
-    var reIsOctal = /^0o[0-7]+$/i;
-
-    /** Built-in method references without a dependency on `root`. */
-    var freeParseInt = parseInt;
-
-    /**
-     * Converts `value` to a number.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to process.
-     * @returns {number} Returns the number.
-     * @example
-     *
-     * _.toNumber(3.2);
-     * // => 3.2
-     *
-     * _.toNumber(Number.MIN_VALUE);
-     * // => 5e-324
-     *
-     * _.toNumber(Infinity);
-     * // => Infinity
-     *
-     * _.toNumber('3.2');
-     * // => 3.2
-     */
-    function toNumber(value) {
-      if (typeof value == 'number') {
-        return value;
-      }
-      if (isSymbol(value)) {
-        return NAN;
-      }
-      if (isObject(value)) {
-        var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-        value = isObject(other) ? (other + '') : other;
-      }
-      if (typeof value != 'string') {
-        return value === 0 ? value : +value;
-      }
-      value = baseTrim(value);
-      var isBinary = reIsBinary.test(value);
-      return (isBinary || reIsOctal.test(value))
-        ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-        : (reIsBadHex.test(value) ? NAN : +value);
-    }
-
-    /** Used as references for various `Number` constants. */
-    var INFINITY$1 = 1 / 0,
-        MAX_INTEGER = 1.7976931348623157e+308;
-
-    /**
-     * Converts `value` to a finite number.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.12.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {number} Returns the converted number.
-     * @example
-     *
-     * _.toFinite(3.2);
-     * // => 3.2
-     *
-     * _.toFinite(Number.MIN_VALUE);
-     * // => 5e-324
-     *
-     * _.toFinite(Infinity);
-     * // => 1.7976931348623157e+308
-     *
-     * _.toFinite('3.2');
-     * // => 3.2
-     */
-    function toFinite(value) {
-      if (!value) {
-        return value === 0 ? value : 0;
-      }
-      value = toNumber(value);
-      if (value === INFINITY$1 || value === -INFINITY$1) {
-        var sign = (value < 0 ? -1 : 1);
-        return sign * MAX_INTEGER;
-      }
-      return value === value ? value : 0;
-    }
-
-    /**
-     * This method returns the first argument it receives.
-     *
-     * @static
-     * @since 0.1.0
-     * @memberOf _
-     * @category Util
-     * @param {*} value Any value.
-     * @returns {*} Returns `value`.
-     * @example
-     *
-     * var object = { 'a': 1 };
-     *
-     * console.log(_.identity(object) === object);
-     * // => true
-     */
-    function identity(value) {
-      return value;
-    }
-
-    /** `Object#toString` result references. */
-    var asyncTag = '[object AsyncFunction]',
-        funcTag$1 = '[object Function]',
-        genTag = '[object GeneratorFunction]',
-        proxyTag = '[object Proxy]';
-
-    /**
-     * Checks if `value` is classified as a `Function` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a function, else `false`.
-     * @example
-     *
-     * _.isFunction(_);
-     * // => true
-     *
-     * _.isFunction(/abc/);
-     * // => false
-     */
-    function isFunction(value) {
-      if (!isObject(value)) {
-        return false;
-      }
-      // The use of `Object#toString` avoids issues with the `typeof` operator
-      // in Safari 9 which returns 'object' for typed arrays and other constructors.
-      var tag = baseGetTag(value);
-      return tag == funcTag$1 || tag == genTag || tag == asyncTag || tag == proxyTag;
-    }
-
-    /** Used to detect overreaching core-js shims. */
-    var coreJsData = root['__core-js_shared__'];
-
-    /** Used to detect methods masquerading as native. */
-    var maskSrcKey = (function() {
-      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
-      return uid ? ('Symbol(src)_1.' + uid) : '';
-    }());
-
-    /**
-     * Checks if `func` has its source masked.
-     *
-     * @private
-     * @param {Function} func The function to check.
-     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
-     */
-    function isMasked(func) {
-      return !!maskSrcKey && (maskSrcKey in func);
-    }
-
-    /** Used for built-in method references. */
-    var funcProto$1 = Function.prototype;
-
-    /** Used to resolve the decompiled source of functions. */
-    var funcToString$1 = funcProto$1.toString;
-
-    /**
-     * Converts `func` to its source code.
-     *
-     * @private
-     * @param {Function} func The function to convert.
-     * @returns {string} Returns the source code.
-     */
-    function toSource$1(func) {
-      if (func != null) {
-        try {
-          return funcToString$1.call(func);
-        } catch (e) {}
-        try {
-          return (func + '');
-        } catch (e) {}
-      }
-      return '';
-    }
-
-    /**
-     * Used to match `RegExp`
-     * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
-     */
-    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-
-    /** Used to detect host constructors (Safari). */
-    var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-    /** Used for built-in method references. */
-    var funcProto = Function.prototype,
-        objectProto$a = Object.prototype;
-
-    /** Used to resolve the decompiled source of functions. */
-    var funcToString = funcProto.toString;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$8 = objectProto$a.hasOwnProperty;
-
-    /** Used to detect if a method is native. */
-    var reIsNative = RegExp('^' +
-      funcToString.call(hasOwnProperty$8).replace(reRegExpChar, '\\$&')
-      .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-    );
-
-    /**
-     * The base implementation of `_.isNative` without bad shim checks.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a native function,
-     *  else `false`.
-     */
-    function baseIsNative(value) {
-      if (!isObject(value) || isMasked(value)) {
-        return false;
-      }
-      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
-      return pattern.test(toSource$1(value));
-    }
-
-    /**
-     * Gets the value at `key` of `object`.
-     *
-     * @private
-     * @param {Object} [object] The object to query.
-     * @param {string} key The key of the property to get.
-     * @returns {*} Returns the property value.
-     */
-    function getValue(object, key) {
-      return object == null ? undefined : object[key];
-    }
-
-    /**
-     * Gets the native function at `key` of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @param {string} key The key of the method to get.
-     * @returns {*} Returns the function if it's native, else `undefined`.
-     */
-    function getNative(object, key) {
-      var value = getValue(object, key);
-      return baseIsNative(value) ? value : undefined;
-    }
-
-    /* Built-in method references that are verified to be native. */
-    var WeakMap$1 = getNative(root, 'WeakMap');
-
-    var defineProperty = (function() {
-      try {
-        var func = getNative(Object, 'defineProperty');
-        func({}, '', {});
-        return func;
-      } catch (e) {}
-    }());
-
-    /** Used as references for various `Number` constants. */
-    var MAX_SAFE_INTEGER$1 = 9007199254740991;
-
-    /** Used to detect unsigned integer values. */
-    var reIsUint = /^(?:0|[1-9]\d*)$/;
-
-    /**
-     * Checks if `value` is a valid array-like index.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-     * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-     */
-    function isIndex(value, length) {
-      var type = typeof value;
-      length = length == null ? MAX_SAFE_INTEGER$1 : length;
-
-      return !!length &&
-        (type == 'number' ||
-          (type != 'symbol' && reIsUint.test(value))) &&
-            (value > -1 && value % 1 == 0 && value < length);
-    }
-
-    /**
-     * The base implementation of `assignValue` and `assignMergeValue` without
-     * value checks.
-     *
-     * @private
-     * @param {Object} object The object to modify.
-     * @param {string} key The key of the property to assign.
-     * @param {*} value The value to assign.
-     */
-    function baseAssignValue(object, key, value) {
-      if (key == '__proto__' && defineProperty) {
-        defineProperty(object, key, {
-          'configurable': true,
-          'enumerable': true,
-          'value': value,
-          'writable': true
-        });
-      } else {
-        object[key] = value;
-      }
-    }
-
-    /**
-     * Performs a
-     * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-     * comparison between two values to determine if they are equivalent.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-     * @example
-     *
-     * var object = { 'a': 1 };
-     * var other = { 'a': 1 };
-     *
-     * _.eq(object, object);
-     * // => true
-     *
-     * _.eq(object, other);
-     * // => false
-     *
-     * _.eq('a', 'a');
-     * // => true
-     *
-     * _.eq('a', Object('a'));
-     * // => false
-     *
-     * _.eq(NaN, NaN);
-     * // => true
-     */
-    function eq(value, other) {
-      return value === other || (value !== value && other !== other);
-    }
-
-    /** Used as references for various `Number` constants. */
-    var MAX_SAFE_INTEGER = 9007199254740991;
-
-    /**
-     * Checks if `value` is a valid array-like length.
-     *
-     * **Note:** This method is loosely based on
-     * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-     * @example
-     *
-     * _.isLength(3);
-     * // => true
-     *
-     * _.isLength(Number.MIN_VALUE);
-     * // => false
-     *
-     * _.isLength(Infinity);
-     * // => false
-     *
-     * _.isLength('3');
-     * // => false
-     */
-    function isLength(value) {
-      return typeof value == 'number' &&
-        value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-    }
-
-    /**
-     * Checks if `value` is array-like. A value is considered array-like if it's
-     * not a function and has a `value.length` that's an integer greater than or
-     * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-     * @example
-     *
-     * _.isArrayLike([1, 2, 3]);
-     * // => true
-     *
-     * _.isArrayLike(document.body.children);
-     * // => true
-     *
-     * _.isArrayLike('abc');
-     * // => true
-     *
-     * _.isArrayLike(_.noop);
-     * // => false
-     */
-    function isArrayLike(value) {
-      return value != null && isLength(value.length) && !isFunction(value);
-    }
-
-    /**
-     * Checks if the given arguments are from an iteratee call.
-     *
-     * @private
-     * @param {*} value The potential iteratee value argument.
-     * @param {*} index The potential iteratee index or key argument.
-     * @param {*} object The potential iteratee object argument.
-     * @returns {boolean} Returns `true` if the arguments are from an iteratee call,
-     *  else `false`.
-     */
-    function isIterateeCall(value, index, object) {
-      if (!isObject(object)) {
-        return false;
-      }
-      var type = typeof index;
-      if (type == 'number'
-            ? (isArrayLike(object) && isIndex(index, object.length))
-            : (type == 'string' && index in object)
-          ) {
-        return eq(object[index], value);
-      }
-      return false;
-    }
-
-    /** Used for built-in method references. */
-    var objectProto$9 = Object.prototype;
-
-    /**
-     * Checks if `value` is likely a prototype object.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
-     */
-    function isPrototype(value) {
-      var Ctor = value && value.constructor,
-          proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto$9;
-
-      return value === proto;
-    }
-
-    /**
-     * The base implementation of `_.times` without support for iteratee shorthands
-     * or max array length checks.
-     *
-     * @private
-     * @param {number} n The number of times to invoke `iteratee`.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Array} Returns the array of results.
-     */
-    function baseTimes(n, iteratee) {
-      var index = -1,
-          result = Array(n);
-
-      while (++index < n) {
-        result[index] = iteratee(index);
-      }
-      return result;
-    }
-
-    /** `Object#toString` result references. */
-    var argsTag$2 = '[object Arguments]';
-
-    /**
-     * The base implementation of `_.isArguments`.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
-     */
-    function baseIsArguments(value) {
-      return isObjectLike$1(value) && baseGetTag(value) == argsTag$2;
-    }
-
-    /** Used for built-in method references. */
-    var objectProto$8 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$7 = objectProto$8.hasOwnProperty;
-
-    /** Built-in value references. */
-    var propertyIsEnumerable$1 = objectProto$8.propertyIsEnumerable;
-
-    /**
-     * Checks if `value` is likely an `arguments` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
-     *  else `false`.
-     * @example
-     *
-     * _.isArguments(function() { return arguments; }());
-     * // => true
-     *
-     * _.isArguments([1, 2, 3]);
-     * // => false
-     */
-    var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
-      return isObjectLike$1(value) && hasOwnProperty$7.call(value, 'callee') &&
-        !propertyIsEnumerable$1.call(value, 'callee');
-    };
-
-    /**
-     * This method returns `false`.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.13.0
-     * @category Util
-     * @returns {boolean} Returns `false`.
-     * @example
-     *
-     * _.times(2, _.stubFalse);
-     * // => [false, false]
-     */
-    function stubFalse() {
-      return false;
-    }
-
-    /** Detect free variable `exports`. */
-    var freeExports$1 = typeof exports == 'object' && exports && !exports.nodeType && exports;
-
-    /** Detect free variable `module`. */
-    var freeModule$1 = freeExports$1 && typeof module == 'object' && module && !module.nodeType && module;
-
-    /** Detect the popular CommonJS extension `module.exports`. */
-    var moduleExports$1 = freeModule$1 && freeModule$1.exports === freeExports$1;
-
-    /** Built-in value references. */
-    var Buffer = moduleExports$1 ? root.Buffer : undefined;
-
-    /* Built-in method references for those with the same name as other `lodash` methods. */
-    var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
-
-    /**
-     * Checks if `value` is a buffer.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.3.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
-     * @example
-     *
-     * _.isBuffer(new Buffer(2));
-     * // => true
-     *
-     * _.isBuffer(new Uint8Array(2));
-     * // => false
-     */
-    var isBuffer = nativeIsBuffer || stubFalse;
-
-    /** `Object#toString` result references. */
-    var argsTag$1 = '[object Arguments]',
-        arrayTag$1 = '[object Array]',
-        boolTag$1 = '[object Boolean]',
-        dateTag$1 = '[object Date]',
-        errorTag$1 = '[object Error]',
-        funcTag = '[object Function]',
-        mapTag$2 = '[object Map]',
-        numberTag$1 = '[object Number]',
-        objectTag$2 = '[object Object]',
-        regexpTag$1 = '[object RegExp]',
-        setTag$2 = '[object Set]',
-        stringTag$1 = '[object String]',
-        weakMapTag$1 = '[object WeakMap]';
-
-    var arrayBufferTag$1 = '[object ArrayBuffer]',
-        dataViewTag$2 = '[object DataView]',
-        float32Tag = '[object Float32Array]',
-        float64Tag = '[object Float64Array]',
-        int8Tag = '[object Int8Array]',
-        int16Tag = '[object Int16Array]',
-        int32Tag = '[object Int32Array]',
-        uint8Tag = '[object Uint8Array]',
-        uint8ClampedTag = '[object Uint8ClampedArray]',
-        uint16Tag = '[object Uint16Array]',
-        uint32Tag = '[object Uint32Array]';
-
-    /** Used to identify `toStringTag` values of typed arrays. */
-    var typedArrayTags = {};
-    typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-    typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-    typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-    typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-    typedArrayTags[uint32Tag] = true;
-    typedArrayTags[argsTag$1] = typedArrayTags[arrayTag$1] =
-    typedArrayTags[arrayBufferTag$1] = typedArrayTags[boolTag$1] =
-    typedArrayTags[dataViewTag$2] = typedArrayTags[dateTag$1] =
-    typedArrayTags[errorTag$1] = typedArrayTags[funcTag] =
-    typedArrayTags[mapTag$2] = typedArrayTags[numberTag$1] =
-    typedArrayTags[objectTag$2] = typedArrayTags[regexpTag$1] =
-    typedArrayTags[setTag$2] = typedArrayTags[stringTag$1] =
-    typedArrayTags[weakMapTag$1] = false;
-
-    /**
-     * The base implementation of `_.isTypedArray` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
-     */
-    function baseIsTypedArray(value) {
-      return isObjectLike$1(value) &&
-        isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
-    }
-
-    /**
-     * The base implementation of `_.unary` without support for storing metadata.
-     *
-     * @private
-     * @param {Function} func The function to cap arguments for.
-     * @returns {Function} Returns the new capped function.
-     */
-    function baseUnary(func) {
-      return function(value) {
-        return func(value);
-      };
-    }
-
-    /** Detect free variable `exports`. */
-    var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
-
-    /** Detect free variable `module`. */
-    var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
-
-    /** Detect the popular CommonJS extension `module.exports`. */
-    var moduleExports = freeModule && freeModule.exports === freeExports;
-
-    /** Detect free variable `process` from Node.js. */
-    var freeProcess = moduleExports && freeGlobal.process;
-
-    /** Used to access faster Node.js helpers. */
-    var nodeUtil = (function() {
-      try {
-        // Use `util.types` for Node.js 10+.
-        var types = freeModule && freeModule.require && freeModule.require('util').types;
-
-        if (types) {
-          return types;
-        }
-
-        // Legacy `process.binding('util')` for Node.js < 10.
-        return freeProcess && freeProcess.binding && freeProcess.binding('util');
-      } catch (e) {}
-    }());
-
-    /* Node.js helper references. */
-    var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
-
-    /**
-     * Checks if `value` is classified as a typed array.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
-     * @example
-     *
-     * _.isTypedArray(new Uint8Array);
-     * // => true
-     *
-     * _.isTypedArray([]);
-     * // => false
-     */
-    var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
-
-    /** Used for built-in method references. */
-    var objectProto$7 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$6 = objectProto$7.hasOwnProperty;
-
-    /**
-     * Creates an array of the enumerable property names of the array-like `value`.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @param {boolean} inherited Specify returning inherited property names.
-     * @returns {Array} Returns the array of property names.
-     */
-    function arrayLikeKeys(value, inherited) {
-      var isArr = isArray(value),
-          isArg = !isArr && isArguments(value),
-          isBuff = !isArr && !isArg && isBuffer(value),
-          isType = !isArr && !isArg && !isBuff && isTypedArray(value),
-          skipIndexes = isArr || isArg || isBuff || isType,
-          result = skipIndexes ? baseTimes(value.length, String) : [],
-          length = result.length;
-
-      for (var key in value) {
-        if ((inherited || hasOwnProperty$6.call(value, key)) &&
-            !(skipIndexes && (
-               // Safari 9 has enumerable `arguments.length` in strict mode.
-               key == 'length' ||
-               // Node.js 0.10 has enumerable non-index properties on buffers.
-               (isBuff && (key == 'offset' || key == 'parent')) ||
-               // PhantomJS 2 has enumerable non-index properties on typed arrays.
-               (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
-               // Skip index properties.
-               isIndex(key, length)
-            ))) {
-          result.push(key);
-        }
-      }
-      return result;
-    }
-
-    /**
-     * Creates a unary function that invokes `func` with its argument transformed.
-     *
-     * @private
-     * @param {Function} func The function to wrap.
-     * @param {Function} transform The argument transform.
-     * @returns {Function} Returns the new function.
-     */
-    function overArg(func, transform) {
-      return function(arg) {
-        return func(transform(arg));
-      };
-    }
-
-    /* Built-in method references for those with the same name as other `lodash` methods. */
-    var nativeKeys = overArg(Object.keys, Object);
-
-    /** Used for built-in method references. */
-    var objectProto$6 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$5 = objectProto$6.hasOwnProperty;
-
-    /**
-     * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names.
-     */
-    function baseKeys(object) {
-      if (!isPrototype(object)) {
-        return nativeKeys(object);
-      }
-      var result = [];
-      for (var key in Object(object)) {
-        if (hasOwnProperty$5.call(object, key) && key != 'constructor') {
-          result.push(key);
-        }
-      }
-      return result;
-    }
-
-    /**
-     * Creates an array of the own enumerable property names of `object`.
-     *
-     * **Note:** Non-object values are coerced to objects. See the
-     * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
-     * for more details.
-     *
-     * @static
-     * @since 0.1.0
-     * @memberOf _
-     * @category Object
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names.
-     * @example
-     *
-     * function Foo() {
-     *   this.a = 1;
-     *   this.b = 2;
-     * }
-     *
-     * Foo.prototype.c = 3;
-     *
-     * _.keys(new Foo);
-     * // => ['a', 'b'] (iteration order is not guaranteed)
-     *
-     * _.keys('hi');
-     * // => ['0', '1']
-     */
-    function keys(object) {
-      return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
-    }
-
-    /** Used to match property names within property paths. */
-    var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
-        reIsPlainProp = /^\w*$/;
-
-    /**
-     * Checks if `value` is a property name and not a property path.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @param {Object} [object] The object to query keys on.
-     * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
-     */
-    function isKey(value, object) {
-      if (isArray(value)) {
-        return false;
-      }
-      var type = typeof value;
-      if (type == 'number' || type == 'symbol' || type == 'boolean' ||
-          value == null || isSymbol(value)) {
-        return true;
-      }
-      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
-        (object != null && value in Object(object));
-    }
-
-    /* Built-in method references that are verified to be native. */
-    var nativeCreate = getNative(Object, 'create');
-
-    /**
-     * Removes all key-value entries from the hash.
-     *
-     * @private
-     * @name clear
-     * @memberOf Hash
-     */
-    function hashClear() {
-      this.__data__ = nativeCreate ? nativeCreate(null) : {};
-      this.size = 0;
-    }
-
-    /**
-     * Removes `key` and its value from the hash.
-     *
-     * @private
-     * @name delete
-     * @memberOf Hash
-     * @param {Object} hash The hash to modify.
-     * @param {string} key The key of the value to remove.
-     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-     */
-    function hashDelete(key) {
-      var result = this.has(key) && delete this.__data__[key];
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-
-    /** Used to stand-in for `undefined` hash values. */
-    var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
-
-    /** Used for built-in method references. */
-    var objectProto$5 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
-
-    /**
-     * Gets the hash value for `key`.
-     *
-     * @private
-     * @name get
-     * @memberOf Hash
-     * @param {string} key The key of the value to get.
-     * @returns {*} Returns the entry value.
-     */
-    function hashGet(key) {
-      var data = this.__data__;
-      if (nativeCreate) {
-        var result = data[key];
-        return result === HASH_UNDEFINED$2 ? undefined : result;
-      }
-      return hasOwnProperty$4.call(data, key) ? data[key] : undefined;
-    }
-
-    /** Used for built-in method references. */
-    var objectProto$4 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
-
-    /**
-     * Checks if a hash value for `key` exists.
-     *
-     * @private
-     * @name has
-     * @memberOf Hash
-     * @param {string} key The key of the entry to check.
-     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-     */
-    function hashHas(key) {
-      var data = this.__data__;
-      return nativeCreate ? (data[key] !== undefined) : hasOwnProperty$3.call(data, key);
-    }
-
-    /** Used to stand-in for `undefined` hash values. */
-    var HASH_UNDEFINED$1 = '__lodash_hash_undefined__';
-
-    /**
-     * Sets the hash `key` to `value`.
-     *
-     * @private
-     * @name set
-     * @memberOf Hash
-     * @param {string} key The key of the value to set.
-     * @param {*} value The value to set.
-     * @returns {Object} Returns the hash instance.
-     */
-    function hashSet(key, value) {
-      var data = this.__data__;
-      this.size += this.has(key) ? 0 : 1;
-      data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED$1 : value;
-      return this;
-    }
-
-    /**
-     * Creates a hash object.
-     *
-     * @private
-     * @constructor
-     * @param {Array} [entries] The key-value pairs to cache.
-     */
-    function Hash(entries) {
-      var index = -1,
-          length = entries == null ? 0 : entries.length;
-
-      this.clear();
-      while (++index < length) {
-        var entry = entries[index];
-        this.set(entry[0], entry[1]);
-      }
-    }
-
-    // Add methods to `Hash`.
-    Hash.prototype.clear = hashClear;
-    Hash.prototype['delete'] = hashDelete;
-    Hash.prototype.get = hashGet;
-    Hash.prototype.has = hashHas;
-    Hash.prototype.set = hashSet;
-
-    /**
-     * Removes all key-value entries from the list cache.
-     *
-     * @private
-     * @name clear
-     * @memberOf ListCache
-     */
-    function listCacheClear() {
-      this.__data__ = [];
-      this.size = 0;
-    }
-
-    /**
-     * Gets the index at which the `key` is found in `array` of key-value pairs.
-     *
-     * @private
-     * @param {Array} array The array to inspect.
-     * @param {*} key The key to search for.
-     * @returns {number} Returns the index of the matched value, else `-1`.
-     */
-    function assocIndexOf(array, key) {
-      var length = array.length;
-      while (length--) {
-        if (eq(array[length][0], key)) {
-          return length;
-        }
-      }
-      return -1;
-    }
-
-    /** Used for built-in method references. */
-    var arrayProto = Array.prototype;
-
-    /** Built-in value references. */
-    var splice = arrayProto.splice;
-
-    /**
-     * Removes `key` and its value from the list cache.
-     *
-     * @private
-     * @name delete
-     * @memberOf ListCache
-     * @param {string} key The key of the value to remove.
-     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-     */
-    function listCacheDelete(key) {
-      var data = this.__data__,
-          index = assocIndexOf(data, key);
-
-      if (index < 0) {
-        return false;
-      }
-      var lastIndex = data.length - 1;
-      if (index == lastIndex) {
-        data.pop();
-      } else {
-        splice.call(data, index, 1);
-      }
-      --this.size;
-      return true;
-    }
-
-    /**
-     * Gets the list cache value for `key`.
-     *
-     * @private
-     * @name get
-     * @memberOf ListCache
-     * @param {string} key The key of the value to get.
-     * @returns {*} Returns the entry value.
-     */
-    function listCacheGet(key) {
-      var data = this.__data__,
-          index = assocIndexOf(data, key);
-
-      return index < 0 ? undefined : data[index][1];
-    }
-
-    /**
-     * Checks if a list cache value for `key` exists.
-     *
-     * @private
-     * @name has
-     * @memberOf ListCache
-     * @param {string} key The key of the entry to check.
-     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-     */
-    function listCacheHas(key) {
-      return assocIndexOf(this.__data__, key) > -1;
-    }
-
-    /**
-     * Sets the list cache `key` to `value`.
-     *
-     * @private
-     * @name set
-     * @memberOf ListCache
-     * @param {string} key The key of the value to set.
-     * @param {*} value The value to set.
-     * @returns {Object} Returns the list cache instance.
-     */
-    function listCacheSet(key, value) {
-      var data = this.__data__,
-          index = assocIndexOf(data, key);
-
-      if (index < 0) {
-        ++this.size;
-        data.push([key, value]);
-      } else {
-        data[index][1] = value;
-      }
-      return this;
-    }
-
-    /**
-     * Creates an list cache object.
-     *
-     * @private
-     * @constructor
-     * @param {Array} [entries] The key-value pairs to cache.
-     */
-    function ListCache(entries) {
-      var index = -1,
-          length = entries == null ? 0 : entries.length;
-
-      this.clear();
-      while (++index < length) {
-        var entry = entries[index];
-        this.set(entry[0], entry[1]);
-      }
-    }
-
-    // Add methods to `ListCache`.
-    ListCache.prototype.clear = listCacheClear;
-    ListCache.prototype['delete'] = listCacheDelete;
-    ListCache.prototype.get = listCacheGet;
-    ListCache.prototype.has = listCacheHas;
-    ListCache.prototype.set = listCacheSet;
-
-    /* Built-in method references that are verified to be native. */
-    var Map$1 = getNative(root, 'Map');
-
-    /**
-     * Removes all key-value entries from the map.
-     *
-     * @private
-     * @name clear
-     * @memberOf MapCache
-     */
-    function mapCacheClear() {
-      this.size = 0;
-      this.__data__ = {
-        'hash': new Hash,
-        'map': new (Map$1 || ListCache),
-        'string': new Hash
-      };
-    }
-
-    /**
-     * Checks if `value` is suitable for use as unique object key.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
-     */
-    function isKeyable(value) {
-      var type = typeof value;
-      return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
-        ? (value !== '__proto__')
-        : (value === null);
-    }
-
-    /**
-     * Gets the data for `map`.
-     *
-     * @private
-     * @param {Object} map The map to query.
-     * @param {string} key The reference key.
-     * @returns {*} Returns the map data.
-     */
-    function getMapData(map, key) {
-      var data = map.__data__;
-      return isKeyable(key)
-        ? data[typeof key == 'string' ? 'string' : 'hash']
-        : data.map;
-    }
-
-    /**
-     * Removes `key` and its value from the map.
-     *
-     * @private
-     * @name delete
-     * @memberOf MapCache
-     * @param {string} key The key of the value to remove.
-     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-     */
-    function mapCacheDelete(key) {
-      var result = getMapData(this, key)['delete'](key);
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-
-    /**
-     * Gets the map value for `key`.
-     *
-     * @private
-     * @name get
-     * @memberOf MapCache
-     * @param {string} key The key of the value to get.
-     * @returns {*} Returns the entry value.
-     */
-    function mapCacheGet(key) {
-      return getMapData(this, key).get(key);
-    }
-
-    /**
-     * Checks if a map value for `key` exists.
-     *
-     * @private
-     * @name has
-     * @memberOf MapCache
-     * @param {string} key The key of the entry to check.
-     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-     */
-    function mapCacheHas(key) {
-      return getMapData(this, key).has(key);
-    }
-
-    /**
-     * Sets the map `key` to `value`.
-     *
-     * @private
-     * @name set
-     * @memberOf MapCache
-     * @param {string} key The key of the value to set.
-     * @param {*} value The value to set.
-     * @returns {Object} Returns the map cache instance.
-     */
-    function mapCacheSet(key, value) {
-      var data = getMapData(this, key),
-          size = data.size;
-
-      data.set(key, value);
-      this.size += data.size == size ? 0 : 1;
-      return this;
-    }
-
-    /**
-     * Creates a map cache object to store key-value pairs.
-     *
-     * @private
-     * @constructor
-     * @param {Array} [entries] The key-value pairs to cache.
-     */
-    function MapCache(entries) {
-      var index = -1,
-          length = entries == null ? 0 : entries.length;
-
-      this.clear();
-      while (++index < length) {
-        var entry = entries[index];
-        this.set(entry[0], entry[1]);
-      }
-    }
-
-    // Add methods to `MapCache`.
-    MapCache.prototype.clear = mapCacheClear;
-    MapCache.prototype['delete'] = mapCacheDelete;
-    MapCache.prototype.get = mapCacheGet;
-    MapCache.prototype.has = mapCacheHas;
-    MapCache.prototype.set = mapCacheSet;
-
-    /** Error message constants. */
-    var FUNC_ERROR_TEXT = 'Expected a function';
-
-    /**
-     * Creates a function that memoizes the result of `func`. If `resolver` is
-     * provided, it determines the cache key for storing the result based on the
-     * arguments provided to the memoized function. By default, the first argument
-     * provided to the memoized function is used as the map cache key. The `func`
-     * is invoked with the `this` binding of the memoized function.
-     *
-     * **Note:** The cache is exposed as the `cache` property on the memoized
-     * function. Its creation may be customized by replacing the `_.memoize.Cache`
-     * constructor with one whose instances implement the
-     * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
-     * method interface of `clear`, `delete`, `get`, `has`, and `set`.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Function
-     * @param {Function} func The function to have its output memoized.
-     * @param {Function} [resolver] The function to resolve the cache key.
-     * @returns {Function} Returns the new memoized function.
-     * @example
-     *
-     * var object = { 'a': 1, 'b': 2 };
-     * var other = { 'c': 3, 'd': 4 };
-     *
-     * var values = _.memoize(_.values);
-     * values(object);
-     * // => [1, 2]
-     *
-     * values(other);
-     * // => [3, 4]
-     *
-     * object.a = 2;
-     * values(object);
-     * // => [1, 2]
-     *
-     * // Modify the result cache.
-     * values.cache.set(object, ['a', 'b']);
-     * values(object);
-     * // => ['a', 'b']
-     *
-     * // Replace `_.memoize.Cache`.
-     * _.memoize.Cache = WeakMap;
-     */
-    function memoize(func, resolver) {
-      if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
-        throw new TypeError(FUNC_ERROR_TEXT);
-      }
-      var memoized = function() {
-        var args = arguments,
-            key = resolver ? resolver.apply(this, args) : args[0],
-            cache = memoized.cache;
-
-        if (cache.has(key)) {
-          return cache.get(key);
-        }
-        var result = func.apply(this, args);
-        memoized.cache = cache.set(key, result) || cache;
-        return result;
-      };
-      memoized.cache = new (memoize.Cache || MapCache);
-      return memoized;
-    }
-
-    // Expose `MapCache`.
-    memoize.Cache = MapCache;
-
-    /** Used as the maximum memoize cache size. */
-    var MAX_MEMOIZE_SIZE = 500;
-
-    /**
-     * A specialized version of `_.memoize` which clears the memoized function's
-     * cache when it exceeds `MAX_MEMOIZE_SIZE`.
-     *
-     * @private
-     * @param {Function} func The function to have its output memoized.
-     * @returns {Function} Returns the new memoized function.
-     */
-    function memoizeCapped(func) {
-      var result = memoize(func, function(key) {
-        if (cache.size === MAX_MEMOIZE_SIZE) {
-          cache.clear();
-        }
-        return key;
-      });
-
-      var cache = result.cache;
-      return result;
-    }
-
-    /** Used to match property names within property paths. */
-    var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-
-    /** Used to match backslashes in property paths. */
-    var reEscapeChar = /\\(\\)?/g;
-
-    /**
-     * Converts `string` to a property path array.
-     *
-     * @private
-     * @param {string} string The string to convert.
-     * @returns {Array} Returns the property path array.
-     */
-    var stringToPath = memoizeCapped(function(string) {
-      var result = [];
-      if (string.charCodeAt(0) === 46 /* . */) {
-        result.push('');
-      }
-      string.replace(rePropName, function(match, number, quote, subString) {
-        result.push(quote ? subString.replace(reEscapeChar, '$1') : (number || match));
-      });
-      return result;
-    });
-
-    /**
-     * Converts `value` to a string. An empty string is returned for `null`
-     * and `undefined` values. The sign of `-0` is preserved.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {string} Returns the converted string.
-     * @example
-     *
-     * _.toString(null);
-     * // => ''
-     *
-     * _.toString(-0);
-     * // => '-0'
-     *
-     * _.toString([1, 2, 3]);
-     * // => '1,2,3'
-     */
-    function toString(value) {
-      return value == null ? '' : baseToString(value);
-    }
-
-    /**
-     * Casts `value` to a path array if it's not one.
-     *
-     * @private
-     * @param {*} value The value to inspect.
-     * @param {Object} [object] The object to query keys on.
-     * @returns {Array} Returns the cast property path array.
-     */
-    function castPath(value, object) {
-      if (isArray(value)) {
-        return value;
-      }
-      return isKey(value, object) ? [value] : stringToPath(toString(value));
-    }
-
-    /** Used as references for various `Number` constants. */
-    var INFINITY = 1 / 0;
-
-    /**
-     * Converts `value` to a string key if it's not a string or symbol.
-     *
-     * @private
-     * @param {*} value The value to inspect.
-     * @returns {string|symbol} Returns the key.
-     */
-    function toKey(value) {
-      if (typeof value == 'string' || isSymbol(value)) {
-        return value;
-      }
-      var result = (value + '');
-      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
-    }
-
-    /**
-     * The base implementation of `_.get` without support for default values.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @param {Array|string} path The path of the property to get.
-     * @returns {*} Returns the resolved value.
-     */
-    function baseGet(object, path) {
-      path = castPath(path, object);
-
-      var index = 0,
-          length = path.length;
-
-      while (object != null && index < length) {
-        object = object[toKey(path[index++])];
-      }
-      return (index && index == length) ? object : undefined;
-    }
-
-    /**
-     * Gets the value at `path` of `object`. If the resolved value is
-     * `undefined`, the `defaultValue` is returned in its place.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.7.0
-     * @category Object
-     * @param {Object} object The object to query.
-     * @param {Array|string} path The path of the property to get.
-     * @param {*} [defaultValue] The value returned for `undefined` resolved values.
-     * @returns {*} Returns the resolved value.
-     * @example
-     *
-     * var object = { 'a': [{ 'b': { 'c': 3 } }] };
-     *
-     * _.get(object, 'a[0].b.c');
-     * // => 3
-     *
-     * _.get(object, ['a', '0', 'b', 'c']);
-     * // => 3
-     *
-     * _.get(object, 'a.b.c', 'default');
-     * // => 'default'
-     */
-    function get(object, path, defaultValue) {
-      var result = object == null ? undefined : baseGet(object, path);
-      return result === undefined ? defaultValue : result;
-    }
-
-    /**
-     * Appends the elements of `values` to `array`.
-     *
-     * @private
-     * @param {Array} array The array to modify.
-     * @param {Array} values The values to append.
-     * @returns {Array} Returns `array`.
-     */
-    function arrayPush(array, values) {
-      var index = -1,
-          length = values.length,
-          offset = array.length;
-
-      while (++index < length) {
-        array[offset + index] = values[index];
-      }
-      return array;
-    }
-
-    /**
-     * Removes all key-value entries from the stack.
-     *
-     * @private
-     * @name clear
-     * @memberOf Stack
-     */
-    function stackClear() {
-      this.__data__ = new ListCache;
-      this.size = 0;
-    }
-
-    /**
-     * Removes `key` and its value from the stack.
-     *
-     * @private
-     * @name delete
-     * @memberOf Stack
-     * @param {string} key The key of the value to remove.
-     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-     */
-    function stackDelete(key) {
-      var data = this.__data__,
-          result = data['delete'](key);
-
-      this.size = data.size;
-      return result;
-    }
-
-    /**
-     * Gets the stack value for `key`.
-     *
-     * @private
-     * @name get
-     * @memberOf Stack
-     * @param {string} key The key of the value to get.
-     * @returns {*} Returns the entry value.
-     */
-    function stackGet(key) {
-      return this.__data__.get(key);
-    }
-
-    /**
-     * Checks if a stack value for `key` exists.
-     *
-     * @private
-     * @name has
-     * @memberOf Stack
-     * @param {string} key The key of the entry to check.
-     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-     */
-    function stackHas(key) {
-      return this.__data__.has(key);
-    }
-
-    /** Used as the size to enable large array optimizations. */
-    var LARGE_ARRAY_SIZE = 200;
-
-    /**
-     * Sets the stack `key` to `value`.
-     *
-     * @private
-     * @name set
-     * @memberOf Stack
-     * @param {string} key The key of the value to set.
-     * @param {*} value The value to set.
-     * @returns {Object} Returns the stack cache instance.
-     */
-    function stackSet(key, value) {
-      var data = this.__data__;
-      if (data instanceof ListCache) {
-        var pairs = data.__data__;
-        if (!Map$1 || (pairs.length < LARGE_ARRAY_SIZE - 1)) {
-          pairs.push([key, value]);
-          this.size = ++data.size;
-          return this;
-        }
-        data = this.__data__ = new MapCache(pairs);
-      }
-      data.set(key, value);
-      this.size = data.size;
-      return this;
-    }
-
-    /**
-     * Creates a stack cache object to store key-value pairs.
-     *
-     * @private
-     * @constructor
-     * @param {Array} [entries] The key-value pairs to cache.
-     */
-    function Stack(entries) {
-      var data = this.__data__ = new ListCache(entries);
-      this.size = data.size;
-    }
-
-    // Add methods to `Stack`.
-    Stack.prototype.clear = stackClear;
-    Stack.prototype['delete'] = stackDelete;
-    Stack.prototype.get = stackGet;
-    Stack.prototype.has = stackHas;
-    Stack.prototype.set = stackSet;
-
-    /**
-     * A specialized version of `_.filter` for arrays without support for
-     * iteratee shorthands.
-     *
-     * @private
-     * @param {Array} [array] The array to iterate over.
-     * @param {Function} predicate The function invoked per iteration.
-     * @returns {Array} Returns the new filtered array.
-     */
-    function arrayFilter(array, predicate) {
-      var index = -1,
-          length = array == null ? 0 : array.length,
-          resIndex = 0,
-          result = [];
-
-      while (++index < length) {
-        var value = array[index];
-        if (predicate(value, index, array)) {
-          result[resIndex++] = value;
-        }
-      }
-      return result;
-    }
-
-    /**
-     * This method returns a new empty array.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.13.0
-     * @category Util
-     * @returns {Array} Returns the new empty array.
-     * @example
-     *
-     * var arrays = _.times(2, _.stubArray);
-     *
-     * console.log(arrays);
-     * // => [[], []]
-     *
-     * console.log(arrays[0] === arrays[1]);
-     * // => false
-     */
-    function stubArray() {
-      return [];
-    }
-
-    /** Used for built-in method references. */
-    var objectProto$3 = Object.prototype;
-
-    /** Built-in value references. */
-    var propertyIsEnumerable = objectProto$3.propertyIsEnumerable;
-
-    /* Built-in method references for those with the same name as other `lodash` methods. */
-    var nativeGetSymbols = Object.getOwnPropertySymbols;
-
-    /**
-     * Creates an array of the own enumerable symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of symbols.
-     */
-    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
-      if (object == null) {
-        return [];
-      }
-      object = Object(object);
-      return arrayFilter(nativeGetSymbols(object), function(symbol) {
-        return propertyIsEnumerable.call(object, symbol);
-      });
-    };
-
-    /**
-     * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
-     * `keysFunc` and `symbolsFunc` to get the enumerable property names and
-     * symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @param {Function} keysFunc The function to get the keys of `object`.
-     * @param {Function} symbolsFunc The function to get the symbols of `object`.
-     * @returns {Array} Returns the array of property names and symbols.
-     */
-    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
-      var result = keysFunc(object);
-      return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
-    }
-
-    /**
-     * Creates an array of own enumerable property names and symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names and symbols.
-     */
-    function getAllKeys(object) {
-      return baseGetAllKeys(object, keys, getSymbols);
-    }
-
-    /* Built-in method references that are verified to be native. */
-    var DataView = getNative(root, 'DataView');
-
-    /* Built-in method references that are verified to be native. */
-    var Promise$1 = getNative(root, 'Promise');
-
-    /* Built-in method references that are verified to be native. */
-    var Set$1 = getNative(root, 'Set');
-
-    /** `Object#toString` result references. */
-    var mapTag$1 = '[object Map]',
-        objectTag$1 = '[object Object]',
-        promiseTag = '[object Promise]',
-        setTag$1 = '[object Set]',
-        weakMapTag = '[object WeakMap]';
-
-    var dataViewTag$1 = '[object DataView]';
-
-    /** Used to detect maps, sets, and weakmaps. */
-    var dataViewCtorString = toSource$1(DataView),
-        mapCtorString = toSource$1(Map$1),
-        promiseCtorString = toSource$1(Promise$1),
-        setCtorString = toSource$1(Set$1),
-        weakMapCtorString = toSource$1(WeakMap$1);
-
-    /**
-     * Gets the `toStringTag` of `value`.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @returns {string} Returns the `toStringTag`.
-     */
-    var getTag = baseGetTag;
-
-    // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
-    if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag$1) ||
-        (Map$1 && getTag(new Map$1) != mapTag$1) ||
-        (Promise$1 && getTag(Promise$1.resolve()) != promiseTag) ||
-        (Set$1 && getTag(new Set$1) != setTag$1) ||
-        (WeakMap$1 && getTag(new WeakMap$1) != weakMapTag)) {
-      getTag = function(value) {
-        var result = baseGetTag(value),
-            Ctor = result == objectTag$1 ? value.constructor : undefined,
-            ctorString = Ctor ? toSource$1(Ctor) : '';
-
-        if (ctorString) {
-          switch (ctorString) {
-            case dataViewCtorString: return dataViewTag$1;
-            case mapCtorString: return mapTag$1;
-            case promiseCtorString: return promiseTag;
-            case setCtorString: return setTag$1;
-            case weakMapCtorString: return weakMapTag;
-          }
-        }
-        return result;
-      };
-    }
-
-    var getTag$1 = getTag;
-
-    /** Built-in value references. */
-    var Uint8Array = root.Uint8Array;
-
-    /** Used to stand-in for `undefined` hash values. */
-    var HASH_UNDEFINED = '__lodash_hash_undefined__';
-
-    /**
-     * Adds `value` to the array cache.
-     *
-     * @private
-     * @name add
-     * @memberOf SetCache
-     * @alias push
-     * @param {*} value The value to cache.
-     * @returns {Object} Returns the cache instance.
-     */
-    function setCacheAdd(value) {
-      this.__data__.set(value, HASH_UNDEFINED);
-      return this;
-    }
-
-    /**
-     * Checks if `value` is in the array cache.
-     *
-     * @private
-     * @name has
-     * @memberOf SetCache
-     * @param {*} value The value to search for.
-     * @returns {number} Returns `true` if `value` is found, else `false`.
-     */
-    function setCacheHas(value) {
-      return this.__data__.has(value);
-    }
-
-    /**
-     *
-     * Creates an array cache object to store unique values.
-     *
-     * @private
-     * @constructor
-     * @param {Array} [values] The values to cache.
-     */
-    function SetCache(values) {
-      var index = -1,
-          length = values == null ? 0 : values.length;
-
-      this.__data__ = new MapCache;
-      while (++index < length) {
-        this.add(values[index]);
-      }
-    }
-
-    // Add methods to `SetCache`.
-    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
-    SetCache.prototype.has = setCacheHas;
-
-    /**
-     * A specialized version of `_.some` for arrays without support for iteratee
-     * shorthands.
-     *
-     * @private
-     * @param {Array} [array] The array to iterate over.
-     * @param {Function} predicate The function invoked per iteration.
-     * @returns {boolean} Returns `true` if any element passes the predicate check,
-     *  else `false`.
-     */
-    function arraySome(array, predicate) {
-      var index = -1,
-          length = array == null ? 0 : array.length;
-
-      while (++index < length) {
-        if (predicate(array[index], index, array)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Checks if a `cache` value for `key` exists.
-     *
-     * @private
-     * @param {Object} cache The cache to query.
-     * @param {string} key The key of the entry to check.
-     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-     */
-    function cacheHas(cache, key) {
-      return cache.has(key);
-    }
-
-    /** Used to compose bitmasks for value comparisons. */
-    var COMPARE_PARTIAL_FLAG$5 = 1,
-        COMPARE_UNORDERED_FLAG$3 = 2;
-
-    /**
-     * A specialized version of `baseIsEqualDeep` for arrays with support for
-     * partial deep comparisons.
-     *
-     * @private
-     * @param {Array} array The array to compare.
-     * @param {Array} other The other array to compare.
-     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-     * @param {Function} customizer The function to customize comparisons.
-     * @param {Function} equalFunc The function to determine equivalents of values.
-     * @param {Object} stack Tracks traversed `array` and `other` objects.
-     * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
-     */
-    function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
-      var isPartial = bitmask & COMPARE_PARTIAL_FLAG$5,
-          arrLength = array.length,
-          othLength = other.length;
-
-      if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
-        return false;
-      }
-      // Check that cyclic values are equal.
-      var arrStacked = stack.get(array);
-      var othStacked = stack.get(other);
-      if (arrStacked && othStacked) {
-        return arrStacked == other && othStacked == array;
-      }
-      var index = -1,
-          result = true,
-          seen = (bitmask & COMPARE_UNORDERED_FLAG$3) ? new SetCache : undefined;
-
-      stack.set(array, other);
-      stack.set(other, array);
-
-      // Ignore non-index properties.
-      while (++index < arrLength) {
-        var arrValue = array[index],
-            othValue = other[index];
-
-        if (customizer) {
-          var compared = isPartial
-            ? customizer(othValue, arrValue, index, other, array, stack)
-            : customizer(arrValue, othValue, index, array, other, stack);
-        }
-        if (compared !== undefined) {
-          if (compared) {
-            continue;
-          }
-          result = false;
-          break;
-        }
-        // Recursively compare arrays (susceptible to call stack limits).
-        if (seen) {
-          if (!arraySome(other, function(othValue, othIndex) {
-                if (!cacheHas(seen, othIndex) &&
-                    (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
-                  return seen.push(othIndex);
-                }
-              })) {
-            result = false;
-            break;
-          }
-        } else if (!(
-              arrValue === othValue ||
-                equalFunc(arrValue, othValue, bitmask, customizer, stack)
-            )) {
-          result = false;
-          break;
-        }
-      }
-      stack['delete'](array);
-      stack['delete'](other);
-      return result;
-    }
-
-    /**
-     * Converts `map` to its key-value pairs.
-     *
-     * @private
-     * @param {Object} map The map to convert.
-     * @returns {Array} Returns the key-value pairs.
-     */
-    function mapToArray(map) {
-      var index = -1,
-          result = Array(map.size);
-
-      map.forEach(function(value, key) {
-        result[++index] = [key, value];
-      });
-      return result;
-    }
-
-    /**
-     * Converts `set` to an array of its values.
-     *
-     * @private
-     * @param {Object} set The set to convert.
-     * @returns {Array} Returns the values.
-     */
-    function setToArray(set) {
-      var index = -1,
-          result = Array(set.size);
-
-      set.forEach(function(value) {
-        result[++index] = value;
-      });
-      return result;
-    }
-
-    /** Used to compose bitmasks for value comparisons. */
-    var COMPARE_PARTIAL_FLAG$4 = 1,
-        COMPARE_UNORDERED_FLAG$2 = 2;
-
-    /** `Object#toString` result references. */
-    var boolTag = '[object Boolean]',
-        dateTag = '[object Date]',
-        errorTag = '[object Error]',
-        mapTag = '[object Map]',
-        numberTag = '[object Number]',
-        regexpTag = '[object RegExp]',
-        setTag = '[object Set]',
-        stringTag = '[object String]',
-        symbolTag = '[object Symbol]';
-
-    var arrayBufferTag = '[object ArrayBuffer]',
-        dataViewTag = '[object DataView]';
-
-    /** Used to convert symbols to primitives and strings. */
-    var symbolProto = Symbol$1 ? Symbol$1.prototype : undefined,
-        symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
-
-    /**
-     * A specialized version of `baseIsEqualDeep` for comparing objects of
-     * the same `toStringTag`.
-     *
-     * **Note:** This function only supports comparing values with tags of
-     * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
-     *
-     * @private
-     * @param {Object} object The object to compare.
-     * @param {Object} other The other object to compare.
-     * @param {string} tag The `toStringTag` of the objects to compare.
-     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-     * @param {Function} customizer The function to customize comparisons.
-     * @param {Function} equalFunc The function to determine equivalents of values.
-     * @param {Object} stack Tracks traversed `object` and `other` objects.
-     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-     */
-    function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
-      switch (tag) {
-        case dataViewTag:
-          if ((object.byteLength != other.byteLength) ||
-              (object.byteOffset != other.byteOffset)) {
-            return false;
-          }
-          object = object.buffer;
-          other = other.buffer;
-
-        case arrayBufferTag:
-          if ((object.byteLength != other.byteLength) ||
-              !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
-            return false;
-          }
-          return true;
-
-        case boolTag:
-        case dateTag:
-        case numberTag:
-          // Coerce booleans to `1` or `0` and dates to milliseconds.
-          // Invalid dates are coerced to `NaN`.
-          return eq(+object, +other);
-
-        case errorTag:
-          return object.name == other.name && object.message == other.message;
-
-        case regexpTag:
-        case stringTag:
-          // Coerce regexes to strings and treat strings, primitives and objects,
-          // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
-          // for more details.
-          return object == (other + '');
-
-        case mapTag:
-          var convert = mapToArray;
-
-        case setTag:
-          var isPartial = bitmask & COMPARE_PARTIAL_FLAG$4;
-          convert || (convert = setToArray);
-
-          if (object.size != other.size && !isPartial) {
-            return false;
-          }
-          // Assume cyclic values are equal.
-          var stacked = stack.get(object);
-          if (stacked) {
-            return stacked == other;
-          }
-          bitmask |= COMPARE_UNORDERED_FLAG$2;
-
-          // Recursively compare objects (susceptible to call stack limits).
-          stack.set(object, other);
-          var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
-          stack['delete'](object);
-          return result;
-
-        case symbolTag:
-          if (symbolValueOf) {
-            return symbolValueOf.call(object) == symbolValueOf.call(other);
-          }
-      }
-      return false;
-    }
-
-    /** Used to compose bitmasks for value comparisons. */
-    var COMPARE_PARTIAL_FLAG$3 = 1;
-
-    /** Used for built-in method references. */
-    var objectProto$2 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
-
-    /**
-     * A specialized version of `baseIsEqualDeep` for objects with support for
-     * partial deep comparisons.
-     *
-     * @private
-     * @param {Object} object The object to compare.
-     * @param {Object} other The other object to compare.
-     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-     * @param {Function} customizer The function to customize comparisons.
-     * @param {Function} equalFunc The function to determine equivalents of values.
-     * @param {Object} stack Tracks traversed `object` and `other` objects.
-     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-     */
-    function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
-      var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3,
-          objProps = getAllKeys(object),
-          objLength = objProps.length,
-          othProps = getAllKeys(other),
-          othLength = othProps.length;
-
-      if (objLength != othLength && !isPartial) {
-        return false;
-      }
-      var index = objLength;
-      while (index--) {
-        var key = objProps[index];
-        if (!(isPartial ? key in other : hasOwnProperty$2.call(other, key))) {
-          return false;
-        }
-      }
-      // Check that cyclic values are equal.
-      var objStacked = stack.get(object);
-      var othStacked = stack.get(other);
-      if (objStacked && othStacked) {
-        return objStacked == other && othStacked == object;
-      }
-      var result = true;
-      stack.set(object, other);
-      stack.set(other, object);
-
-      var skipCtor = isPartial;
-      while (++index < objLength) {
-        key = objProps[index];
-        var objValue = object[key],
-            othValue = other[key];
-
-        if (customizer) {
-          var compared = isPartial
-            ? customizer(othValue, objValue, key, other, object, stack)
-            : customizer(objValue, othValue, key, object, other, stack);
-        }
-        // Recursively compare objects (susceptible to call stack limits).
-        if (!(compared === undefined
-              ? (objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack))
-              : compared
-            )) {
-          result = false;
-          break;
-        }
-        skipCtor || (skipCtor = key == 'constructor');
-      }
-      if (result && !skipCtor) {
-        var objCtor = object.constructor,
-            othCtor = other.constructor;
-
-        // Non `Object` object instances with different constructors are not equal.
-        if (objCtor != othCtor &&
-            ('constructor' in object && 'constructor' in other) &&
-            !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
-              typeof othCtor == 'function' && othCtor instanceof othCtor)) {
-          result = false;
-        }
-      }
-      stack['delete'](object);
-      stack['delete'](other);
-      return result;
-    }
-
-    /** Used to compose bitmasks for value comparisons. */
-    var COMPARE_PARTIAL_FLAG$2 = 1;
-
-    /** `Object#toString` result references. */
-    var argsTag = '[object Arguments]',
-        arrayTag = '[object Array]',
-        objectTag = '[object Object]';
-
-    /** Used for built-in method references. */
-    var objectProto$1 = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
-
-    /**
-     * A specialized version of `baseIsEqual` for arrays and objects which performs
-     * deep comparisons and tracks traversed objects enabling objects with circular
-     * references to be compared.
-     *
-     * @private
-     * @param {Object} object The object to compare.
-     * @param {Object} other The other object to compare.
-     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-     * @param {Function} customizer The function to customize comparisons.
-     * @param {Function} equalFunc The function to determine equivalents of values.
-     * @param {Object} [stack] Tracks traversed `object` and `other` objects.
-     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-     */
-    function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
-      var objIsArr = isArray(object),
-          othIsArr = isArray(other),
-          objTag = objIsArr ? arrayTag : getTag$1(object),
-          othTag = othIsArr ? arrayTag : getTag$1(other);
-
-      objTag = objTag == argsTag ? objectTag : objTag;
-      othTag = othTag == argsTag ? objectTag : othTag;
-
-      var objIsObj = objTag == objectTag,
-          othIsObj = othTag == objectTag,
-          isSameTag = objTag == othTag;
-
-      if (isSameTag && isBuffer(object)) {
-        if (!isBuffer(other)) {
-          return false;
-        }
-        objIsArr = true;
-        objIsObj = false;
-      }
-      if (isSameTag && !objIsObj) {
-        stack || (stack = new Stack);
-        return (objIsArr || isTypedArray(object))
-          ? equalArrays(object, other, bitmask, customizer, equalFunc, stack)
-          : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
-      }
-      if (!(bitmask & COMPARE_PARTIAL_FLAG$2)) {
-        var objIsWrapped = objIsObj && hasOwnProperty$1.call(object, '__wrapped__'),
-            othIsWrapped = othIsObj && hasOwnProperty$1.call(other, '__wrapped__');
-
-        if (objIsWrapped || othIsWrapped) {
-          var objUnwrapped = objIsWrapped ? object.value() : object,
-              othUnwrapped = othIsWrapped ? other.value() : other;
-
-          stack || (stack = new Stack);
-          return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
-        }
-      }
-      if (!isSameTag) {
-        return false;
-      }
-      stack || (stack = new Stack);
-      return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
-    }
-
-    /**
-     * The base implementation of `_.isEqual` which supports partial comparisons
-     * and tracks traversed objects.
-     *
-     * @private
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @param {boolean} bitmask The bitmask flags.
-     *  1 - Unordered comparison
-     *  2 - Partial comparison
-     * @param {Function} [customizer] The function to customize comparisons.
-     * @param {Object} [stack] Tracks traversed `value` and `other` objects.
-     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-     */
-    function baseIsEqual(value, other, bitmask, customizer, stack) {
-      if (value === other) {
-        return true;
-      }
-      if (value == null || other == null || (!isObjectLike$1(value) && !isObjectLike$1(other))) {
-        return value !== value && other !== other;
-      }
-      return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
-    }
-
-    /** Used to compose bitmasks for value comparisons. */
-    var COMPARE_PARTIAL_FLAG$1 = 1,
-        COMPARE_UNORDERED_FLAG$1 = 2;
-
-    /**
-     * The base implementation of `_.isMatch` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Object} object The object to inspect.
-     * @param {Object} source The object of property values to match.
-     * @param {Array} matchData The property names, values, and compare flags to match.
-     * @param {Function} [customizer] The function to customize comparisons.
-     * @returns {boolean} Returns `true` if `object` is a match, else `false`.
-     */
-    function baseIsMatch(object, source, matchData, customizer) {
-      var index = matchData.length,
-          length = index,
-          noCustomizer = !customizer;
-
-      if (object == null) {
-        return !length;
-      }
-      object = Object(object);
-      while (index--) {
-        var data = matchData[index];
-        if ((noCustomizer && data[2])
-              ? data[1] !== object[data[0]]
-              : !(data[0] in object)
-            ) {
-          return false;
-        }
-      }
-      while (++index < length) {
-        data = matchData[index];
-        var key = data[0],
-            objValue = object[key],
-            srcValue = data[1];
-
-        if (noCustomizer && data[2]) {
-          if (objValue === undefined && !(key in object)) {
-            return false;
-          }
-        } else {
-          var stack = new Stack;
-          if (customizer) {
-            var result = customizer(objValue, srcValue, key, object, source, stack);
-          }
-          if (!(result === undefined
-                ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$1 | COMPARE_UNORDERED_FLAG$1, customizer, stack)
-                : result
-              )) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-
-    /**
-     * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` if suitable for strict
-     *  equality comparisons, else `false`.
-     */
-    function isStrictComparable(value) {
-      return value === value && !isObject(value);
-    }
-
-    /**
-     * Gets the property names, values, and compare flags of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the match data of `object`.
-     */
-    function getMatchData(object) {
-      var result = keys(object),
-          length = result.length;
-
-      while (length--) {
-        var key = result[length],
-            value = object[key];
-
-        result[length] = [key, value, isStrictComparable(value)];
-      }
-      return result;
-    }
-
-    /**
-     * A specialized version of `matchesProperty` for source values suitable
-     * for strict equality comparisons, i.e. `===`.
-     *
-     * @private
-     * @param {string} key The key of the property to get.
-     * @param {*} srcValue The value to match.
-     * @returns {Function} Returns the new spec function.
-     */
-    function matchesStrictComparable(key, srcValue) {
-      return function(object) {
-        if (object == null) {
-          return false;
-        }
-        return object[key] === srcValue &&
-          (srcValue !== undefined || (key in Object(object)));
-      };
-    }
-
-    /**
-     * The base implementation of `_.matches` which doesn't clone `source`.
-     *
-     * @private
-     * @param {Object} source The object of property values to match.
-     * @returns {Function} Returns the new spec function.
-     */
-    function baseMatches(source) {
-      var matchData = getMatchData(source);
-      if (matchData.length == 1 && matchData[0][2]) {
-        return matchesStrictComparable(matchData[0][0], matchData[0][1]);
-      }
-      return function(object) {
-        return object === source || baseIsMatch(object, source, matchData);
-      };
-    }
-
-    /**
-     * The base implementation of `_.hasIn` without support for deep paths.
-     *
-     * @private
-     * @param {Object} [object] The object to query.
-     * @param {Array|string} key The key to check.
-     * @returns {boolean} Returns `true` if `key` exists, else `false`.
-     */
-    function baseHasIn(object, key) {
-      return object != null && key in Object(object);
-    }
-
-    /**
-     * Checks if `path` exists on `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @param {Array|string} path The path to check.
-     * @param {Function} hasFunc The function to check properties.
-     * @returns {boolean} Returns `true` if `path` exists, else `false`.
-     */
-    function hasPath(object, path, hasFunc) {
-      path = castPath(path, object);
-
-      var index = -1,
-          length = path.length,
-          result = false;
-
-      while (++index < length) {
-        var key = toKey(path[index]);
-        if (!(result = object != null && hasFunc(object, key))) {
-          break;
-        }
-        object = object[key];
-      }
-      if (result || ++index != length) {
-        return result;
-      }
-      length = object == null ? 0 : object.length;
-      return !!length && isLength(length) && isIndex(key, length) &&
-        (isArray(object) || isArguments(object));
-    }
-
-    /**
-     * Checks if `path` is a direct or inherited property of `object`.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Object
-     * @param {Object} object The object to query.
-     * @param {Array|string} path The path to check.
-     * @returns {boolean} Returns `true` if `path` exists, else `false`.
-     * @example
-     *
-     * var object = _.create({ 'a': _.create({ 'b': 2 }) });
-     *
-     * _.hasIn(object, 'a');
-     * // => true
-     *
-     * _.hasIn(object, 'a.b');
-     * // => true
-     *
-     * _.hasIn(object, ['a', 'b']);
-     * // => true
-     *
-     * _.hasIn(object, 'b');
-     * // => false
-     */
-    function hasIn(object, path) {
-      return object != null && hasPath(object, path, baseHasIn);
-    }
-
-    /** Used to compose bitmasks for value comparisons. */
-    var COMPARE_PARTIAL_FLAG = 1,
-        COMPARE_UNORDERED_FLAG = 2;
-
-    /**
-     * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
-     *
-     * @private
-     * @param {string} path The path of the property to get.
-     * @param {*} srcValue The value to match.
-     * @returns {Function} Returns the new spec function.
-     */
-    function baseMatchesProperty(path, srcValue) {
-      if (isKey(path) && isStrictComparable(srcValue)) {
-        return matchesStrictComparable(toKey(path), srcValue);
-      }
-      return function(object) {
-        var objValue = get(object, path);
-        return (objValue === undefined && objValue === srcValue)
-          ? hasIn(object, path)
-          : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
-      };
-    }
-
-    /**
-     * The base implementation of `_.property` without support for deep paths.
-     *
-     * @private
-     * @param {string} key The key of the property to get.
-     * @returns {Function} Returns the new accessor function.
-     */
-    function baseProperty(key) {
-      return function(object) {
-        return object == null ? undefined : object[key];
-      };
-    }
-
-    /**
-     * A specialized version of `baseProperty` which supports deep paths.
-     *
-     * @private
-     * @param {Array|string} path The path of the property to get.
-     * @returns {Function} Returns the new accessor function.
-     */
-    function basePropertyDeep(path) {
-      return function(object) {
-        return baseGet(object, path);
-      };
-    }
-
-    /**
-     * Creates a function that returns the value at `path` of a given object.
-     *
-     * @static
-     * @memberOf _
-     * @since 2.4.0
-     * @category Util
-     * @param {Array|string} path The path of the property to get.
-     * @returns {Function} Returns the new accessor function.
-     * @example
-     *
-     * var objects = [
-     *   { 'a': { 'b': 2 } },
-     *   { 'a': { 'b': 1 } }
-     * ];
-     *
-     * _.map(objects, _.property('a.b'));
-     * // => [2, 1]
-     *
-     * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
-     * // => [1, 2]
-     */
-    function property(path) {
-      return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
-    }
-
-    /**
-     * The base implementation of `_.iteratee`.
-     *
-     * @private
-     * @param {*} [value=_.identity] The value to convert to an iteratee.
-     * @returns {Function} Returns the iteratee.
-     */
-    function baseIteratee(value) {
-      // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
-      // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
-      if (typeof value == 'function') {
-        return value;
-      }
-      if (value == null) {
-        return identity;
-      }
-      if (typeof value == 'object') {
-        return isArray(value)
-          ? baseMatchesProperty(value[0], value[1])
-          : baseMatches(value);
-      }
-      return property(value);
-    }
-
-    /**
-     * A specialized version of `baseAggregator` for arrays.
-     *
-     * @private
-     * @param {Array} [array] The array to iterate over.
-     * @param {Function} setter The function to set `accumulator` values.
-     * @param {Function} iteratee The iteratee to transform keys.
-     * @param {Object} accumulator The initial aggregated object.
-     * @returns {Function} Returns `accumulator`.
-     */
-    function arrayAggregator(array, setter, iteratee, accumulator) {
-      var index = -1,
-          length = array == null ? 0 : array.length;
-
-      while (++index < length) {
-        var value = array[index];
-        setter(accumulator, value, iteratee(value), array);
-      }
-      return accumulator;
-    }
-
-    /**
-     * Creates a base function for methods like `_.forIn` and `_.forOwn`.
-     *
-     * @private
-     * @param {boolean} [fromRight] Specify iterating from right to left.
-     * @returns {Function} Returns the new base function.
-     */
-    function createBaseFor(fromRight) {
-      return function(object, iteratee, keysFunc) {
-        var index = -1,
-            iterable = Object(object),
-            props = keysFunc(object),
-            length = props.length;
-
-        while (length--) {
-          var key = props[fromRight ? length : ++index];
-          if (iteratee(iterable[key], key, iterable) === false) {
-            break;
-          }
-        }
-        return object;
-      };
-    }
-
-    /**
-     * The base implementation of `baseForOwn` which iterates over `object`
-     * properties returned by `keysFunc` and invokes `iteratee` for each property.
-     * Iteratee functions may exit iteration early by explicitly returning `false`.
-     *
-     * @private
-     * @param {Object} object The object to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @param {Function} keysFunc The function to get the keys of `object`.
-     * @returns {Object} Returns `object`.
-     */
-    var baseFor = createBaseFor();
-
-    /**
-     * The base implementation of `_.forOwn` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Object} object The object to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Object} Returns `object`.
-     */
-    function baseForOwn(object, iteratee) {
-      return object && baseFor(object, iteratee, keys);
-    }
-
-    /**
-     * Creates a `baseEach` or `baseEachRight` function.
-     *
-     * @private
-     * @param {Function} eachFunc The function to iterate over a collection.
-     * @param {boolean} [fromRight] Specify iterating from right to left.
-     * @returns {Function} Returns the new base function.
-     */
-    function createBaseEach(eachFunc, fromRight) {
-      return function(collection, iteratee) {
-        if (collection == null) {
-          return collection;
-        }
-        if (!isArrayLike(collection)) {
-          return eachFunc(collection, iteratee);
-        }
-        var length = collection.length,
-            index = fromRight ? length : -1,
-            iterable = Object(collection);
-
-        while ((fromRight ? index-- : ++index < length)) {
-          if (iteratee(iterable[index], index, iterable) === false) {
-            break;
-          }
-        }
-        return collection;
-      };
-    }
-
-    /**
-     * The base implementation of `_.forEach` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Array|Object} Returns `collection`.
-     */
-    var baseEach = createBaseEach(baseForOwn);
-
-    /**
-     * Aggregates elements of `collection` on `accumulator` with keys transformed
-     * by `iteratee` and values set by `setter`.
-     *
-     * @private
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} setter The function to set `accumulator` values.
-     * @param {Function} iteratee The iteratee to transform keys.
-     * @param {Object} accumulator The initial aggregated object.
-     * @returns {Function} Returns `accumulator`.
-     */
-    function baseAggregator(collection, setter, iteratee, accumulator) {
-      baseEach(collection, function(value, key, collection) {
-        setter(accumulator, value, iteratee(value), collection);
-      });
-      return accumulator;
-    }
-
-    /**
-     * Creates a function like `_.groupBy`.
-     *
-     * @private
-     * @param {Function} setter The function to set accumulator values.
-     * @param {Function} [initializer] The accumulator object initializer.
-     * @returns {Function} Returns the new aggregator function.
-     */
-    function createAggregator(setter, initializer) {
-      return function(collection, iteratee) {
-        var func = isArray(collection) ? arrayAggregator : baseAggregator,
-            accumulator = initializer ? initializer() : {};
-
-        return func(collection, setter, baseIteratee(iteratee), accumulator);
-      };
-    }
-
-    /**
-     * The base implementation of `_.map` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Array} Returns the new mapped array.
-     */
-    function baseMap(collection, iteratee) {
-      var index = -1,
-          result = isArrayLike(collection) ? Array(collection.length) : [];
-
-      baseEach(collection, function(value, key, collection) {
-        result[++index] = iteratee(value, key, collection);
-      });
-      return result;
-    }
-
-    /** Used for built-in method references. */
-    var objectProto = Object.prototype;
-
-    /** Used to check objects for own properties. */
-    var hasOwnProperty = objectProto.hasOwnProperty;
-
-    /**
-     * Creates an object composed of keys generated from the results of running
-     * each element of `collection` thru `iteratee`. The order of grouped values
-     * is determined by the order they occur in `collection`. The corresponding
-     * value of each key is an array of elements responsible for generating the
-     * key. The iteratee is invoked with one argument: (value).
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Collection
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
-     * @returns {Object} Returns the composed aggregate object.
-     * @example
-     *
-     * _.groupBy([6.1, 4.2, 6.3], Math.floor);
-     * // => { '4': [4.2], '6': [6.1, 6.3] }
-     *
-     * // The `_.property` iteratee shorthand.
-     * _.groupBy(['one', 'two', 'three'], 'length');
-     * // => { '3': ['one', 'two'], '5': ['three'] }
-     */
-    var groupBy = createAggregator(function(result, value, key) {
-      if (hasOwnProperty.call(result, key)) {
-        result[key].push(value);
-      } else {
-        baseAssignValue(result, key, [value]);
-      }
-    });
-
-    /**
-     * The base implementation of `_.sortBy` which uses `comparer` to define the
-     * sort order of `array` and replaces criteria objects with their corresponding
-     * values.
-     *
-     * @private
-     * @param {Array} array The array to sort.
-     * @param {Function} comparer The function to define sort order.
-     * @returns {Array} Returns `array`.
-     */
-    function baseSortBy(array, comparer) {
-      var length = array.length;
-
-      array.sort(comparer);
-      while (length--) {
-        array[length] = array[length].value;
-      }
-      return array;
-    }
-
-    /**
-     * Compares values to sort them in ascending order.
-     *
-     * @private
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {number} Returns the sort order indicator for `value`.
-     */
-    function compareAscending(value, other) {
-      if (value !== other) {
-        var valIsDefined = value !== undefined,
-            valIsNull = value === null,
-            valIsReflexive = value === value,
-            valIsSymbol = isSymbol(value);
-
-        var othIsDefined = other !== undefined,
-            othIsNull = other === null,
-            othIsReflexive = other === other,
-            othIsSymbol = isSymbol(other);
-
-        if ((!othIsNull && !othIsSymbol && !valIsSymbol && value > other) ||
-            (valIsSymbol && othIsDefined && othIsReflexive && !othIsNull && !othIsSymbol) ||
-            (valIsNull && othIsDefined && othIsReflexive) ||
-            (!valIsDefined && othIsReflexive) ||
-            !valIsReflexive) {
-          return 1;
-        }
-        if ((!valIsNull && !valIsSymbol && !othIsSymbol && value < other) ||
-            (othIsSymbol && valIsDefined && valIsReflexive && !valIsNull && !valIsSymbol) ||
-            (othIsNull && valIsDefined && valIsReflexive) ||
-            (!othIsDefined && valIsReflexive) ||
-            !othIsReflexive) {
-          return -1;
-        }
-      }
-      return 0;
-    }
-
-    /**
-     * Used by `_.orderBy` to compare multiple properties of a value to another
-     * and stable sort them.
-     *
-     * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
-     * specify an order of "desc" for descending or "asc" for ascending sort order
-     * of corresponding values.
-     *
-     * @private
-     * @param {Object} object The object to compare.
-     * @param {Object} other The other object to compare.
-     * @param {boolean[]|string[]} orders The order to sort by for each property.
-     * @returns {number} Returns the sort order indicator for `object`.
-     */
-    function compareMultiple(object, other, orders) {
-      var index = -1,
-          objCriteria = object.criteria,
-          othCriteria = other.criteria,
-          length = objCriteria.length,
-          ordersLength = orders.length;
-
-      while (++index < length) {
-        var result = compareAscending(objCriteria[index], othCriteria[index]);
-        if (result) {
-          if (index >= ordersLength) {
-            return result;
-          }
-          var order = orders[index];
-          return result * (order == 'desc' ? -1 : 1);
-        }
-      }
-      // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
-      // that causes it, under certain circumstances, to provide the same value for
-      // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
-      // for more details.
-      //
-      // This also ensures a stable sort in V8 and other engines.
-      // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
-      return object.index - other.index;
-    }
-
-    /**
-     * The base implementation of `_.orderBy` without param guards.
-     *
-     * @private
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function[]|Object[]|string[]} iteratees The iteratees to sort by.
-     * @param {string[]} orders The sort orders of `iteratees`.
-     * @returns {Array} Returns the new sorted array.
-     */
-    function baseOrderBy(collection, iteratees, orders) {
-      if (iteratees.length) {
-        iteratees = arrayMap(iteratees, function(iteratee) {
-          if (isArray(iteratee)) {
-            return function(value) {
-              return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
-            }
-          }
-          return iteratee;
-        });
-      } else {
-        iteratees = [identity];
-      }
-
-      var index = -1;
-      iteratees = arrayMap(iteratees, baseUnary(baseIteratee));
-
-      var result = baseMap(collection, function(value, key, collection) {
-        var criteria = arrayMap(iteratees, function(iteratee) {
-          return iteratee(value);
-        });
-        return { 'criteria': criteria, 'index': ++index, 'value': value };
-      });
-
-      return baseSortBy(result, function(object, other) {
-        return compareMultiple(object, other, orders);
-      });
-    }
-
-    /**
-     * This method is like `_.sortBy` except that it allows specifying the sort
-     * orders of the iteratees to sort by. If `orders` is unspecified, all values
-     * are sorted in ascending order. Otherwise, specify an order of "desc" for
-     * descending or "asc" for ascending sort order of corresponding values.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Collection
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Array[]|Function[]|Object[]|string[]} [iteratees=[_.identity]]
-     *  The iteratees to sort by.
-     * @param {string[]} [orders] The sort orders of `iteratees`.
-     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.reduce`.
-     * @returns {Array} Returns the new sorted array.
-     * @example
-     *
-     * var users = [
-     *   { 'user': 'fred',   'age': 48 },
-     *   { 'user': 'barney', 'age': 34 },
-     *   { 'user': 'fred',   'age': 40 },
-     *   { 'user': 'barney', 'age': 36 }
-     * ];
-     *
-     * // Sort by `user` in ascending order and by `age` in descending order.
-     * _.orderBy(users, ['user', 'age'], ['asc', 'desc']);
-     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 40]]
-     */
-    function orderBy(collection, iteratees, orders, guard) {
-      if (collection == null) {
-        return [];
-      }
-      if (!isArray(iteratees)) {
-        iteratees = iteratees == null ? [] : [iteratees];
-      }
-      orders = guard ? undefined : orders;
-      if (!isArray(orders)) {
-        orders = orders == null ? [] : [orders];
-      }
-      return baseOrderBy(collection, iteratees, orders);
-    }
-
-    /* Built-in method references for those with the same name as other `lodash` methods. */
-    var nativeCeil = Math.ceil,
-        nativeMax = Math.max;
-
-    /**
-     * The base implementation of `_.range` and `_.rangeRight` which doesn't
-     * coerce arguments.
-     *
-     * @private
-     * @param {number} start The start of the range.
-     * @param {number} end The end of the range.
-     * @param {number} step The value to increment or decrement by.
-     * @param {boolean} [fromRight] Specify iterating from right to left.
-     * @returns {Array} Returns the range of numbers.
-     */
-    function baseRange(start, end, step, fromRight) {
-      var index = -1,
-          length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
-          result = Array(length);
-
-      while (length--) {
-        result[fromRight ? length : ++index] = start;
-        start += step;
-      }
-      return result;
-    }
-
-    /**
-     * Creates a `_.range` or `_.rangeRight` function.
-     *
-     * @private
-     * @param {boolean} [fromRight] Specify iterating from right to left.
-     * @returns {Function} Returns the new range function.
-     */
-    function createRange(fromRight) {
-      return function(start, end, step) {
-        if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
-          end = step = undefined;
-        }
-        // Ensure the sign of `-0` is preserved.
-        start = toFinite(start);
-        if (end === undefined) {
-          end = start;
-          start = 0;
-        } else {
-          end = toFinite(end);
-        }
-        step = step === undefined ? (start < end ? 1 : -1) : toFinite(step);
-        return baseRange(start, end, step, fromRight);
-      };
-    }
-
-    /**
-     * Creates an array of numbers (positive and/or negative) progressing from
-     * `start` up to, but not including, `end`. A step of `-1` is used if a negative
-     * `start` is specified without an `end` or `step`. If `end` is not specified,
-     * it's set to `start` with `start` then set to `0`.
-     *
-     * **Note:** JavaScript follows the IEEE-754 standard for resolving
-     * floating-point values which can produce unexpected results.
-     *
-     * @static
-     * @since 0.1.0
-     * @memberOf _
-     * @category Util
-     * @param {number} [start=0] The start of the range.
-     * @param {number} end The end of the range.
-     * @param {number} [step=1] The value to increment or decrement by.
-     * @returns {Array} Returns the range of numbers.
-     * @see _.inRange, _.rangeRight
-     * @example
-     *
-     * _.range(4);
-     * // => [0, 1, 2, 3]
-     *
-     * _.range(-4);
-     * // => [0, -1, -2, -3]
-     *
-     * _.range(1, 5);
-     * // => [1, 2, 3, 4]
-     *
-     * _.range(0, 20, 5);
-     * // => [0, 5, 10, 15]
-     *
-     * _.range(0, -4, -1);
-     * // => [0, -1, -2, -3]
-     *
-     * _.range(1, 4, 0);
-     * // => [1, 1, 1]
-     *
-     * _.range(0);
-     * // => []
-     */
-    var range = createRange();
-
-    var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-    function createCommonjsModule(fn) {
-      var module = { exports: {} };
-    	return fn(module, module.exports), module.exports;
-    }
-
-    var big = createCommonjsModule(function (module) {
-    (function (GLOBAL) {
-      var Big,
-
-
-    /************************************** EDITABLE DEFAULTS *****************************************/
-
-
-        // The default values below must be integers within the stated ranges.
-
-        /*
-         * The maximum number of decimal places (DP) of the results of operations involving division:
-         * div and sqrt, and pow with negative exponents.
-         */
-        DP = 20,            // 0 to MAX_DP
-
-        /*
-         * The rounding mode (RM) used when rounding to the above decimal places.
-         *
-         *  0  Towards zero (i.e. truncate, no rounding).       (ROUND_DOWN)
-         *  1  To nearest neighbour. If equidistant, round up.  (ROUND_HALF_UP)
-         *  2  To nearest neighbour. If equidistant, to even.   (ROUND_HALF_EVEN)
-         *  3  Away from zero.                                  (ROUND_UP)
-         */
-        RM = 1,             // 0, 1, 2 or 3
-
-        // The maximum value of DP and Big.DP.
-        MAX_DP = 1E6,       // 0 to 1000000
-
-        // The maximum magnitude of the exponent argument to the pow method.
-        MAX_POWER = 1E6,    // 1 to 1000000
-
-        /*
-         * The negative exponent (NE) at and beneath which toString returns exponential notation.
-         * (JavaScript numbers: -7)
-         * -1000000 is the minimum recommended exponent value of a Big.
-         */
-        NE = -7,            // 0 to -1000000
-
-        /*
-         * The positive exponent (PE) at and above which toString returns exponential notation.
-         * (JavaScript numbers: 21)
-         * 1000000 is the maximum recommended exponent value of a Big, but this limit is not enforced.
-         */
-        PE = 21,            // 0 to 1000000
-
-        /*
-         * When true, an error will be thrown if a primitive number is passed to the Big constructor,
-         * or if valueOf is called, or if toNumber is called on a Big which cannot be converted to a
-         * primitive number without a loss of precision.
-         */
-        STRICT = false,     // true or false
-
-
-    /**************************************************************************************************/
-
-
-        // Error messages.
-        NAME = '[big.js] ',
-        INVALID = NAME + 'Invalid ',
-        INVALID_DP = INVALID + 'decimal places',
-        INVALID_RM = INVALID + 'rounding mode',
-        DIV_BY_ZERO = NAME + 'Division by zero',
-
-        // The shared prototype object.
-        P = {},
-        UNDEFINED = void 0,
-        NUMERIC = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i;
-
-
-      /*
-       * Create and return a Big constructor.
-       */
-      function _Big_() {
-
-        /*
-         * The Big constructor and exported function.
-         * Create and return a new instance of a Big number object.
-         *
-         * n {number|string|Big} A numeric value.
-         */
-        function Big(n) {
-          var x = this;
-
-          // Enable constructor usage without new.
-          if (!(x instanceof Big)) return n === UNDEFINED ? _Big_() : new Big(n);
-
-          // Duplicate.
-          if (n instanceof Big) {
-            x.s = n.s;
-            x.e = n.e;
-            x.c = n.c.slice();
-          } else {
-            if (typeof n !== 'string') {
-              if (Big.strict === true) {
-                throw TypeError(INVALID + 'number');
-              }
-
-              // Minus zero?
-              n = n === 0 && 1 / n < 0 ? '-0' : String(n);
-            }
-
-            parse(x, n);
-          }
-
-          // Retain a reference to this Big constructor.
-          // Shadow Big.prototype.constructor which points to Object.
-          x.constructor = Big;
-        }
-
-        Big.prototype = P;
-        Big.DP = DP;
-        Big.RM = RM;
-        Big.NE = NE;
-        Big.PE = PE;
-        Big.strict = STRICT;
-        Big.roundDown = 0;
-        Big.roundHalfUp = 1;
-        Big.roundHalfEven = 2;
-        Big.roundUp = 3;
-
-        return Big;
-      }
-
-
-      /*
-       * Parse the number or string value passed to a Big constructor.
-       *
-       * x {Big} A Big number instance.
-       * n {number|string} A numeric value.
-       */
-      function parse(x, n) {
-        var e, i, nl;
-
-        if (!NUMERIC.test(n)) {
-          throw Error(INVALID + 'number');
-        }
-
-        // Determine sign.
-        x.s = n.charAt(0) == '-' ? (n = n.slice(1), -1) : 1;
-
-        // Decimal point?
-        if ((e = n.indexOf('.')) > -1) n = n.replace('.', '');
-
-        // Exponential form?
-        if ((i = n.search(/e/i)) > 0) {
-
-          // Determine exponent.
-          if (e < 0) e = i;
-          e += +n.slice(i + 1);
-          n = n.substring(0, i);
-        } else if (e < 0) {
-
-          // Integer.
-          e = n.length;
-        }
-
-        nl = n.length;
-
-        // Determine leading zeros.
-        for (i = 0; i < nl && n.charAt(i) == '0';) ++i;
-
-        if (i == nl) {
-
-          // Zero.
-          x.c = [x.e = 0];
-        } else {
-
-          // Determine trailing zeros.
-          for (; nl > 0 && n.charAt(--nl) == '0';);
-          x.e = e - i - 1;
-          x.c = [];
-
-          // Convert string to array of digits without leading/trailing zeros.
-          for (e = 0; i <= nl;) x.c[e++] = +n.charAt(i++);
-        }
-
-        return x;
-      }
-
-
-      /*
-       * Round Big x to a maximum of sd significant digits using rounding mode rm.
-       *
-       * x {Big} The Big to round.
-       * sd {number} Significant digits: integer, 0 to MAX_DP inclusive.
-       * rm {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-       * [more] {boolean} Whether the result of division was truncated.
-       */
-      function round(x, sd, rm, more) {
-        var xc = x.c;
-
-        if (rm === UNDEFINED) rm = x.constructor.RM;
-        if (rm !== 0 && rm !== 1 && rm !== 2 && rm !== 3) {
-          throw Error(INVALID_RM);
-        }
-
-        if (sd < 1) {
-          more =
-            rm === 3 && (more || !!xc[0]) || sd === 0 && (
-            rm === 1 && xc[0] >= 5 ||
-            rm === 2 && (xc[0] > 5 || xc[0] === 5 && (more || xc[1] !== UNDEFINED))
-          );
-
-          xc.length = 1;
-
-          if (more) {
-
-            // 1, 0.1, 0.01, 0.001, 0.0001 etc.
-            x.e = x.e - sd + 1;
-            xc[0] = 1;
-          } else {
-
-            // Zero.
-            xc[0] = x.e = 0;
-          }
-        } else if (sd < xc.length) {
-
-          // xc[sd] is the digit after the digit that may be rounded up.
-          more =
-            rm === 1 && xc[sd] >= 5 ||
-            rm === 2 && (xc[sd] > 5 || xc[sd] === 5 &&
-              (more || xc[sd + 1] !== UNDEFINED || xc[sd - 1] & 1)) ||
-            rm === 3 && (more || !!xc[0]);
-
-          // Remove any digits after the required precision.
-          xc.length = sd--;
-
-          // Round up?
-          if (more) {
-
-            // Rounding up may mean the previous digit has to be rounded up.
-            for (; ++xc[sd] > 9;) {
-              xc[sd] = 0;
-              if (!sd--) {
-                ++x.e;
-                xc.unshift(1);
-              }
-            }
-          }
-
-          // Remove trailing zeros.
-          for (sd = xc.length; !xc[--sd];) xc.pop();
-        }
-
-        return x;
-      }
-
-
-      /*
-       * Return a string representing the value of Big x in normal or exponential notation.
-       * Handles P.toExponential, P.toFixed, P.toJSON, P.toPrecision, P.toString and P.valueOf.
-       */
-      function stringify(x, doExponential, isNonzero) {
-        var e = x.e,
-          s = x.c.join(''),
-          n = s.length;
-
-        // Exponential notation?
-        if (doExponential) {
-          s = s.charAt(0) + (n > 1 ? '.' + s.slice(1) : '') + (e < 0 ? 'e' : 'e+') + e;
-
-        // Normal notation.
-        } else if (e < 0) {
-          for (; ++e;) s = '0' + s;
-          s = '0.' + s;
-        } else if (e > 0) {
-          if (++e > n) {
-            for (e -= n; e--;) s += '0';
-          } else if (e < n) {
-            s = s.slice(0, e) + '.' + s.slice(e);
-          }
-        } else if (n > 1) {
-          s = s.charAt(0) + '.' + s.slice(1);
-        }
-
-        return x.s < 0 && isNonzero ? '-' + s : s;
-      }
-
-
-      // Prototype/instance methods
-
-
-      /*
-       * Return a new Big whose value is the absolute value of this Big.
-       */
-      P.abs = function () {
-        var x = new this.constructor(this);
-        x.s = 1;
-        return x;
-      };
-
-
-      /*
-       * Return 1 if the value of this Big is greater than the value of Big y,
-       *       -1 if the value of this Big is less than the value of Big y, or
-       *        0 if they have the same value.
-       */
-      P.cmp = function (y) {
-        var isneg,
-          x = this,
-          xc = x.c,
-          yc = (y = new x.constructor(y)).c,
-          i = x.s,
-          j = y.s,
-          k = x.e,
-          l = y.e;
-
-        // Either zero?
-        if (!xc[0] || !yc[0]) return !xc[0] ? !yc[0] ? 0 : -j : i;
-
-        // Signs differ?
-        if (i != j) return i;
-
-        isneg = i < 0;
-
-        // Compare exponents.
-        if (k != l) return k > l ^ isneg ? 1 : -1;
-
-        j = (k = xc.length) < (l = yc.length) ? k : l;
-
-        // Compare digit by digit.
-        for (i = -1; ++i < j;) {
-          if (xc[i] != yc[i]) return xc[i] > yc[i] ^ isneg ? 1 : -1;
-        }
-
-        // Compare lengths.
-        return k == l ? 0 : k > l ^ isneg ? 1 : -1;
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big divided by the value of Big y, rounded,
-       * if necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
-       */
-      P.div = function (y) {
-        var x = this,
-          Big = x.constructor,
-          a = x.c,                  // dividend
-          b = (y = new Big(y)).c,   // divisor
-          k = x.s == y.s ? 1 : -1,
-          dp = Big.DP;
-
-        if (dp !== ~~dp || dp < 0 || dp > MAX_DP) {
-          throw Error(INVALID_DP);
-        }
-
-        // Divisor is zero?
-        if (!b[0]) {
-          throw Error(DIV_BY_ZERO);
-        }
-
-        // Dividend is 0? Return +-0.
-        if (!a[0]) {
-          y.s = k;
-          y.c = [y.e = 0];
-          return y;
-        }
-
-        var bl, bt, n, cmp, ri,
-          bz = b.slice(),
-          ai = bl = b.length,
-          al = a.length,
-          r = a.slice(0, bl),   // remainder
-          rl = r.length,
-          q = y,                // quotient
-          qc = q.c = [],
-          qi = 0,
-          p = dp + (q.e = x.e - y.e) + 1;    // precision of the result
-
-        q.s = k;
-        k = p < 0 ? 0 : p;
-
-        // Create version of divisor with leading zero.
-        bz.unshift(0);
-
-        // Add zeros to make remainder as long as divisor.
-        for (; rl++ < bl;) r.push(0);
-
-        do {
-
-          // n is how many times the divisor goes into current remainder.
-          for (n = 0; n < 10; n++) {
-
-            // Compare divisor and remainder.
-            if (bl != (rl = r.length)) {
-              cmp = bl > rl ? 1 : -1;
-            } else {
-              for (ri = -1, cmp = 0; ++ri < bl;) {
-                if (b[ri] != r[ri]) {
-                  cmp = b[ri] > r[ri] ? 1 : -1;
-                  break;
-                }
-              }
-            }
-
-            // If divisor < remainder, subtract divisor from remainder.
-            if (cmp < 0) {
-
-              // Remainder can't be more than 1 digit longer than divisor.
-              // Equalise lengths using divisor with extra leading zero?
-              for (bt = rl == bl ? b : bz; rl;) {
-                if (r[--rl] < bt[rl]) {
-                  ri = rl;
-                  for (; ri && !r[--ri];) r[ri] = 9;
-                  --r[ri];
-                  r[rl] += 10;
-                }
-                r[rl] -= bt[rl];
-              }
-
-              for (; !r[0];) r.shift();
-            } else {
-              break;
-            }
-          }
-
-          // Add the digit n to the result array.
-          qc[qi++] = cmp ? n : ++n;
-
-          // Update the remainder.
-          if (r[0] && cmp) r[rl] = a[ai] || 0;
-          else r = [a[ai]];
-
-        } while ((ai++ < al || r[0] !== UNDEFINED) && k--);
-
-        // Leading zero? Do not remove if result is simply zero (qi == 1).
-        if (!qc[0] && qi != 1) {
-
-          // There can't be more than one zero.
-          qc.shift();
-          q.e--;
-          p--;
-        }
-
-        // Round?
-        if (qi > p) round(q, p, Big.RM, r[0] !== UNDEFINED);
-
-        return q;
-      };
-
-
-      /*
-       * Return true if the value of this Big is equal to the value of Big y, otherwise return false.
-       */
-      P.eq = function (y) {
-        return this.cmp(y) === 0;
-      };
-
-
-      /*
-       * Return true if the value of this Big is greater than the value of Big y, otherwise return
-       * false.
-       */
-      P.gt = function (y) {
-        return this.cmp(y) > 0;
-      };
-
-
-      /*
-       * Return true if the value of this Big is greater than or equal to the value of Big y, otherwise
-       * return false.
-       */
-      P.gte = function (y) {
-        return this.cmp(y) > -1;
-      };
-
-
-      /*
-       * Return true if the value of this Big is less than the value of Big y, otherwise return false.
-       */
-      P.lt = function (y) {
-        return this.cmp(y) < 0;
-      };
-
-
-      /*
-       * Return true if the value of this Big is less than or equal to the value of Big y, otherwise
-       * return false.
-       */
-      P.lte = function (y) {
-        return this.cmp(y) < 1;
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big minus the value of Big y.
-       */
-      P.minus = P.sub = function (y) {
-        var i, j, t, xlty,
-          x = this,
-          Big = x.constructor,
-          a = x.s,
-          b = (y = new Big(y)).s;
-
-        // Signs differ?
-        if (a != b) {
-          y.s = -b;
-          return x.plus(y);
-        }
-
-        var xc = x.c.slice(),
-          xe = x.e,
-          yc = y.c,
-          ye = y.e;
-
-        // Either zero?
-        if (!xc[0] || !yc[0]) {
-          if (yc[0]) {
-            y.s = -b;
-          } else if (xc[0]) {
-            y = new Big(x);
-          } else {
-            y.s = 1;
-          }
-          return y;
-        }
-
-        // Determine which is the bigger number. Prepend zeros to equalise exponents.
-        if (a = xe - ye) {
-
-          if (xlty = a < 0) {
-            a = -a;
-            t = xc;
-          } else {
-            ye = xe;
-            t = yc;
-          }
-
-          t.reverse();
-          for (b = a; b--;) t.push(0);
-          t.reverse();
-        } else {
-
-          // Exponents equal. Check digit by digit.
-          j = ((xlty = xc.length < yc.length) ? xc : yc).length;
-
-          for (a = b = 0; b < j; b++) {
-            if (xc[b] != yc[b]) {
-              xlty = xc[b] < yc[b];
-              break;
-            }
-          }
-        }
-
-        // x < y? Point xc to the array of the bigger number.
-        if (xlty) {
-          t = xc;
-          xc = yc;
-          yc = t;
-          y.s = -y.s;
-        }
-
-        /*
-         * Append zeros to xc if shorter. No need to add zeros to yc if shorter as subtraction only
-         * needs to start at yc.length.
-         */
-        if ((b = (j = yc.length) - (i = xc.length)) > 0) for (; b--;) xc[i++] = 0;
-
-        // Subtract yc from xc.
-        for (b = i; j > a;) {
-          if (xc[--j] < yc[j]) {
-            for (i = j; i && !xc[--i];) xc[i] = 9;
-            --xc[i];
-            xc[j] += 10;
-          }
-
-          xc[j] -= yc[j];
-        }
-
-        // Remove trailing zeros.
-        for (; xc[--b] === 0;) xc.pop();
-
-        // Remove leading zeros and adjust exponent accordingly.
-        for (; xc[0] === 0;) {
-          xc.shift();
-          --ye;
-        }
-
-        if (!xc[0]) {
-
-          // n - n = +0
-          y.s = 1;
-
-          // Result must be zero.
-          xc = [ye = 0];
-        }
-
-        y.c = xc;
-        y.e = ye;
-
-        return y;
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big modulo the value of Big y.
-       */
-      P.mod = function (y) {
-        var ygtx,
-          x = this,
-          Big = x.constructor,
-          a = x.s,
-          b = (y = new Big(y)).s;
-
-        if (!y.c[0]) {
-          throw Error(DIV_BY_ZERO);
-        }
-
-        x.s = y.s = 1;
-        ygtx = y.cmp(x) == 1;
-        x.s = a;
-        y.s = b;
-
-        if (ygtx) return new Big(x);
-
-        a = Big.DP;
-        b = Big.RM;
-        Big.DP = Big.RM = 0;
-        x = x.div(y);
-        Big.DP = a;
-        Big.RM = b;
-
-        return this.minus(x.times(y));
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big plus the value of Big y.
-       */
-      P.plus = P.add = function (y) {
-        var e, k, t,
-          x = this,
-          Big = x.constructor;
-
-        y = new Big(y);
-
-        // Signs differ?
-        if (x.s != y.s) {
-          y.s = -y.s;
-          return x.minus(y);
-        }
-
-        var xe = x.e,
-          xc = x.c,
-          ye = y.e,
-          yc = y.c;
-
-        // Either zero?
-        if (!xc[0] || !yc[0]) {
-          if (!yc[0]) {
-            if (xc[0]) {
-              y = new Big(x);
-            } else {
-              y.s = x.s;
-            }
-          }
-          return y;
-        }
-
-        xc = xc.slice();
-
-        // Prepend zeros to equalise exponents.
-        // Note: reverse faster than unshifts.
-        if (e = xe - ye) {
-          if (e > 0) {
-            ye = xe;
-            t = yc;
-          } else {
-            e = -e;
-            t = xc;
-          }
-
-          t.reverse();
-          for (; e--;) t.push(0);
-          t.reverse();
-        }
-
-        // Point xc to the longer array.
-        if (xc.length - yc.length < 0) {
-          t = yc;
-          yc = xc;
-          xc = t;
-        }
-
-        e = yc.length;
-
-        // Only start adding at yc.length - 1 as the further digits of xc can be left as they are.
-        for (k = 0; e; xc[e] %= 10) k = (xc[--e] = xc[e] + yc[e] + k) / 10 | 0;
-
-        // No need to check for zero, as +x + +y != 0 && -x + -y != 0
-
-        if (k) {
-          xc.unshift(k);
-          ++ye;
-        }
-
-        // Remove trailing zeros.
-        for (e = xc.length; xc[--e] === 0;) xc.pop();
-
-        y.c = xc;
-        y.e = ye;
-
-        return y;
-      };
-
-
-      /*
-       * Return a Big whose value is the value of this Big raised to the power n.
-       * If n is negative, round to a maximum of Big.DP decimal places using rounding
-       * mode Big.RM.
-       *
-       * n {number} Integer, -MAX_POWER to MAX_POWER inclusive.
-       */
-      P.pow = function (n) {
-        var x = this,
-          one = new x.constructor('1'),
-          y = one,
-          isneg = n < 0;
-
-        if (n !== ~~n || n < -MAX_POWER || n > MAX_POWER) {
-          throw Error(INVALID + 'exponent');
-        }
-
-        if (isneg) n = -n;
-
-        for (;;) {
-          if (n & 1) y = y.times(x);
-          n >>= 1;
-          if (!n) break;
-          x = x.times(x);
-        }
-
-        return isneg ? one.div(y) : y;
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big rounded to a maximum precision of sd
-       * significant digits using rounding mode rm, or Big.RM if rm is not specified.
-       *
-       * sd {number} Significant digits: integer, 1 to MAX_DP inclusive.
-       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-       */
-      P.prec = function (sd, rm) {
-        if (sd !== ~~sd || sd < 1 || sd > MAX_DP) {
-          throw Error(INVALID + 'precision');
-        }
-        return round(new this.constructor(this), sd, rm);
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big rounded to a maximum of dp decimal places
-       * using rounding mode rm, or Big.RM if rm is not specified.
-       * If dp is negative, round to an integer which is a multiple of 10**-dp.
-       * If dp is not specified, round to 0 decimal places.
-       *
-       * dp? {number} Integer, -MAX_DP to MAX_DP inclusive.
-       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-       */
-      P.round = function (dp, rm) {
-        if (dp === UNDEFINED) dp = 0;
-        else if (dp !== ~~dp || dp < -MAX_DP || dp > MAX_DP) {
-          throw Error(INVALID_DP);
-        }
-        return round(new this.constructor(this), dp + this.e + 1, rm);
-      };
-
-
-      /*
-       * Return a new Big whose value is the square root of the value of this Big, rounded, if
-       * necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
-       */
-      P.sqrt = function () {
-        var r, c, t,
-          x = this,
-          Big = x.constructor,
-          s = x.s,
-          e = x.e,
-          half = new Big('0.5');
-
-        // Zero?
-        if (!x.c[0]) return new Big(x);
-
-        // Negative?
-        if (s < 0) {
-          throw Error(NAME + 'No square root');
-        }
-
-        // Estimate.
-        s = Math.sqrt(x + '');
-
-        // Math.sqrt underflow/overflow?
-        // Re-estimate: pass x coefficient to Math.sqrt as integer, then adjust the result exponent.
-        if (s === 0 || s === 1 / 0) {
-          c = x.c.join('');
-          if (!(c.length + e & 1)) c += '0';
-          s = Math.sqrt(c);
-          e = ((e + 1) / 2 | 0) - (e < 0 || e & 1);
-          r = new Big((s == 1 / 0 ? '5e' : (s = s.toExponential()).slice(0, s.indexOf('e') + 1)) + e);
-        } else {
-          r = new Big(s + '');
-        }
-
-        e = r.e + (Big.DP += 4);
-
-        // Newton-Raphson iteration.
-        do {
-          t = r;
-          r = half.times(t.plus(x.div(t)));
-        } while (t.c.slice(0, e).join('') !== r.c.slice(0, e).join(''));
-
-        return round(r, (Big.DP -= 4) + r.e + 1, Big.RM);
-      };
-
-
-      /*
-       * Return a new Big whose value is the value of this Big times the value of Big y.
-       */
-      P.times = P.mul = function (y) {
-        var c,
-          x = this,
-          Big = x.constructor,
-          xc = x.c,
-          yc = (y = new Big(y)).c,
-          a = xc.length,
-          b = yc.length,
-          i = x.e,
-          j = y.e;
-
-        // Determine sign of result.
-        y.s = x.s == y.s ? 1 : -1;
-
-        // Return signed 0 if either 0.
-        if (!xc[0] || !yc[0]) {
-          y.c = [y.e = 0];
-          return y;
-        }
-
-        // Initialise exponent of result as x.e + y.e.
-        y.e = i + j;
-
-        // If array xc has fewer digits than yc, swap xc and yc, and lengths.
-        if (a < b) {
-          c = xc;
-          xc = yc;
-          yc = c;
-          j = a;
-          a = b;
-          b = j;
-        }
-
-        // Initialise coefficient array of result with zeros.
-        for (c = new Array(j = a + b); j--;) c[j] = 0;
-
-        // Multiply.
-
-        // i is initially xc.length.
-        for (i = b; i--;) {
-          b = 0;
-
-          // a is yc.length.
-          for (j = a + i; j > i;) {
-
-            // Current sum of products at this digit position, plus carry.
-            b = c[j] + yc[i] * xc[j - i - 1] + b;
-            c[j--] = b % 10;
-
-            // carry
-            b = b / 10 | 0;
-          }
-
-          c[j] = b;
-        }
-
-        // Increment result exponent if there is a final carry, otherwise remove leading zero.
-        if (b) ++y.e;
-        else c.shift();
-
-        // Remove trailing zeros.
-        for (i = c.length; !c[--i];) c.pop();
-        y.c = c;
-
-        return y;
-      };
-
-
-      /*
-       * Return a string representing the value of this Big in exponential notation rounded to dp fixed
-       * decimal places using rounding mode rm, or Big.RM if rm is not specified.
-       *
-       * dp? {number} Decimal places: integer, 0 to MAX_DP inclusive.
-       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-       */
-      P.toExponential = function (dp, rm) {
-        var x = this,
-          n = x.c[0];
-
-        if (dp !== UNDEFINED) {
-          if (dp !== ~~dp || dp < 0 || dp > MAX_DP) {
-            throw Error(INVALID_DP);
-          }
-          x = round(new x.constructor(x), ++dp, rm);
-          for (; x.c.length < dp;) x.c.push(0);
-        }
-
-        return stringify(x, true, !!n);
-      };
-
-
-      /*
-       * Return a string representing the value of this Big in normal notation rounded to dp fixed
-       * decimal places using rounding mode rm, or Big.RM if rm is not specified.
-       *
-       * dp? {number} Decimal places: integer, 0 to MAX_DP inclusive.
-       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-       *
-       * (-0).toFixed(0) is '0', but (-0.1).toFixed(0) is '-0'.
-       * (-0).toFixed(1) is '0.0', but (-0.01).toFixed(1) is '-0.0'.
-       */
-      P.toFixed = function (dp, rm) {
-        var x = this,
-          n = x.c[0];
-
-        if (dp !== UNDEFINED) {
-          if (dp !== ~~dp || dp < 0 || dp > MAX_DP) {
-            throw Error(INVALID_DP);
-          }
-          x = round(new x.constructor(x), dp + x.e + 1, rm);
-
-          // x.e may have changed if the value is rounded up.
-          for (dp = dp + x.e + 1; x.c.length < dp;) x.c.push(0);
-        }
-
-        return stringify(x, false, !!n);
-      };
-
-
-      /*
-       * Return a string representing the value of this Big.
-       * Return exponential notation if this Big has a positive exponent equal to or greater than
-       * Big.PE, or a negative exponent equal to or less than Big.NE.
-       * Omit the sign for negative zero.
-       */
-      P.toJSON = P.toString = function () {
-        var x = this,
-          Big = x.constructor;
-        return stringify(x, x.e <= Big.NE || x.e >= Big.PE, !!x.c[0]);
-      };
-
-
-      /*
-       * Return the value of this Big as a primitve number.
-       */
-      P.toNumber = function () {
-        var n = Number(stringify(this, true, true));
-        if (this.constructor.strict === true && !this.eq(n.toString())) {
-          throw Error(NAME + 'Imprecise conversion');
-        }
-        return n;
-      };
-
-
-      /*
-       * Return a string representing the value of this Big rounded to sd significant digits using
-       * rounding mode rm, or Big.RM if rm is not specified.
-       * Use exponential notation if sd is less than the number of digits necessary to represent
-       * the integer part of the value in normal notation.
-       *
-       * sd {number} Significant digits: integer, 1 to MAX_DP inclusive.
-       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-       */
-      P.toPrecision = function (sd, rm) {
-        var x = this,
-          Big = x.constructor,
-          n = x.c[0];
-
-        if (sd !== UNDEFINED) {
-          if (sd !== ~~sd || sd < 1 || sd > MAX_DP) {
-            throw Error(INVALID + 'precision');
-          }
-          x = round(new Big(x), sd, rm);
-          for (; x.c.length < sd;) x.c.push(0);
-        }
-
-        return stringify(x, sd <= x.e || x.e <= Big.NE || x.e >= Big.PE, !!n);
-      };
-
-
-      /*
-       * Return a string representing the value of this Big.
-       * Return exponential notation if this Big has a positive exponent equal to or greater than
-       * Big.PE, or a negative exponent equal to or less than Big.NE.
-       * Include the sign for negative zero.
-       */
-      P.valueOf = function () {
-        var x = this,
-          Big = x.constructor;
-        if (Big.strict === true) {
-          throw Error(NAME + 'valueOf disallowed');
-        }
-        return stringify(x, x.e <= Big.NE || x.e >= Big.PE, true);
-      };
-
-
-      // Export
-
-
-      Big = _Big_();
-
-      Big['default'] = Big.Big = Big;
-
-      //AMD.
-      if (module.exports) {
-        module.exports = Big;
-
-      //Browser.
-      } else {
-        GLOBAL.Big = Big;
-      }
-    })(commonjsGlobal);
-    });
-
-    const { STAGE, NODE_ENV } = process.env;
-    const isProd = NODE_ENV === null || NODE_ENV === void 0 ? void 0 : NODE_ENV.startsWith('prod');
-    const NetworkConfigs = {
-        polkadot: {
-            leasePeriod: 259200,
-            decimal: 10,
-            tokenSymbol: 'DOT',
-            endpoint: '',
-        },
-        kusama: {
-            leasePeriod: 129600,
-            decimal: 12,
-            tokenSymbol: 'KSM',
-            endpoint: '',
-        },
-        rococo: {
-            leasePeriod: 14400,
-            decimal: 12,
-            tokenSymbol: 'ROC',
-            endpoint: isProd ? 'https://api.subquery.network/sq/subvis-io/rococo-auction' : 'http://localhost:3000',
-        },
-    };
-    const config = Object.assign({}, NetworkConfigs[STAGE || 'rococo']);
-
-    const file$5 = "src/Token.svelte";
-
-    function create_fragment$6(ctx) {
-    	let div;
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			t = text(/*title*/ ctx[0]);
-    			attr_dev(div, "class", "inline-block");
-    			add_location(div, file$5, 13, 0, 372);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, t);
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*title*/ 1) set_data_dev(t, /*title*/ ctx[0]);
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$6.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$6($$self, $$props, $$invalidate) {
-    	let tokenValue;
-    	let title;
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Token", slots, []);
-    	let { value } = $$props;
-    	let { allowZero = false } = $$props;
-    	let { emptyDisplay = "" } = $$props;
-    	const { decimal, tokenSymbol } = config;
-    	const writable_props = ["value", "allowZero", "emptyDisplay"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Token> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$$set = $$props => {
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("allowZero" in $$props) $$invalidate(2, allowZero = $$props.allowZero);
-    		if ("emptyDisplay" in $$props) $$invalidate(3, emptyDisplay = $$props.emptyDisplay);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		Big: big,
-    		config,
-    		value,
-    		allowZero,
-    		emptyDisplay,
-    		decimal,
-    		tokenSymbol,
-    		tokenValue,
-    		title
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("allowZero" in $$props) $$invalidate(2, allowZero = $$props.allowZero);
-    		if ("emptyDisplay" in $$props) $$invalidate(3, emptyDisplay = $$props.emptyDisplay);
-    		if ("tokenValue" in $$props) $$invalidate(4, tokenValue = $$props.tokenValue);
-    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 2) {
-    			$$invalidate(4, tokenValue = big(value || 0).div(10 ** decimal).toNumber());
-    		}
-
-    		if ($$self.$$.dirty & /*allowZero, tokenValue, emptyDisplay*/ 28) {
-    			$$invalidate(0, title = !allowZero && tokenValue == 0
-    			? emptyDisplay
-    			: `${tokenValue} ${tokenSymbol}`);
-    		}
-    	};
-
-    	return [title, value, allowZero, emptyDisplay, tokenValue];
-    }
-
-    class Token$1 extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { value: 1, allowZero: 2, emptyDisplay: 3 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Token",
-    			options,
-    			id: create_fragment$6.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<Token> was created without expected prop 'value'");
-    		}
-    	}
-
-    	get value() {
-    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get allowZero() {
-    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set allowZero(value) {
-    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get emptyDisplay() {
-    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set emptyDisplay(value) {
-    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    const file$4 = "src/AuctionSlot.svelte";
-
-    // (31:8) {#if paraId}
-    function create_if_block$2(ctx) {
-    	let img;
-    	let img_src_value;
-
-    	const block = {
-    		c: function create() {
-    			img = element("img");
-    			attr_dev(img, "class", "mx-1 rounded-full");
-    			if (img.src !== (img_src_value = "./ksm-logo.png")) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", /*paraId*/ ctx[2]);
-    			attr_dev(img, "width", "22");
-    			attr_dev(img, "height", "22");
-    			add_location(img, file$4, 31, 8, 1540);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, img, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*paraId*/ 4) {
-    				attr_dev(img, "alt", /*paraId*/ ctx[2]);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(img);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$2.name,
-    		type: "if",
-    		source: "(31:8) {#if paraId}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$5(ctx) {
-    	let div15;
-    	let div2;
-    	let div0;
-    	let t0;
-    	let t1_value = /*slots*/ ctx[5].join(" - ") + "";
-    	let t1;
-    	let t2;
-    	let div1;
-    	let t3;
-    	let t4_value = (/*leaseStart*/ ctx[0] || /*blockStart*/ ctx[6]) + "";
-    	let t4;
-    	let t5;
-    	let t6_value = (/*leaseEnd*/ ctx[1] || /*blockEnd*/ ctx[7]) + "";
-    	let t6;
-    	let t7;
-    	let div14;
-    	let div6;
-    	let div3;
-    	let t9;
-    	let div5;
-    	let t10;
-    	let div4;
-    	let t11_value = (/*paraId*/ ctx[2] || "N/A") + "";
-    	let t11;
-    	let t12;
-    	let div9;
-    	let div7;
-    	let t14;
-    	let div8;
-    	let token;
-    	let t15;
-    	let div13;
-    	let div10;
-    	let t17;
-    	let div12;
-    	let div11;
-    	let t18_value = (/*wonBlocks*/ ctx[4] || "N/A") + "";
-    	let t18;
-    	let current;
-    	let if_block = /*paraId*/ ctx[2] && create_if_block$2(ctx);
-
-    	token = new Token$1({
-    			props: {
-    				class: "fixed-line-height",
-    				value: /*amount*/ ctx[3],
-    				emptyDisplay: "N/A"
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			div15 = element("div");
-    			div2 = element("div");
-    			div0 = element("div");
-    			t0 = text("Slot ");
-    			t1 = text(t1_value);
-    			t2 = space();
-    			div1 = element("div");
-    			t3 = text("Block: ");
-    			t4 = text(t4_value);
-    			t5 = text(" - ");
-    			t6 = text(t6_value);
-    			t7 = space();
-    			div14 = element("div");
-    			div6 = element("div");
-    			div3 = element("div");
-    			div3.textContent = "Current Winner";
-    			t9 = space();
-    			div5 = element("div");
-    			if (if_block) if_block.c();
-    			t10 = space();
-    			div4 = element("div");
-    			t11 = text(t11_value);
-    			t12 = space();
-    			div9 = element("div");
-    			div7 = element("div");
-    			div7.textContent = "Bid Price";
-    			t14 = space();
-    			div8 = element("div");
-    			create_component(token.$$.fragment);
-    			t15 = space();
-    			div13 = element("div");
-    			div10 = element("div");
-    			div10.textContent = "Winning Chance";
-    			t17 = space();
-    			div12 = element("div");
-    			div11 = element("div");
-    			t18 = text(t18_value);
-    			attr_dev(div0, "class", "col-span-3 text-base");
-    			add_location(div0, file$4, 22, 4, 937);
-    			attr_dev(div1, "class", "col-span-2 text-gray-400 text-xs text-right");
-    			add_location(div1, file$4, 23, 4, 1006);
-    			attr_dev(div2, "class", "grid grid-cols-5 mb-2");
-    			add_location(div2, file$4, 21, 2, 897);
-    			attr_dev(div3, "class", "text-gray-400 mb-2");
-    			add_location(div3, file$4, 28, 6, 1396);
-    			attr_dev(div4, "class", "mx-1");
-    			add_location(div4, file$4, 33, 8, 1653);
-    			attr_dev(div5, "class", "flex flex-row justify-center items-center");
-    			add_location(div5, file$4, 29, 6, 1455);
-    			attr_dev(div6, "class", "text-center text-xm flex flex-col");
-    			add_location(div6, file$4, 27, 4, 1342);
-    			attr_dev(div7, "class", "text-gray-400 mb-2");
-    			add_location(div7, file$4, 37, 6, 1777);
-    			attr_dev(div8, "class", "flex flex-row justify-center items-center fixed-line-height svelte-pgbpgd");
-    			add_location(div8, file$4, 38, 6, 1831);
-    			attr_dev(div9, "class", "text-center text-xm flex flex-col");
-    			add_location(div9, file$4, 36, 4, 1723);
-    			attr_dev(div10, "class", "text-gray-400 mb-2");
-    			add_location(div10, file$4, 43, 6, 2064);
-    			attr_dev(div11, "class", "fixed-line-height svelte-pgbpgd");
-    			add_location(div11, file$4, 45, 8, 2187);
-    			attr_dev(div12, "class", "flex flex-row justify-center items-center");
-    			add_location(div12, file$4, 44, 6, 2123);
-    			attr_dev(div13, "class", "text-center text-xm flex flex-col");
-    			add_location(div13, file$4, 42, 4, 2010);
-    			attr_dev(div14, "class", "grid grid-cols-3 gap-1");
-    			add_location(div14, file$4, 26, 2, 1301);
-    			attr_dev(div15, "class", "rounded-lg p-2 col-span-6 zoom-in");
-    			set_style(div15, "background-color", /*bgColor*/ ctx[8]);
-    			set_style(div15, "border", "1px solid " + /*borderColor*/ ctx[9]);
-    			add_location(div15, file$4, 20, 0, 778);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div15, anchor);
-    			append_dev(div15, div2);
-    			append_dev(div2, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, t1);
-    			append_dev(div2, t2);
-    			append_dev(div2, div1);
-    			append_dev(div1, t3);
-    			append_dev(div1, t4);
-    			append_dev(div1, t5);
-    			append_dev(div1, t6);
-    			append_dev(div15, t7);
-    			append_dev(div15, div14);
-    			append_dev(div14, div6);
-    			append_dev(div6, div3);
-    			append_dev(div6, t9);
-    			append_dev(div6, div5);
-    			if (if_block) if_block.m(div5, null);
-    			append_dev(div5, t10);
-    			append_dev(div5, div4);
-    			append_dev(div4, t11);
-    			append_dev(div14, t12);
-    			append_dev(div14, div9);
-    			append_dev(div9, div7);
-    			append_dev(div9, t14);
-    			append_dev(div9, div8);
-    			mount_component(token, div8, null);
-    			append_dev(div14, t15);
-    			append_dev(div14, div13);
-    			append_dev(div13, div10);
-    			append_dev(div13, t17);
-    			append_dev(div13, div12);
-    			append_dev(div12, div11);
-    			append_dev(div11, t18);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*slots*/ 32) && t1_value !== (t1_value = /*slots*/ ctx[5].join(" - ") + "")) set_data_dev(t1, t1_value);
-    			if ((!current || dirty & /*leaseStart, blockStart*/ 65) && t4_value !== (t4_value = (/*leaseStart*/ ctx[0] || /*blockStart*/ ctx[6]) + "")) set_data_dev(t4, t4_value);
-    			if ((!current || dirty & /*leaseEnd, blockEnd*/ 130) && t6_value !== (t6_value = (/*leaseEnd*/ ctx[1] || /*blockEnd*/ ctx[7]) + "")) set_data_dev(t6, t6_value);
-
-    			if (/*paraId*/ ctx[2]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block$2(ctx);
-    					if_block.c();
-    					if_block.m(div5, t10);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-
-    			if ((!current || dirty & /*paraId*/ 4) && t11_value !== (t11_value = (/*paraId*/ ctx[2] || "N/A") + "")) set_data_dev(t11, t11_value);
-    			const token_changes = {};
-    			if (dirty & /*amount*/ 8) token_changes.value = /*amount*/ ctx[3];
-    			token.$set(token_changes);
-    			if ((!current || dirty & /*wonBlocks*/ 16) && t18_value !== (t18_value = (/*wonBlocks*/ ctx[4] || "N/A") + "")) set_data_dev(t18, t18_value);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(token.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(token.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div15);
-    			if (if_block) if_block.d();
-    			destroy_component(token);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$5.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$5($$self, $$props, $$invalidate) {
-    	let slots;
-    	let blockStart;
-    	let blockEnd;
-    	let { $$slots: slots$1 = {}, $$scope } = $$props;
-    	validate_slots("AuctionSlot", slots$1, []);
-
-    	let { firstSlot } = $$props,
-    		{ lastSlot } = $$props,
-    		{ leaseStart = "" } = $$props,
-    		{ leaseEnd = "" } = $$props,
-    		{ paraId } = $$props,
-    		{ amount } = $$props,
-    		{ wonBlocks } = $$props,
-    		{ groupIdx } = $$props;
-
-    	const colorConfigs = [
-    		{
-    			bgColor: "#f5f6ff",
-    			borderColor: "#ced8ff",
-    			btnColor: "#9e89f0"
-    		},
-    		{
-    			borderColor: "#d0ebff",
-    			bgColor: "#f3faff",
-    			btnColor: "#5dbdf5"
-    		},
-    		{
-    			bgColor: "#fffcf0",
-    			borderColor: "#fcf4ba",
-    			btnColor: "#f3df2a"
-    		},
-    		{
-    			borderColor: "#d3eaea",
-    			bgColor: "#f3fbfd",
-    			btnColor: "#91dadb"
-    		}
-    	];
-
-    	const { bgColor, borderColor, btnColor } = colorConfigs[groupIdx] || {};
-
-    	const writable_props = [
-    		"firstSlot",
-    		"lastSlot",
-    		"leaseStart",
-    		"leaseEnd",
-    		"paraId",
-    		"amount",
-    		"wonBlocks",
-    		"groupIdx"
-    	];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<AuctionSlot> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$$set = $$props => {
-    		if ("firstSlot" in $$props) $$invalidate(10, firstSlot = $$props.firstSlot);
-    		if ("lastSlot" in $$props) $$invalidate(11, lastSlot = $$props.lastSlot);
-    		if ("leaseStart" in $$props) $$invalidate(0, leaseStart = $$props.leaseStart);
-    		if ("leaseEnd" in $$props) $$invalidate(1, leaseEnd = $$props.leaseEnd);
-    		if ("paraId" in $$props) $$invalidate(2, paraId = $$props.paraId);
-    		if ("amount" in $$props) $$invalidate(3, amount = $$props.amount);
-    		if ("wonBlocks" in $$props) $$invalidate(4, wonBlocks = $$props.wonBlocks);
-    		if ("groupIdx" in $$props) $$invalidate(12, groupIdx = $$props.groupIdx);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		range,
-    		Token: Token$1,
-    		config,
-    		firstSlot,
-    		lastSlot,
-    		leaseStart,
-    		leaseEnd,
-    		paraId,
-    		amount,
-    		wonBlocks,
-    		groupIdx,
-    		colorConfigs,
-    		bgColor,
-    		borderColor,
-    		btnColor,
-    		slots,
-    		blockStart,
-    		blockEnd
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ("firstSlot" in $$props) $$invalidate(10, firstSlot = $$props.firstSlot);
-    		if ("lastSlot" in $$props) $$invalidate(11, lastSlot = $$props.lastSlot);
-    		if ("leaseStart" in $$props) $$invalidate(0, leaseStart = $$props.leaseStart);
-    		if ("leaseEnd" in $$props) $$invalidate(1, leaseEnd = $$props.leaseEnd);
-    		if ("paraId" in $$props) $$invalidate(2, paraId = $$props.paraId);
-    		if ("amount" in $$props) $$invalidate(3, amount = $$props.amount);
-    		if ("wonBlocks" in $$props) $$invalidate(4, wonBlocks = $$props.wonBlocks);
-    		if ("groupIdx" in $$props) $$invalidate(12, groupIdx = $$props.groupIdx);
-    		if ("slots" in $$props) $$invalidate(5, slots = $$props.slots);
-    		if ("blockStart" in $$props) $$invalidate(6, blockStart = $$props.blockStart);
-    		if ("blockEnd" in $$props) $$invalidate(7, blockEnd = $$props.blockEnd);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*firstSlot, lastSlot*/ 3072) {
-    			$$invalidate(5, slots = range(firstSlot, lastSlot + 1));
-    		}
-
-    		if ($$self.$$.dirty & /*firstSlot*/ 1024) {
-    			$$invalidate(6, blockStart = firstSlot * config.leasePeriod);
-    		}
-
-    		if ($$self.$$.dirty & /*lastSlot*/ 2048) {
-    			$$invalidate(7, blockEnd = lastSlot * config.leasePeriod);
-    		}
-    	};
-
-    	return [
-    		leaseStart,
-    		leaseEnd,
-    		paraId,
-    		amount,
-    		wonBlocks,
-    		slots,
-    		blockStart,
-    		blockEnd,
-    		bgColor,
-    		borderColor,
-    		firstSlot,
-    		lastSlot,
-    		groupIdx
-    	];
-    }
-
-    class AuctionSlot extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {
-    			firstSlot: 10,
-    			lastSlot: 11,
-    			leaseStart: 0,
-    			leaseEnd: 1,
-    			paraId: 2,
-    			amount: 3,
-    			wonBlocks: 4,
-    			groupIdx: 12
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "AuctionSlot",
-    			options,
-    			id: create_fragment$5.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*firstSlot*/ ctx[10] === undefined && !("firstSlot" in props)) {
-    			console.warn("<AuctionSlot> was created without expected prop 'firstSlot'");
-    		}
-
-    		if (/*lastSlot*/ ctx[11] === undefined && !("lastSlot" in props)) {
-    			console.warn("<AuctionSlot> was created without expected prop 'lastSlot'");
-    		}
-
-    		if (/*paraId*/ ctx[2] === undefined && !("paraId" in props)) {
-    			console.warn("<AuctionSlot> was created without expected prop 'paraId'");
-    		}
-
-    		if (/*amount*/ ctx[3] === undefined && !("amount" in props)) {
-    			console.warn("<AuctionSlot> was created without expected prop 'amount'");
-    		}
-
-    		if (/*wonBlocks*/ ctx[4] === undefined && !("wonBlocks" in props)) {
-    			console.warn("<AuctionSlot> was created without expected prop 'wonBlocks'");
-    		}
-
-    		if (/*groupIdx*/ ctx[12] === undefined && !("groupIdx" in props)) {
-    			console.warn("<AuctionSlot> was created without expected prop 'groupIdx'");
-    		}
-    	}
-
-    	get firstSlot() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set firstSlot(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get lastSlot() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set lastSlot(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get leaseStart() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set leaseStart(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get leaseEnd() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set leaseEnd(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get paraId() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set paraId(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get amount() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set amount(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get wonBlocks() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set wonBlocks(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get groupIdx() {
-    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set groupIdx(value) {
-    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    const time = readable(null, function start(set) {
-        const interval = setInterval(() => {
-            set(new Date());
-        }, 1000);
-        return function stop() {
-            clearInterval(interval);
-        };
-    });
-    const curAuction = writable(null);
-    const chronicle = writable(null);
 
     function l$1(a, b) {
       b.tag = a;
@@ -12012,7 +7243,7 @@ var app = (function () {
      * Return true if `value` is object-like. A value is object-like if it's not
      * `null` and has a `typeof` result of "object".
      */
-    function isObjectLike(value) {
+    function isObjectLike$1(value) {
       return _typeof$2(value) == 'object' && value !== null;
     }
 
@@ -12254,7 +7485,7 @@ var app = (function () {
         if (_extensions == null && originalError != null) {
           var originalExtensions = originalError.extensions;
 
-          if (isObjectLike(originalExtensions)) {
+          if (isObjectLike$1(originalExtensions)) {
             _extensions = originalExtensions;
           }
         }
@@ -12524,7 +7755,7 @@ var app = (function () {
      * within a Source.
      */
 
-    var Token = /*#__PURE__*/function () {
+    var Token$1 = /*#__PURE__*/function () {
       /**
        * The kind of Token.
        */
@@ -12579,7 +7810,7 @@ var app = (function () {
       return Token;
     }(); // Print a simplified form when appearing in `inspect` and `util.inspect`.
 
-    defineInspect(Token);
+    defineInspect(Token$1);
     /**
      * @internal
      */
@@ -13009,7 +8240,7 @@ var app = (function () {
        * The character offset at which the current line begins.
        */
       function Lexer(source) {
-        var startOfFileToken = new Token(TokenKind.SOF, 0, 0, 0, 0, null);
+        var startOfFileToken = new Token$1(TokenKind.SOF, 0, 0, 0, 0, null);
         this.source = source;
         this.lastToken = startOfFileToken;
         this.token = startOfFileToken;
@@ -13121,7 +8352,7 @@ var app = (function () {
 
           case 33:
             //  !
-            return new Token(TokenKind.BANG, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.BANG, pos, pos + 1, _line, _col, prev);
 
           case 35:
             //  #
@@ -13129,59 +8360,59 @@ var app = (function () {
 
           case 36:
             //  $
-            return new Token(TokenKind.DOLLAR, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.DOLLAR, pos, pos + 1, _line, _col, prev);
 
           case 38:
             //  &
-            return new Token(TokenKind.AMP, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.AMP, pos, pos + 1, _line, _col, prev);
 
           case 40:
             //  (
-            return new Token(TokenKind.PAREN_L, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.PAREN_L, pos, pos + 1, _line, _col, prev);
 
           case 41:
             //  )
-            return new Token(TokenKind.PAREN_R, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.PAREN_R, pos, pos + 1, _line, _col, prev);
 
           case 46:
             //  .
             if (body.charCodeAt(pos + 1) === 46 && body.charCodeAt(pos + 2) === 46) {
-              return new Token(TokenKind.SPREAD, pos, pos + 3, _line, _col, prev);
+              return new Token$1(TokenKind.SPREAD, pos, pos + 3, _line, _col, prev);
             }
 
             break;
 
           case 58:
             //  :
-            return new Token(TokenKind.COLON, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.COLON, pos, pos + 1, _line, _col, prev);
 
           case 61:
             //  =
-            return new Token(TokenKind.EQUALS, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.EQUALS, pos, pos + 1, _line, _col, prev);
 
           case 64:
             //  @
-            return new Token(TokenKind.AT, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.AT, pos, pos + 1, _line, _col, prev);
 
           case 91:
             //  [
-            return new Token(TokenKind.BRACKET_L, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.BRACKET_L, pos, pos + 1, _line, _col, prev);
 
           case 93:
             //  ]
-            return new Token(TokenKind.BRACKET_R, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.BRACKET_R, pos, pos + 1, _line, _col, prev);
 
           case 123:
             // {
-            return new Token(TokenKind.BRACE_L, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.BRACE_L, pos, pos + 1, _line, _col, prev);
 
           case 124:
             // |
-            return new Token(TokenKind.PIPE, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.PIPE, pos, pos + 1, _line, _col, prev);
 
           case 125:
             // }
-            return new Token(TokenKind.BRACE_R, pos, pos + 1, _line, _col, prev);
+            return new Token$1(TokenKind.BRACE_R, pos, pos + 1, _line, _col, prev);
 
           case 34:
             //  "
@@ -13329,7 +8560,7 @@ var app = (function () {
 
       var line = lexer.line;
       var col = 1 + pos - lexer.lineStart;
-      return new Token(TokenKind.EOF, bodyLength, bodyLength, line, col, prev);
+      return new Token$1(TokenKind.EOF, bodyLength, bodyLength, line, col, prev);
     }
     /**
      * Report a message that an unexpected character was encountered.
@@ -13365,7 +8596,7 @@ var app = (function () {
       } while (!isNaN(code) && ( // SourceCharacter but not LineTerminator
       code > 0x001f || code === 0x0009));
 
-      return new Token(TokenKind.COMMENT, start, position, line, col, prev, body.slice(start + 1, position));
+      return new Token$1(TokenKind.COMMENT, start, position, line, col, prev, body.slice(start + 1, position));
     }
     /**
      * Reads a number token from the source file, either a float
@@ -13426,7 +8657,7 @@ var app = (function () {
         throw syntaxError(source, position, "Invalid number, expected digit but got: ".concat(printCharCode(code), "."));
       }
 
-      return new Token(isFloat ? TokenKind.FLOAT : TokenKind.INT, start, position, line, col, prev, body.slice(start, position));
+      return new Token$1(isFloat ? TokenKind.FLOAT : TokenKind.INT, start, position, line, col, prev, body.slice(start, position));
     }
     /**
      * Returns the new position in the source after reading digits.
@@ -13469,7 +8700,7 @@ var app = (function () {
         // Closing Quote (")
         if (code === 34) {
           value += body.slice(chunkStart, position);
-          return new Token(TokenKind.STRING, start, position + 1, line, col, prev, value);
+          return new Token$1(TokenKind.STRING, start, position + 1, line, col, prev, value);
         } // SourceCharacter
 
 
@@ -13561,7 +8792,7 @@ var app = (function () {
         // Closing Triple-Quote (""")
         if (code === 34 && body.charCodeAt(position + 1) === 34 && body.charCodeAt(position + 2) === 34) {
           rawValue += body.slice(chunkStart, position);
-          return new Token(TokenKind.BLOCK_STRING, start, position + 3, line, col, prev, dedentBlockStringValue(rawValue));
+          return new Token$1(TokenKind.BLOCK_STRING, start, position + 3, line, col, prev, dedentBlockStringValue(rawValue));
         } // SourceCharacter
 
 
@@ -13648,7 +8879,7 @@ var app = (function () {
         ++position;
       }
 
-      return new Token(TokenKind.NAME, start, position, line, col, prev, body.slice(start, position));
+      return new Token$1(TokenKind.NAME, start, position, line, col, prev, body.slice(start, position));
     } // _ A-Z a-z
 
 
@@ -16604,7 +11835,7 @@ var app = (function () {
       return state;
     }
 
-    function toSource(store) {
+    function toSource$1(store) {
       return make$1((function(observer) {
         var $request, $contextKey;
         return store.subscribe((function(state) {
@@ -16648,7 +11879,7 @@ var app = (function () {
           fetching: !1,
           stale: !1
         }) ]);
-      }))(toSource(store))));
+      }))(toSource$1(store))));
       onDestroy(subscription.unsubscribe);
       return store;
     }
@@ -16689,11 +11920,5144 @@ var app = (function () {
       extensions: void 0
     };
 
-    const AUCTION_QUERY = `
-query ($auctionStatusFilter: AuctionFilter) {
+    /** Detect free variable `global` from Node.js. */
+    var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+    /** Detect free variable `self`. */
+    var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+    /** Used as a reference to the global object. */
+    var root = freeGlobal || freeSelf || Function('return this')();
+
+    /** Built-in value references. */
+    var Symbol$1 = root.Symbol;
+
+    /** Used for built-in method references. */
+    var objectProto$c = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$9 = objectProto$c.hasOwnProperty;
+
+    /**
+     * Used to resolve the
+     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+     * of values.
+     */
+    var nativeObjectToString$1 = objectProto$c.toString;
+
+    /** Built-in value references. */
+    var symToStringTag$1 = Symbol$1 ? Symbol$1.toStringTag : undefined;
+
+    /**
+     * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @returns {string} Returns the raw `toStringTag`.
+     */
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty$9.call(value, symToStringTag$1),
+          tag = value[symToStringTag$1];
+
+      try {
+        value[symToStringTag$1] = undefined;
+        var unmasked = true;
+      } catch (e) {}
+
+      var result = nativeObjectToString$1.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag$1] = tag;
+        } else {
+          delete value[symToStringTag$1];
+        }
+      }
+      return result;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$b = Object.prototype;
+
+    /**
+     * Used to resolve the
+     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+     * of values.
+     */
+    var nativeObjectToString = objectProto$b.toString;
+
+    /**
+     * Converts `value` to a string using `Object.prototype.toString`.
+     *
+     * @private
+     * @param {*} value The value to convert.
+     * @returns {string} Returns the converted string.
+     */
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+
+    /** `Object#toString` result references. */
+    var nullTag = '[object Null]',
+        undefinedTag = '[object Undefined]';
+
+    /** Built-in value references. */
+    var symToStringTag = Symbol$1 ? Symbol$1.toStringTag : undefined;
+
+    /**
+     * The base implementation of `getTag` without fallbacks for buggy environments.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @returns {string} Returns the `toStringTag`.
+     */
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === undefined ? undefinedTag : nullTag;
+      }
+      return (symToStringTag && symToStringTag in Object(value))
+        ? getRawTag(value)
+        : objectToString(value);
+    }
+
+    /**
+     * Checks if `value` is object-like. A value is object-like if it's not `null`
+     * and has a `typeof` result of "object".
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+     * @example
+     *
+     * _.isObjectLike({});
+     * // => true
+     *
+     * _.isObjectLike([1, 2, 3]);
+     * // => true
+     *
+     * _.isObjectLike(_.noop);
+     * // => false
+     *
+     * _.isObjectLike(null);
+     * // => false
+     */
+    function isObjectLike(value) {
+      return value != null && typeof value == 'object';
+    }
+
+    /** `Object#toString` result references. */
+    var symbolTag$1 = '[object Symbol]';
+
+    /**
+     * Checks if `value` is classified as a `Symbol` primitive or object.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+     * @example
+     *
+     * _.isSymbol(Symbol.iterator);
+     * // => true
+     *
+     * _.isSymbol('abc');
+     * // => false
+     */
+    function isSymbol(value) {
+      return typeof value == 'symbol' ||
+        (isObjectLike(value) && baseGetTag(value) == symbolTag$1);
+    }
+
+    /**
+     * A specialized version of `_.map` for arrays without support for iteratee
+     * shorthands.
+     *
+     * @private
+     * @param {Array} [array] The array to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @returns {Array} Returns the new mapped array.
+     */
+    function arrayMap(array, iteratee) {
+      var index = -1,
+          length = array == null ? 0 : array.length,
+          result = Array(length);
+
+      while (++index < length) {
+        result[index] = iteratee(array[index], index, array);
+      }
+      return result;
+    }
+
+    /**
+     * Checks if `value` is classified as an `Array` object.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+     * @example
+     *
+     * _.isArray([1, 2, 3]);
+     * // => true
+     *
+     * _.isArray(document.body.children);
+     * // => false
+     *
+     * _.isArray('abc');
+     * // => false
+     *
+     * _.isArray(_.noop);
+     * // => false
+     */
+    var isArray = Array.isArray;
+
+    /** Used as references for various `Number` constants. */
+    var INFINITY$2 = 1 / 0;
+
+    /** Used to convert symbols to primitives and strings. */
+    var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : undefined,
+        symbolToString = symbolProto$1 ? symbolProto$1.toString : undefined;
+
+    /**
+     * The base implementation of `_.toString` which doesn't convert nullish
+     * values to empty strings.
+     *
+     * @private
+     * @param {*} value The value to process.
+     * @returns {string} Returns the string.
+     */
+    function baseToString(value) {
+      // Exit early for strings to avoid a performance hit in some environments.
+      if (typeof value == 'string') {
+        return value;
+      }
+      if (isArray(value)) {
+        // Recursively convert values (susceptible to call stack limits).
+        return arrayMap(value, baseToString) + '';
+      }
+      if (isSymbol(value)) {
+        return symbolToString ? symbolToString.call(value) : '';
+      }
+      var result = (value + '');
+      return (result == '0' && (1 / value) == -INFINITY$2) ? '-0' : result;
+    }
+
+    /** Used to match a single whitespace character. */
+    var reWhitespace = /\s/;
+
+    /**
+     * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+     * character of `string`.
+     *
+     * @private
+     * @param {string} string The string to inspect.
+     * @returns {number} Returns the index of the last non-whitespace character.
+     */
+    function trimmedEndIndex(string) {
+      var index = string.length;
+
+      while (index-- && reWhitespace.test(string.charAt(index))) {}
+      return index;
+    }
+
+    /** Used to match leading whitespace. */
+    var reTrimStart = /^\s+/;
+
+    /**
+     * The base implementation of `_.trim`.
+     *
+     * @private
+     * @param {string} string The string to trim.
+     * @returns {string} Returns the trimmed string.
+     */
+    function baseTrim(string) {
+      return string
+        ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+        : string;
+    }
+
+    /**
+     * Checks if `value` is the
+     * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+     * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+     * @example
+     *
+     * _.isObject({});
+     * // => true
+     *
+     * _.isObject([1, 2, 3]);
+     * // => true
+     *
+     * _.isObject(_.noop);
+     * // => true
+     *
+     * _.isObject(null);
+     * // => false
+     */
+    function isObject(value) {
+      var type = typeof value;
+      return value != null && (type == 'object' || type == 'function');
+    }
+
+    /** Used as references for various `Number` constants. */
+    var NAN = 0 / 0;
+
+    /** Used to detect bad signed hexadecimal string values. */
+    var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+    /** Used to detect binary string values. */
+    var reIsBinary = /^0b[01]+$/i;
+
+    /** Used to detect octal string values. */
+    var reIsOctal = /^0o[0-7]+$/i;
+
+    /** Built-in method references without a dependency on `root`. */
+    var freeParseInt = parseInt;
+
+    /**
+     * Converts `value` to a number.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to process.
+     * @returns {number} Returns the number.
+     * @example
+     *
+     * _.toNumber(3.2);
+     * // => 3.2
+     *
+     * _.toNumber(Number.MIN_VALUE);
+     * // => 5e-324
+     *
+     * _.toNumber(Infinity);
+     * // => Infinity
+     *
+     * _.toNumber('3.2');
+     * // => 3.2
+     */
+    function toNumber(value) {
+      if (typeof value == 'number') {
+        return value;
+      }
+      if (isSymbol(value)) {
+        return NAN;
+      }
+      if (isObject(value)) {
+        var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+        value = isObject(other) ? (other + '') : other;
+      }
+      if (typeof value != 'string') {
+        return value === 0 ? value : +value;
+      }
+      value = baseTrim(value);
+      var isBinary = reIsBinary.test(value);
+      return (isBinary || reIsOctal.test(value))
+        ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+        : (reIsBadHex.test(value) ? NAN : +value);
+    }
+
+    /** Used as references for various `Number` constants. */
+    var INFINITY$1 = 1 / 0,
+        MAX_INTEGER = 1.7976931348623157e+308;
+
+    /**
+     * Converts `value` to a finite number.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.12.0
+     * @category Lang
+     * @param {*} value The value to convert.
+     * @returns {number} Returns the converted number.
+     * @example
+     *
+     * _.toFinite(3.2);
+     * // => 3.2
+     *
+     * _.toFinite(Number.MIN_VALUE);
+     * // => 5e-324
+     *
+     * _.toFinite(Infinity);
+     * // => 1.7976931348623157e+308
+     *
+     * _.toFinite('3.2');
+     * // => 3.2
+     */
+    function toFinite(value) {
+      if (!value) {
+        return value === 0 ? value : 0;
+      }
+      value = toNumber(value);
+      if (value === INFINITY$1 || value === -INFINITY$1) {
+        var sign = (value < 0 ? -1 : 1);
+        return sign * MAX_INTEGER;
+      }
+      return value === value ? value : 0;
+    }
+
+    /**
+     * This method returns the first argument it receives.
+     *
+     * @static
+     * @since 0.1.0
+     * @memberOf _
+     * @category Util
+     * @param {*} value Any value.
+     * @returns {*} Returns `value`.
+     * @example
+     *
+     * var object = { 'a': 1 };
+     *
+     * console.log(_.identity(object) === object);
+     * // => true
+     */
+    function identity(value) {
+      return value;
+    }
+
+    /** `Object#toString` result references. */
+    var asyncTag = '[object AsyncFunction]',
+        funcTag$1 = '[object Function]',
+        genTag = '[object GeneratorFunction]',
+        proxyTag = '[object Proxy]';
+
+    /**
+     * Checks if `value` is classified as a `Function` object.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+     * @example
+     *
+     * _.isFunction(_);
+     * // => true
+     *
+     * _.isFunction(/abc/);
+     * // => false
+     */
+    function isFunction(value) {
+      if (!isObject(value)) {
+        return false;
+      }
+      // The use of `Object#toString` avoids issues with the `typeof` operator
+      // in Safari 9 which returns 'object' for typed arrays and other constructors.
+      var tag = baseGetTag(value);
+      return tag == funcTag$1 || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+
+    /** Used to detect overreaching core-js shims. */
+    var coreJsData = root['__core-js_shared__'];
+
+    /** Used to detect methods masquerading as native. */
+    var maskSrcKey = (function() {
+      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+      return uid ? ('Symbol(src)_1.' + uid) : '';
+    }());
+
+    /**
+     * Checks if `func` has its source masked.
+     *
+     * @private
+     * @param {Function} func The function to check.
+     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+     */
+    function isMasked(func) {
+      return !!maskSrcKey && (maskSrcKey in func);
+    }
+
+    /** Used for built-in method references. */
+    var funcProto$1 = Function.prototype;
+
+    /** Used to resolve the decompiled source of functions. */
+    var funcToString$1 = funcProto$1.toString;
+
+    /**
+     * Converts `func` to its source code.
+     *
+     * @private
+     * @param {Function} func The function to convert.
+     * @returns {string} Returns the source code.
+     */
+    function toSource(func) {
+      if (func != null) {
+        try {
+          return funcToString$1.call(func);
+        } catch (e) {}
+        try {
+          return (func + '');
+        } catch (e) {}
+      }
+      return '';
+    }
+
+    /**
+     * Used to match `RegExp`
+     * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+     */
+    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+
+    /** Used to detect host constructors (Safari). */
+    var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+    /** Used for built-in method references. */
+    var funcProto = Function.prototype,
+        objectProto$a = Object.prototype;
+
+    /** Used to resolve the decompiled source of functions. */
+    var funcToString = funcProto.toString;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$8 = objectProto$a.hasOwnProperty;
+
+    /** Used to detect if a method is native. */
+    var reIsNative = RegExp('^' +
+      funcToString.call(hasOwnProperty$8).replace(reRegExpChar, '\\$&')
+      .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+    );
+
+    /**
+     * The base implementation of `_.isNative` without bad shim checks.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a native function,
+     *  else `false`.
+     */
+    function baseIsNative(value) {
+      if (!isObject(value) || isMasked(value)) {
+        return false;
+      }
+      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+      return pattern.test(toSource(value));
+    }
+
+    /**
+     * Gets the value at `key` of `object`.
+     *
+     * @private
+     * @param {Object} [object] The object to query.
+     * @param {string} key The key of the property to get.
+     * @returns {*} Returns the property value.
+     */
+    function getValue(object, key) {
+      return object == null ? undefined : object[key];
+    }
+
+    /**
+     * Gets the native function at `key` of `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {string} key The key of the method to get.
+     * @returns {*} Returns the function if it's native, else `undefined`.
+     */
+    function getNative(object, key) {
+      var value = getValue(object, key);
+      return baseIsNative(value) ? value : undefined;
+    }
+
+    /* Built-in method references that are verified to be native. */
+    var WeakMap$1 = getNative(root, 'WeakMap');
+
+    var defineProperty = (function() {
+      try {
+        var func = getNative(Object, 'defineProperty');
+        func({}, '', {});
+        return func;
+      } catch (e) {}
+    }());
+
+    /** Used as references for various `Number` constants. */
+    var MAX_SAFE_INTEGER$1 = 9007199254740991;
+
+    /** Used to detect unsigned integer values. */
+    var reIsUint = /^(?:0|[1-9]\d*)$/;
+
+    /**
+     * Checks if `value` is a valid array-like index.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+     * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+     */
+    function isIndex(value, length) {
+      var type = typeof value;
+      length = length == null ? MAX_SAFE_INTEGER$1 : length;
+
+      return !!length &&
+        (type == 'number' ||
+          (type != 'symbol' && reIsUint.test(value))) &&
+            (value > -1 && value % 1 == 0 && value < length);
+    }
+
+    /**
+     * The base implementation of `assignValue` and `assignMergeValue` without
+     * value checks.
+     *
+     * @private
+     * @param {Object} object The object to modify.
+     * @param {string} key The key of the property to assign.
+     * @param {*} value The value to assign.
+     */
+    function baseAssignValue(object, key, value) {
+      if (key == '__proto__' && defineProperty) {
+        defineProperty(object, key, {
+          'configurable': true,
+          'enumerable': true,
+          'value': value,
+          'writable': true
+        });
+      } else {
+        object[key] = value;
+      }
+    }
+
+    /**
+     * Performs a
+     * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+     * comparison between two values to determine if they are equivalent.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to compare.
+     * @param {*} other The other value to compare.
+     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+     * @example
+     *
+     * var object = { 'a': 1 };
+     * var other = { 'a': 1 };
+     *
+     * _.eq(object, object);
+     * // => true
+     *
+     * _.eq(object, other);
+     * // => false
+     *
+     * _.eq('a', 'a');
+     * // => true
+     *
+     * _.eq('a', Object('a'));
+     * // => false
+     *
+     * _.eq(NaN, NaN);
+     * // => true
+     */
+    function eq(value, other) {
+      return value === other || (value !== value && other !== other);
+    }
+
+    /** Used as references for various `Number` constants. */
+    var MAX_SAFE_INTEGER = 9007199254740991;
+
+    /**
+     * Checks if `value` is a valid array-like length.
+     *
+     * **Note:** This method is loosely based on
+     * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+     * @example
+     *
+     * _.isLength(3);
+     * // => true
+     *
+     * _.isLength(Number.MIN_VALUE);
+     * // => false
+     *
+     * _.isLength(Infinity);
+     * // => false
+     *
+     * _.isLength('3');
+     * // => false
+     */
+    function isLength(value) {
+      return typeof value == 'number' &&
+        value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+    }
+
+    /**
+     * Checks if `value` is array-like. A value is considered array-like if it's
+     * not a function and has a `value.length` that's an integer greater than or
+     * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+     * @example
+     *
+     * _.isArrayLike([1, 2, 3]);
+     * // => true
+     *
+     * _.isArrayLike(document.body.children);
+     * // => true
+     *
+     * _.isArrayLike('abc');
+     * // => true
+     *
+     * _.isArrayLike(_.noop);
+     * // => false
+     */
+    function isArrayLike(value) {
+      return value != null && isLength(value.length) && !isFunction(value);
+    }
+
+    /**
+     * Checks if the given arguments are from an iteratee call.
+     *
+     * @private
+     * @param {*} value The potential iteratee value argument.
+     * @param {*} index The potential iteratee index or key argument.
+     * @param {*} object The potential iteratee object argument.
+     * @returns {boolean} Returns `true` if the arguments are from an iteratee call,
+     *  else `false`.
+     */
+    function isIterateeCall(value, index, object) {
+      if (!isObject(object)) {
+        return false;
+      }
+      var type = typeof index;
+      if (type == 'number'
+            ? (isArrayLike(object) && isIndex(index, object.length))
+            : (type == 'string' && index in object)
+          ) {
+        return eq(object[index], value);
+      }
+      return false;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$9 = Object.prototype;
+
+    /**
+     * Checks if `value` is likely a prototype object.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
+     */
+    function isPrototype(value) {
+      var Ctor = value && value.constructor,
+          proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto$9;
+
+      return value === proto;
+    }
+
+    /**
+     * The base implementation of `_.times` without support for iteratee shorthands
+     * or max array length checks.
+     *
+     * @private
+     * @param {number} n The number of times to invoke `iteratee`.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @returns {Array} Returns the array of results.
+     */
+    function baseTimes(n, iteratee) {
+      var index = -1,
+          result = Array(n);
+
+      while (++index < n) {
+        result[index] = iteratee(index);
+      }
+      return result;
+    }
+
+    /** `Object#toString` result references. */
+    var argsTag$2 = '[object Arguments]';
+
+    /**
+     * The base implementation of `_.isArguments`.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+     */
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag$2;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$8 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$7 = objectProto$8.hasOwnProperty;
+
+    /** Built-in value references. */
+    var propertyIsEnumerable$1 = objectProto$8.propertyIsEnumerable;
+
+    /**
+     * Checks if `value` is likely an `arguments` object.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+     *  else `false`.
+     * @example
+     *
+     * _.isArguments(function() { return arguments; }());
+     * // => true
+     *
+     * _.isArguments([1, 2, 3]);
+     * // => false
+     */
+    var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty$7.call(value, 'callee') &&
+        !propertyIsEnumerable$1.call(value, 'callee');
+    };
+
+    /**
+     * This method returns `false`.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.13.0
+     * @category Util
+     * @returns {boolean} Returns `false`.
+     * @example
+     *
+     * _.times(2, _.stubFalse);
+     * // => [false, false]
+     */
+    function stubFalse() {
+      return false;
+    }
+
+    /** Detect free variable `exports`. */
+    var freeExports$1 = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+    /** Detect free variable `module`. */
+    var freeModule$1 = freeExports$1 && typeof module == 'object' && module && !module.nodeType && module;
+
+    /** Detect the popular CommonJS extension `module.exports`. */
+    var moduleExports$1 = freeModule$1 && freeModule$1.exports === freeExports$1;
+
+    /** Built-in value references. */
+    var Buffer = moduleExports$1 ? root.Buffer : undefined;
+
+    /* Built-in method references for those with the same name as other `lodash` methods. */
+    var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
+
+    /**
+     * Checks if `value` is a buffer.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.3.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
+     * @example
+     *
+     * _.isBuffer(new Buffer(2));
+     * // => true
+     *
+     * _.isBuffer(new Uint8Array(2));
+     * // => false
+     */
+    var isBuffer = nativeIsBuffer || stubFalse;
+
+    /** `Object#toString` result references. */
+    var argsTag$1 = '[object Arguments]',
+        arrayTag$1 = '[object Array]',
+        boolTag$1 = '[object Boolean]',
+        dateTag$1 = '[object Date]',
+        errorTag$1 = '[object Error]',
+        funcTag = '[object Function]',
+        mapTag$2 = '[object Map]',
+        numberTag$1 = '[object Number]',
+        objectTag$2 = '[object Object]',
+        regexpTag$1 = '[object RegExp]',
+        setTag$2 = '[object Set]',
+        stringTag$1 = '[object String]',
+        weakMapTag$1 = '[object WeakMap]';
+
+    var arrayBufferTag$1 = '[object ArrayBuffer]',
+        dataViewTag$2 = '[object DataView]',
+        float32Tag = '[object Float32Array]',
+        float64Tag = '[object Float64Array]',
+        int8Tag = '[object Int8Array]',
+        int16Tag = '[object Int16Array]',
+        int32Tag = '[object Int32Array]',
+        uint8Tag = '[object Uint8Array]',
+        uint8ClampedTag = '[object Uint8ClampedArray]',
+        uint16Tag = '[object Uint16Array]',
+        uint32Tag = '[object Uint32Array]';
+
+    /** Used to identify `toStringTag` values of typed arrays. */
+    var typedArrayTags = {};
+    typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+    typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+    typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+    typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+    typedArrayTags[uint32Tag] = true;
+    typedArrayTags[argsTag$1] = typedArrayTags[arrayTag$1] =
+    typedArrayTags[arrayBufferTag$1] = typedArrayTags[boolTag$1] =
+    typedArrayTags[dataViewTag$2] = typedArrayTags[dateTag$1] =
+    typedArrayTags[errorTag$1] = typedArrayTags[funcTag] =
+    typedArrayTags[mapTag$2] = typedArrayTags[numberTag$1] =
+    typedArrayTags[objectTag$2] = typedArrayTags[regexpTag$1] =
+    typedArrayTags[setTag$2] = typedArrayTags[stringTag$1] =
+    typedArrayTags[weakMapTag$1] = false;
+
+    /**
+     * The base implementation of `_.isTypedArray` without Node.js optimizations.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+     */
+    function baseIsTypedArray(value) {
+      return isObjectLike(value) &&
+        isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+    }
+
+    /**
+     * The base implementation of `_.unary` without support for storing metadata.
+     *
+     * @private
+     * @param {Function} func The function to cap arguments for.
+     * @returns {Function} Returns the new capped function.
+     */
+    function baseUnary(func) {
+      return function(value) {
+        return func(value);
+      };
+    }
+
+    /** Detect free variable `exports`. */
+    var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+    /** Detect free variable `module`. */
+    var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+    /** Detect the popular CommonJS extension `module.exports`. */
+    var moduleExports = freeModule && freeModule.exports === freeExports;
+
+    /** Detect free variable `process` from Node.js. */
+    var freeProcess = moduleExports && freeGlobal.process;
+
+    /** Used to access faster Node.js helpers. */
+    var nodeUtil = (function() {
+      try {
+        // Use `util.types` for Node.js 10+.
+        var types = freeModule && freeModule.require && freeModule.require('util').types;
+
+        if (types) {
+          return types;
+        }
+
+        // Legacy `process.binding('util')` for Node.js < 10.
+        return freeProcess && freeProcess.binding && freeProcess.binding('util');
+      } catch (e) {}
+    }());
+
+    /* Node.js helper references. */
+    var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+
+    /**
+     * Checks if `value` is classified as a typed array.
+     *
+     * @static
+     * @memberOf _
+     * @since 3.0.0
+     * @category Lang
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+     * @example
+     *
+     * _.isTypedArray(new Uint8Array);
+     * // => true
+     *
+     * _.isTypedArray([]);
+     * // => false
+     */
+    var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+
+    /** Used for built-in method references. */
+    var objectProto$7 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$6 = objectProto$7.hasOwnProperty;
+
+    /**
+     * Creates an array of the enumerable property names of the array-like `value`.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @param {boolean} inherited Specify returning inherited property names.
+     * @returns {Array} Returns the array of property names.
+     */
+    function arrayLikeKeys(value, inherited) {
+      var isArr = isArray(value),
+          isArg = !isArr && isArguments(value),
+          isBuff = !isArr && !isArg && isBuffer(value),
+          isType = !isArr && !isArg && !isBuff && isTypedArray(value),
+          skipIndexes = isArr || isArg || isBuff || isType,
+          result = skipIndexes ? baseTimes(value.length, String) : [],
+          length = result.length;
+
+      for (var key in value) {
+        if ((inherited || hasOwnProperty$6.call(value, key)) &&
+            !(skipIndexes && (
+               // Safari 9 has enumerable `arguments.length` in strict mode.
+               key == 'length' ||
+               // Node.js 0.10 has enumerable non-index properties on buffers.
+               (isBuff && (key == 'offset' || key == 'parent')) ||
+               // PhantomJS 2 has enumerable non-index properties on typed arrays.
+               (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
+               // Skip index properties.
+               isIndex(key, length)
+            ))) {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+
+    /**
+     * Creates a unary function that invokes `func` with its argument transformed.
+     *
+     * @private
+     * @param {Function} func The function to wrap.
+     * @param {Function} transform The argument transform.
+     * @returns {Function} Returns the new function.
+     */
+    function overArg(func, transform) {
+      return function(arg) {
+        return func(transform(arg));
+      };
+    }
+
+    /* Built-in method references for those with the same name as other `lodash` methods. */
+    var nativeKeys = overArg(Object.keys, Object);
+
+    /** Used for built-in method references. */
+    var objectProto$6 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$5 = objectProto$6.hasOwnProperty;
+
+    /**
+     * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @returns {Array} Returns the array of property names.
+     */
+    function baseKeys(object) {
+      if (!isPrototype(object)) {
+        return nativeKeys(object);
+      }
+      var result = [];
+      for (var key in Object(object)) {
+        if (hasOwnProperty$5.call(object, key) && key != 'constructor') {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+
+    /**
+     * Creates an array of the own enumerable property names of `object`.
+     *
+     * **Note:** Non-object values are coerced to objects. See the
+     * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
+     * for more details.
+     *
+     * @static
+     * @since 0.1.0
+     * @memberOf _
+     * @category Object
+     * @param {Object} object The object to query.
+     * @returns {Array} Returns the array of property names.
+     * @example
+     *
+     * function Foo() {
+     *   this.a = 1;
+     *   this.b = 2;
+     * }
+     *
+     * Foo.prototype.c = 3;
+     *
+     * _.keys(new Foo);
+     * // => ['a', 'b'] (iteration order is not guaranteed)
+     *
+     * _.keys('hi');
+     * // => ['0', '1']
+     */
+    function keys(object) {
+      return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+    }
+
+    /** Used to match property names within property paths. */
+    var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+        reIsPlainProp = /^\w*$/;
+
+    /**
+     * Checks if `value` is a property name and not a property path.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @param {Object} [object] The object to query keys on.
+     * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+     */
+    function isKey(value, object) {
+      if (isArray(value)) {
+        return false;
+      }
+      var type = typeof value;
+      if (type == 'number' || type == 'symbol' || type == 'boolean' ||
+          value == null || isSymbol(value)) {
+        return true;
+      }
+      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
+        (object != null && value in Object(object));
+    }
+
+    /* Built-in method references that are verified to be native. */
+    var nativeCreate = getNative(Object, 'create');
+
+    /**
+     * Removes all key-value entries from the hash.
+     *
+     * @private
+     * @name clear
+     * @memberOf Hash
+     */
+    function hashClear() {
+      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+      this.size = 0;
+    }
+
+    /**
+     * Removes `key` and its value from the hash.
+     *
+     * @private
+     * @name delete
+     * @memberOf Hash
+     * @param {Object} hash The hash to modify.
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function hashDelete(key) {
+      var result = this.has(key) && delete this.__data__[key];
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+
+    /** Used to stand-in for `undefined` hash values. */
+    var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
+
+    /** Used for built-in method references. */
+    var objectProto$5 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
+
+    /**
+     * Gets the hash value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf Hash
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function hashGet(key) {
+      var data = this.__data__;
+      if (nativeCreate) {
+        var result = data[key];
+        return result === HASH_UNDEFINED$2 ? undefined : result;
+      }
+      return hasOwnProperty$4.call(data, key) ? data[key] : undefined;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$4 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
+
+    /**
+     * Checks if a hash value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf Hash
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function hashHas(key) {
+      var data = this.__data__;
+      return nativeCreate ? (data[key] !== undefined) : hasOwnProperty$3.call(data, key);
+    }
+
+    /** Used to stand-in for `undefined` hash values. */
+    var HASH_UNDEFINED$1 = '__lodash_hash_undefined__';
+
+    /**
+     * Sets the hash `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf Hash
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the hash instance.
+     */
+    function hashSet(key, value) {
+      var data = this.__data__;
+      this.size += this.has(key) ? 0 : 1;
+      data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED$1 : value;
+      return this;
+    }
+
+    /**
+     * Creates a hash object.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function Hash(entries) {
+      var index = -1,
+          length = entries == null ? 0 : entries.length;
+
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+
+    // Add methods to `Hash`.
+    Hash.prototype.clear = hashClear;
+    Hash.prototype['delete'] = hashDelete;
+    Hash.prototype.get = hashGet;
+    Hash.prototype.has = hashHas;
+    Hash.prototype.set = hashSet;
+
+    /**
+     * Removes all key-value entries from the list cache.
+     *
+     * @private
+     * @name clear
+     * @memberOf ListCache
+     */
+    function listCacheClear() {
+      this.__data__ = [];
+      this.size = 0;
+    }
+
+    /**
+     * Gets the index at which the `key` is found in `array` of key-value pairs.
+     *
+     * @private
+     * @param {Array} array The array to inspect.
+     * @param {*} key The key to search for.
+     * @returns {number} Returns the index of the matched value, else `-1`.
+     */
+    function assocIndexOf(array, key) {
+      var length = array.length;
+      while (length--) {
+        if (eq(array[length][0], key)) {
+          return length;
+        }
+      }
+      return -1;
+    }
+
+    /** Used for built-in method references. */
+    var arrayProto = Array.prototype;
+
+    /** Built-in value references. */
+    var splice = arrayProto.splice;
+
+    /**
+     * Removes `key` and its value from the list cache.
+     *
+     * @private
+     * @name delete
+     * @memberOf ListCache
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function listCacheDelete(key) {
+      var data = this.__data__,
+          index = assocIndexOf(data, key);
+
+      if (index < 0) {
+        return false;
+      }
+      var lastIndex = data.length - 1;
+      if (index == lastIndex) {
+        data.pop();
+      } else {
+        splice.call(data, index, 1);
+      }
+      --this.size;
+      return true;
+    }
+
+    /**
+     * Gets the list cache value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf ListCache
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function listCacheGet(key) {
+      var data = this.__data__,
+          index = assocIndexOf(data, key);
+
+      return index < 0 ? undefined : data[index][1];
+    }
+
+    /**
+     * Checks if a list cache value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf ListCache
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function listCacheHas(key) {
+      return assocIndexOf(this.__data__, key) > -1;
+    }
+
+    /**
+     * Sets the list cache `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf ListCache
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the list cache instance.
+     */
+    function listCacheSet(key, value) {
+      var data = this.__data__,
+          index = assocIndexOf(data, key);
+
+      if (index < 0) {
+        ++this.size;
+        data.push([key, value]);
+      } else {
+        data[index][1] = value;
+      }
+      return this;
+    }
+
+    /**
+     * Creates an list cache object.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function ListCache(entries) {
+      var index = -1,
+          length = entries == null ? 0 : entries.length;
+
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+
+    // Add methods to `ListCache`.
+    ListCache.prototype.clear = listCacheClear;
+    ListCache.prototype['delete'] = listCacheDelete;
+    ListCache.prototype.get = listCacheGet;
+    ListCache.prototype.has = listCacheHas;
+    ListCache.prototype.set = listCacheSet;
+
+    /* Built-in method references that are verified to be native. */
+    var Map$1 = getNative(root, 'Map');
+
+    /**
+     * Removes all key-value entries from the map.
+     *
+     * @private
+     * @name clear
+     * @memberOf MapCache
+     */
+    function mapCacheClear() {
+      this.size = 0;
+      this.__data__ = {
+        'hash': new Hash,
+        'map': new (Map$1 || ListCache),
+        'string': new Hash
+      };
+    }
+
+    /**
+     * Checks if `value` is suitable for use as unique object key.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
+     */
+    function isKeyable(value) {
+      var type = typeof value;
+      return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
+        ? (value !== '__proto__')
+        : (value === null);
+    }
+
+    /**
+     * Gets the data for `map`.
+     *
+     * @private
+     * @param {Object} map The map to query.
+     * @param {string} key The reference key.
+     * @returns {*} Returns the map data.
+     */
+    function getMapData(map, key) {
+      var data = map.__data__;
+      return isKeyable(key)
+        ? data[typeof key == 'string' ? 'string' : 'hash']
+        : data.map;
+    }
+
+    /**
+     * Removes `key` and its value from the map.
+     *
+     * @private
+     * @name delete
+     * @memberOf MapCache
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function mapCacheDelete(key) {
+      var result = getMapData(this, key)['delete'](key);
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+
+    /**
+     * Gets the map value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf MapCache
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function mapCacheGet(key) {
+      return getMapData(this, key).get(key);
+    }
+
+    /**
+     * Checks if a map value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf MapCache
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function mapCacheHas(key) {
+      return getMapData(this, key).has(key);
+    }
+
+    /**
+     * Sets the map `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf MapCache
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the map cache instance.
+     */
+    function mapCacheSet(key, value) {
+      var data = getMapData(this, key),
+          size = data.size;
+
+      data.set(key, value);
+      this.size += data.size == size ? 0 : 1;
+      return this;
+    }
+
+    /**
+     * Creates a map cache object to store key-value pairs.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function MapCache(entries) {
+      var index = -1,
+          length = entries == null ? 0 : entries.length;
+
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+
+    // Add methods to `MapCache`.
+    MapCache.prototype.clear = mapCacheClear;
+    MapCache.prototype['delete'] = mapCacheDelete;
+    MapCache.prototype.get = mapCacheGet;
+    MapCache.prototype.has = mapCacheHas;
+    MapCache.prototype.set = mapCacheSet;
+
+    /** Error message constants. */
+    var FUNC_ERROR_TEXT = 'Expected a function';
+
+    /**
+     * Creates a function that memoizes the result of `func`. If `resolver` is
+     * provided, it determines the cache key for storing the result based on the
+     * arguments provided to the memoized function. By default, the first argument
+     * provided to the memoized function is used as the map cache key. The `func`
+     * is invoked with the `this` binding of the memoized function.
+     *
+     * **Note:** The cache is exposed as the `cache` property on the memoized
+     * function. Its creation may be customized by replacing the `_.memoize.Cache`
+     * constructor with one whose instances implement the
+     * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
+     * method interface of `clear`, `delete`, `get`, `has`, and `set`.
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Function
+     * @param {Function} func The function to have its output memoized.
+     * @param {Function} [resolver] The function to resolve the cache key.
+     * @returns {Function} Returns the new memoized function.
+     * @example
+     *
+     * var object = { 'a': 1, 'b': 2 };
+     * var other = { 'c': 3, 'd': 4 };
+     *
+     * var values = _.memoize(_.values);
+     * values(object);
+     * // => [1, 2]
+     *
+     * values(other);
+     * // => [3, 4]
+     *
+     * object.a = 2;
+     * values(object);
+     * // => [1, 2]
+     *
+     * // Modify the result cache.
+     * values.cache.set(object, ['a', 'b']);
+     * values(object);
+     * // => ['a', 'b']
+     *
+     * // Replace `_.memoize.Cache`.
+     * _.memoize.Cache = WeakMap;
+     */
+    function memoize(func, resolver) {
+      if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      var memoized = function() {
+        var args = arguments,
+            key = resolver ? resolver.apply(this, args) : args[0],
+            cache = memoized.cache;
+
+        if (cache.has(key)) {
+          return cache.get(key);
+        }
+        var result = func.apply(this, args);
+        memoized.cache = cache.set(key, result) || cache;
+        return result;
+      };
+      memoized.cache = new (memoize.Cache || MapCache);
+      return memoized;
+    }
+
+    // Expose `MapCache`.
+    memoize.Cache = MapCache;
+
+    /** Used as the maximum memoize cache size. */
+    var MAX_MEMOIZE_SIZE = 500;
+
+    /**
+     * A specialized version of `_.memoize` which clears the memoized function's
+     * cache when it exceeds `MAX_MEMOIZE_SIZE`.
+     *
+     * @private
+     * @param {Function} func The function to have its output memoized.
+     * @returns {Function} Returns the new memoized function.
+     */
+    function memoizeCapped(func) {
+      var result = memoize(func, function(key) {
+        if (cache.size === MAX_MEMOIZE_SIZE) {
+          cache.clear();
+        }
+        return key;
+      });
+
+      var cache = result.cache;
+      return result;
+    }
+
+    /** Used to match property names within property paths. */
+    var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+
+    /** Used to match backslashes in property paths. */
+    var reEscapeChar = /\\(\\)?/g;
+
+    /**
+     * Converts `string` to a property path array.
+     *
+     * @private
+     * @param {string} string The string to convert.
+     * @returns {Array} Returns the property path array.
+     */
+    var stringToPath = memoizeCapped(function(string) {
+      var result = [];
+      if (string.charCodeAt(0) === 46 /* . */) {
+        result.push('');
+      }
+      string.replace(rePropName, function(match, number, quote, subString) {
+        result.push(quote ? subString.replace(reEscapeChar, '$1') : (number || match));
+      });
+      return result;
+    });
+
+    /**
+     * Converts `value` to a string. An empty string is returned for `null`
+     * and `undefined` values. The sign of `-0` is preserved.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Lang
+     * @param {*} value The value to convert.
+     * @returns {string} Returns the converted string.
+     * @example
+     *
+     * _.toString(null);
+     * // => ''
+     *
+     * _.toString(-0);
+     * // => '-0'
+     *
+     * _.toString([1, 2, 3]);
+     * // => '1,2,3'
+     */
+    function toString(value) {
+      return value == null ? '' : baseToString(value);
+    }
+
+    /**
+     * Casts `value` to a path array if it's not one.
+     *
+     * @private
+     * @param {*} value The value to inspect.
+     * @param {Object} [object] The object to query keys on.
+     * @returns {Array} Returns the cast property path array.
+     */
+    function castPath(value, object) {
+      if (isArray(value)) {
+        return value;
+      }
+      return isKey(value, object) ? [value] : stringToPath(toString(value));
+    }
+
+    /** Used as references for various `Number` constants. */
+    var INFINITY = 1 / 0;
+
+    /**
+     * Converts `value` to a string key if it's not a string or symbol.
+     *
+     * @private
+     * @param {*} value The value to inspect.
+     * @returns {string|symbol} Returns the key.
+     */
+    function toKey(value) {
+      if (typeof value == 'string' || isSymbol(value)) {
+        return value;
+      }
+      var result = (value + '');
+      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+    }
+
+    /**
+     * The base implementation of `_.get` without support for default values.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {Array|string} path The path of the property to get.
+     * @returns {*} Returns the resolved value.
+     */
+    function baseGet(object, path) {
+      path = castPath(path, object);
+
+      var index = 0,
+          length = path.length;
+
+      while (object != null && index < length) {
+        object = object[toKey(path[index++])];
+      }
+      return (index && index == length) ? object : undefined;
+    }
+
+    /**
+     * Gets the value at `path` of `object`. If the resolved value is
+     * `undefined`, the `defaultValue` is returned in its place.
+     *
+     * @static
+     * @memberOf _
+     * @since 3.7.0
+     * @category Object
+     * @param {Object} object The object to query.
+     * @param {Array|string} path The path of the property to get.
+     * @param {*} [defaultValue] The value returned for `undefined` resolved values.
+     * @returns {*} Returns the resolved value.
+     * @example
+     *
+     * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+     *
+     * _.get(object, 'a[0].b.c');
+     * // => 3
+     *
+     * _.get(object, ['a', '0', 'b', 'c']);
+     * // => 3
+     *
+     * _.get(object, 'a.b.c', 'default');
+     * // => 'default'
+     */
+    function get(object, path, defaultValue) {
+      var result = object == null ? undefined : baseGet(object, path);
+      return result === undefined ? defaultValue : result;
+    }
+
+    /**
+     * Appends the elements of `values` to `array`.
+     *
+     * @private
+     * @param {Array} array The array to modify.
+     * @param {Array} values The values to append.
+     * @returns {Array} Returns `array`.
+     */
+    function arrayPush(array, values) {
+      var index = -1,
+          length = values.length,
+          offset = array.length;
+
+      while (++index < length) {
+        array[offset + index] = values[index];
+      }
+      return array;
+    }
+
+    /**
+     * Removes all key-value entries from the stack.
+     *
+     * @private
+     * @name clear
+     * @memberOf Stack
+     */
+    function stackClear() {
+      this.__data__ = new ListCache;
+      this.size = 0;
+    }
+
+    /**
+     * Removes `key` and its value from the stack.
+     *
+     * @private
+     * @name delete
+     * @memberOf Stack
+     * @param {string} key The key of the value to remove.
+     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+     */
+    function stackDelete(key) {
+      var data = this.__data__,
+          result = data['delete'](key);
+
+      this.size = data.size;
+      return result;
+    }
+
+    /**
+     * Gets the stack value for `key`.
+     *
+     * @private
+     * @name get
+     * @memberOf Stack
+     * @param {string} key The key of the value to get.
+     * @returns {*} Returns the entry value.
+     */
+    function stackGet(key) {
+      return this.__data__.get(key);
+    }
+
+    /**
+     * Checks if a stack value for `key` exists.
+     *
+     * @private
+     * @name has
+     * @memberOf Stack
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function stackHas(key) {
+      return this.__data__.has(key);
+    }
+
+    /** Used as the size to enable large array optimizations. */
+    var LARGE_ARRAY_SIZE = 200;
+
+    /**
+     * Sets the stack `key` to `value`.
+     *
+     * @private
+     * @name set
+     * @memberOf Stack
+     * @param {string} key The key of the value to set.
+     * @param {*} value The value to set.
+     * @returns {Object} Returns the stack cache instance.
+     */
+    function stackSet(key, value) {
+      var data = this.__data__;
+      if (data instanceof ListCache) {
+        var pairs = data.__data__;
+        if (!Map$1 || (pairs.length < LARGE_ARRAY_SIZE - 1)) {
+          pairs.push([key, value]);
+          this.size = ++data.size;
+          return this;
+        }
+        data = this.__data__ = new MapCache(pairs);
+      }
+      data.set(key, value);
+      this.size = data.size;
+      return this;
+    }
+
+    /**
+     * Creates a stack cache object to store key-value pairs.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [entries] The key-value pairs to cache.
+     */
+    function Stack(entries) {
+      var data = this.__data__ = new ListCache(entries);
+      this.size = data.size;
+    }
+
+    // Add methods to `Stack`.
+    Stack.prototype.clear = stackClear;
+    Stack.prototype['delete'] = stackDelete;
+    Stack.prototype.get = stackGet;
+    Stack.prototype.has = stackHas;
+    Stack.prototype.set = stackSet;
+
+    /**
+     * A specialized version of `_.filter` for arrays without support for
+     * iteratee shorthands.
+     *
+     * @private
+     * @param {Array} [array] The array to iterate over.
+     * @param {Function} predicate The function invoked per iteration.
+     * @returns {Array} Returns the new filtered array.
+     */
+    function arrayFilter(array, predicate) {
+      var index = -1,
+          length = array == null ? 0 : array.length,
+          resIndex = 0,
+          result = [];
+
+      while (++index < length) {
+        var value = array[index];
+        if (predicate(value, index, array)) {
+          result[resIndex++] = value;
+        }
+      }
+      return result;
+    }
+
+    /**
+     * This method returns a new empty array.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.13.0
+     * @category Util
+     * @returns {Array} Returns the new empty array.
+     * @example
+     *
+     * var arrays = _.times(2, _.stubArray);
+     *
+     * console.log(arrays);
+     * // => [[], []]
+     *
+     * console.log(arrays[0] === arrays[1]);
+     * // => false
+     */
+    function stubArray() {
+      return [];
+    }
+
+    /** Used for built-in method references. */
+    var objectProto$3 = Object.prototype;
+
+    /** Built-in value references. */
+    var propertyIsEnumerable = objectProto$3.propertyIsEnumerable;
+
+    /* Built-in method references for those with the same name as other `lodash` methods. */
+    var nativeGetSymbols = Object.getOwnPropertySymbols;
+
+    /**
+     * Creates an array of the own enumerable symbols of `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @returns {Array} Returns the array of symbols.
+     */
+    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+      if (object == null) {
+        return [];
+      }
+      object = Object(object);
+      return arrayFilter(nativeGetSymbols(object), function(symbol) {
+        return propertyIsEnumerable.call(object, symbol);
+      });
+    };
+
+    /**
+     * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
+     * `keysFunc` and `symbolsFunc` to get the enumerable property names and
+     * symbols of `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {Function} keysFunc The function to get the keys of `object`.
+     * @param {Function} symbolsFunc The function to get the symbols of `object`.
+     * @returns {Array} Returns the array of property names and symbols.
+     */
+    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+      var result = keysFunc(object);
+      return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
+    }
+
+    /**
+     * Creates an array of own enumerable property names and symbols of `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @returns {Array} Returns the array of property names and symbols.
+     */
+    function getAllKeys(object) {
+      return baseGetAllKeys(object, keys, getSymbols);
+    }
+
+    /* Built-in method references that are verified to be native. */
+    var DataView = getNative(root, 'DataView');
+
+    /* Built-in method references that are verified to be native. */
+    var Promise$1 = getNative(root, 'Promise');
+
+    /* Built-in method references that are verified to be native. */
+    var Set$1 = getNative(root, 'Set');
+
+    /** `Object#toString` result references. */
+    var mapTag$1 = '[object Map]',
+        objectTag$1 = '[object Object]',
+        promiseTag = '[object Promise]',
+        setTag$1 = '[object Set]',
+        weakMapTag = '[object WeakMap]';
+
+    var dataViewTag$1 = '[object DataView]';
+
+    /** Used to detect maps, sets, and weakmaps. */
+    var dataViewCtorString = toSource(DataView),
+        mapCtorString = toSource(Map$1),
+        promiseCtorString = toSource(Promise$1),
+        setCtorString = toSource(Set$1),
+        weakMapCtorString = toSource(WeakMap$1);
+
+    /**
+     * Gets the `toStringTag` of `value`.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @returns {string} Returns the `toStringTag`.
+     */
+    var getTag = baseGetTag;
+
+    // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
+    if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag$1) ||
+        (Map$1 && getTag(new Map$1) != mapTag$1) ||
+        (Promise$1 && getTag(Promise$1.resolve()) != promiseTag) ||
+        (Set$1 && getTag(new Set$1) != setTag$1) ||
+        (WeakMap$1 && getTag(new WeakMap$1) != weakMapTag)) {
+      getTag = function(value) {
+        var result = baseGetTag(value),
+            Ctor = result == objectTag$1 ? value.constructor : undefined,
+            ctorString = Ctor ? toSource(Ctor) : '';
+
+        if (ctorString) {
+          switch (ctorString) {
+            case dataViewCtorString: return dataViewTag$1;
+            case mapCtorString: return mapTag$1;
+            case promiseCtorString: return promiseTag;
+            case setCtorString: return setTag$1;
+            case weakMapCtorString: return weakMapTag;
+          }
+        }
+        return result;
+      };
+    }
+
+    var getTag$1 = getTag;
+
+    /** Built-in value references. */
+    var Uint8Array = root.Uint8Array;
+
+    /** Used to stand-in for `undefined` hash values. */
+    var HASH_UNDEFINED = '__lodash_hash_undefined__';
+
+    /**
+     * Adds `value` to the array cache.
+     *
+     * @private
+     * @name add
+     * @memberOf SetCache
+     * @alias push
+     * @param {*} value The value to cache.
+     * @returns {Object} Returns the cache instance.
+     */
+    function setCacheAdd(value) {
+      this.__data__.set(value, HASH_UNDEFINED);
+      return this;
+    }
+
+    /**
+     * Checks if `value` is in the array cache.
+     *
+     * @private
+     * @name has
+     * @memberOf SetCache
+     * @param {*} value The value to search for.
+     * @returns {number} Returns `true` if `value` is found, else `false`.
+     */
+    function setCacheHas(value) {
+      return this.__data__.has(value);
+    }
+
+    /**
+     *
+     * Creates an array cache object to store unique values.
+     *
+     * @private
+     * @constructor
+     * @param {Array} [values] The values to cache.
+     */
+    function SetCache(values) {
+      var index = -1,
+          length = values == null ? 0 : values.length;
+
+      this.__data__ = new MapCache;
+      while (++index < length) {
+        this.add(values[index]);
+      }
+    }
+
+    // Add methods to `SetCache`.
+    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+    SetCache.prototype.has = setCacheHas;
+
+    /**
+     * A specialized version of `_.some` for arrays without support for iteratee
+     * shorthands.
+     *
+     * @private
+     * @param {Array} [array] The array to iterate over.
+     * @param {Function} predicate The function invoked per iteration.
+     * @returns {boolean} Returns `true` if any element passes the predicate check,
+     *  else `false`.
+     */
+    function arraySome(array, predicate) {
+      var index = -1,
+          length = array == null ? 0 : array.length;
+
+      while (++index < length) {
+        if (predicate(array[index], index, array)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Checks if a `cache` value for `key` exists.
+     *
+     * @private
+     * @param {Object} cache The cache to query.
+     * @param {string} key The key of the entry to check.
+     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+     */
+    function cacheHas(cache, key) {
+      return cache.has(key);
+    }
+
+    /** Used to compose bitmasks for value comparisons. */
+    var COMPARE_PARTIAL_FLAG$5 = 1,
+        COMPARE_UNORDERED_FLAG$3 = 2;
+
+    /**
+     * A specialized version of `baseIsEqualDeep` for arrays with support for
+     * partial deep comparisons.
+     *
+     * @private
+     * @param {Array} array The array to compare.
+     * @param {Array} other The other array to compare.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+     * @param {Function} customizer The function to customize comparisons.
+     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {Object} stack Tracks traversed `array` and `other` objects.
+     * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
+     */
+    function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG$5,
+          arrLength = array.length,
+          othLength = other.length;
+
+      if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
+        return false;
+      }
+      // Check that cyclic values are equal.
+      var arrStacked = stack.get(array);
+      var othStacked = stack.get(other);
+      if (arrStacked && othStacked) {
+        return arrStacked == other && othStacked == array;
+      }
+      var index = -1,
+          result = true,
+          seen = (bitmask & COMPARE_UNORDERED_FLAG$3) ? new SetCache : undefined;
+
+      stack.set(array, other);
+      stack.set(other, array);
+
+      // Ignore non-index properties.
+      while (++index < arrLength) {
+        var arrValue = array[index],
+            othValue = other[index];
+
+        if (customizer) {
+          var compared = isPartial
+            ? customizer(othValue, arrValue, index, other, array, stack)
+            : customizer(arrValue, othValue, index, array, other, stack);
+        }
+        if (compared !== undefined) {
+          if (compared) {
+            continue;
+          }
+          result = false;
+          break;
+        }
+        // Recursively compare arrays (susceptible to call stack limits).
+        if (seen) {
+          if (!arraySome(other, function(othValue, othIndex) {
+                if (!cacheHas(seen, othIndex) &&
+                    (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+                  return seen.push(othIndex);
+                }
+              })) {
+            result = false;
+            break;
+          }
+        } else if (!(
+              arrValue === othValue ||
+                equalFunc(arrValue, othValue, bitmask, customizer, stack)
+            )) {
+          result = false;
+          break;
+        }
+      }
+      stack['delete'](array);
+      stack['delete'](other);
+      return result;
+    }
+
+    /**
+     * Converts `map` to its key-value pairs.
+     *
+     * @private
+     * @param {Object} map The map to convert.
+     * @returns {Array} Returns the key-value pairs.
+     */
+    function mapToArray(map) {
+      var index = -1,
+          result = Array(map.size);
+
+      map.forEach(function(value, key) {
+        result[++index] = [key, value];
+      });
+      return result;
+    }
+
+    /**
+     * Converts `set` to an array of its values.
+     *
+     * @private
+     * @param {Object} set The set to convert.
+     * @returns {Array} Returns the values.
+     */
+    function setToArray(set) {
+      var index = -1,
+          result = Array(set.size);
+
+      set.forEach(function(value) {
+        result[++index] = value;
+      });
+      return result;
+    }
+
+    /** Used to compose bitmasks for value comparisons. */
+    var COMPARE_PARTIAL_FLAG$4 = 1,
+        COMPARE_UNORDERED_FLAG$2 = 2;
+
+    /** `Object#toString` result references. */
+    var boolTag = '[object Boolean]',
+        dateTag = '[object Date]',
+        errorTag = '[object Error]',
+        mapTag = '[object Map]',
+        numberTag = '[object Number]',
+        regexpTag = '[object RegExp]',
+        setTag = '[object Set]',
+        stringTag = '[object String]',
+        symbolTag = '[object Symbol]';
+
+    var arrayBufferTag = '[object ArrayBuffer]',
+        dataViewTag = '[object DataView]';
+
+    /** Used to convert symbols to primitives and strings. */
+    var symbolProto = Symbol$1 ? Symbol$1.prototype : undefined,
+        symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+
+    /**
+     * A specialized version of `baseIsEqualDeep` for comparing objects of
+     * the same `toStringTag`.
+     *
+     * **Note:** This function only supports comparing values with tags of
+     * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+     *
+     * @private
+     * @param {Object} object The object to compare.
+     * @param {Object} other The other object to compare.
+     * @param {string} tag The `toStringTag` of the objects to compare.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+     * @param {Function} customizer The function to customize comparisons.
+     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {Object} stack Tracks traversed `object` and `other` objects.
+     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+     */
+    function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+      switch (tag) {
+        case dataViewTag:
+          if ((object.byteLength != other.byteLength) ||
+              (object.byteOffset != other.byteOffset)) {
+            return false;
+          }
+          object = object.buffer;
+          other = other.buffer;
+
+        case arrayBufferTag:
+          if ((object.byteLength != other.byteLength) ||
+              !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
+            return false;
+          }
+          return true;
+
+        case boolTag:
+        case dateTag:
+        case numberTag:
+          // Coerce booleans to `1` or `0` and dates to milliseconds.
+          // Invalid dates are coerced to `NaN`.
+          return eq(+object, +other);
+
+        case errorTag:
+          return object.name == other.name && object.message == other.message;
+
+        case regexpTag:
+        case stringTag:
+          // Coerce regexes to strings and treat strings, primitives and objects,
+          // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
+          // for more details.
+          return object == (other + '');
+
+        case mapTag:
+          var convert = mapToArray;
+
+        case setTag:
+          var isPartial = bitmask & COMPARE_PARTIAL_FLAG$4;
+          convert || (convert = setToArray);
+
+          if (object.size != other.size && !isPartial) {
+            return false;
+          }
+          // Assume cyclic values are equal.
+          var stacked = stack.get(object);
+          if (stacked) {
+            return stacked == other;
+          }
+          bitmask |= COMPARE_UNORDERED_FLAG$2;
+
+          // Recursively compare objects (susceptible to call stack limits).
+          stack.set(object, other);
+          var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+          stack['delete'](object);
+          return result;
+
+        case symbolTag:
+          if (symbolValueOf) {
+            return symbolValueOf.call(object) == symbolValueOf.call(other);
+          }
+      }
+      return false;
+    }
+
+    /** Used to compose bitmasks for value comparisons. */
+    var COMPARE_PARTIAL_FLAG$3 = 1;
+
+    /** Used for built-in method references. */
+    var objectProto$2 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
+
+    /**
+     * A specialized version of `baseIsEqualDeep` for objects with support for
+     * partial deep comparisons.
+     *
+     * @private
+     * @param {Object} object The object to compare.
+     * @param {Object} other The other object to compare.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+     * @param {Function} customizer The function to customize comparisons.
+     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {Object} stack Tracks traversed `object` and `other` objects.
+     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+     */
+    function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3,
+          objProps = getAllKeys(object),
+          objLength = objProps.length,
+          othProps = getAllKeys(other),
+          othLength = othProps.length;
+
+      if (objLength != othLength && !isPartial) {
+        return false;
+      }
+      var index = objLength;
+      while (index--) {
+        var key = objProps[index];
+        if (!(isPartial ? key in other : hasOwnProperty$2.call(other, key))) {
+          return false;
+        }
+      }
+      // Check that cyclic values are equal.
+      var objStacked = stack.get(object);
+      var othStacked = stack.get(other);
+      if (objStacked && othStacked) {
+        return objStacked == other && othStacked == object;
+      }
+      var result = true;
+      stack.set(object, other);
+      stack.set(other, object);
+
+      var skipCtor = isPartial;
+      while (++index < objLength) {
+        key = objProps[index];
+        var objValue = object[key],
+            othValue = other[key];
+
+        if (customizer) {
+          var compared = isPartial
+            ? customizer(othValue, objValue, key, other, object, stack)
+            : customizer(objValue, othValue, key, object, other, stack);
+        }
+        // Recursively compare objects (susceptible to call stack limits).
+        if (!(compared === undefined
+              ? (objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack))
+              : compared
+            )) {
+          result = false;
+          break;
+        }
+        skipCtor || (skipCtor = key == 'constructor');
+      }
+      if (result && !skipCtor) {
+        var objCtor = object.constructor,
+            othCtor = other.constructor;
+
+        // Non `Object` object instances with different constructors are not equal.
+        if (objCtor != othCtor &&
+            ('constructor' in object && 'constructor' in other) &&
+            !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
+              typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+          result = false;
+        }
+      }
+      stack['delete'](object);
+      stack['delete'](other);
+      return result;
+    }
+
+    /** Used to compose bitmasks for value comparisons. */
+    var COMPARE_PARTIAL_FLAG$2 = 1;
+
+    /** `Object#toString` result references. */
+    var argsTag = '[object Arguments]',
+        arrayTag = '[object Array]',
+        objectTag = '[object Object]';
+
+    /** Used for built-in method references. */
+    var objectProto$1 = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
+
+    /**
+     * A specialized version of `baseIsEqual` for arrays and objects which performs
+     * deep comparisons and tracks traversed objects enabling objects with circular
+     * references to be compared.
+     *
+     * @private
+     * @param {Object} object The object to compare.
+     * @param {Object} other The other object to compare.
+     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+     * @param {Function} customizer The function to customize comparisons.
+     * @param {Function} equalFunc The function to determine equivalents of values.
+     * @param {Object} [stack] Tracks traversed `object` and `other` objects.
+     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+     */
+    function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+      var objIsArr = isArray(object),
+          othIsArr = isArray(other),
+          objTag = objIsArr ? arrayTag : getTag$1(object),
+          othTag = othIsArr ? arrayTag : getTag$1(other);
+
+      objTag = objTag == argsTag ? objectTag : objTag;
+      othTag = othTag == argsTag ? objectTag : othTag;
+
+      var objIsObj = objTag == objectTag,
+          othIsObj = othTag == objectTag,
+          isSameTag = objTag == othTag;
+
+      if (isSameTag && isBuffer(object)) {
+        if (!isBuffer(other)) {
+          return false;
+        }
+        objIsArr = true;
+        objIsObj = false;
+      }
+      if (isSameTag && !objIsObj) {
+        stack || (stack = new Stack);
+        return (objIsArr || isTypedArray(object))
+          ? equalArrays(object, other, bitmask, customizer, equalFunc, stack)
+          : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+      }
+      if (!(bitmask & COMPARE_PARTIAL_FLAG$2)) {
+        var objIsWrapped = objIsObj && hasOwnProperty$1.call(object, '__wrapped__'),
+            othIsWrapped = othIsObj && hasOwnProperty$1.call(other, '__wrapped__');
+
+        if (objIsWrapped || othIsWrapped) {
+          var objUnwrapped = objIsWrapped ? object.value() : object,
+              othUnwrapped = othIsWrapped ? other.value() : other;
+
+          stack || (stack = new Stack);
+          return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+        }
+      }
+      if (!isSameTag) {
+        return false;
+      }
+      stack || (stack = new Stack);
+      return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+    }
+
+    /**
+     * The base implementation of `_.isEqual` which supports partial comparisons
+     * and tracks traversed objects.
+     *
+     * @private
+     * @param {*} value The value to compare.
+     * @param {*} other The other value to compare.
+     * @param {boolean} bitmask The bitmask flags.
+     *  1 - Unordered comparison
+     *  2 - Partial comparison
+     * @param {Function} [customizer] The function to customize comparisons.
+     * @param {Object} [stack] Tracks traversed `value` and `other` objects.
+     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+     */
+    function baseIsEqual(value, other, bitmask, customizer, stack) {
+      if (value === other) {
+        return true;
+      }
+      if (value == null || other == null || (!isObjectLike(value) && !isObjectLike(other))) {
+        return value !== value && other !== other;
+      }
+      return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+    }
+
+    /** Used to compose bitmasks for value comparisons. */
+    var COMPARE_PARTIAL_FLAG$1 = 1,
+        COMPARE_UNORDERED_FLAG$1 = 2;
+
+    /**
+     * The base implementation of `_.isMatch` without support for iteratee shorthands.
+     *
+     * @private
+     * @param {Object} object The object to inspect.
+     * @param {Object} source The object of property values to match.
+     * @param {Array} matchData The property names, values, and compare flags to match.
+     * @param {Function} [customizer] The function to customize comparisons.
+     * @returns {boolean} Returns `true` if `object` is a match, else `false`.
+     */
+    function baseIsMatch(object, source, matchData, customizer) {
+      var index = matchData.length,
+          length = index,
+          noCustomizer = !customizer;
+
+      if (object == null) {
+        return !length;
+      }
+      object = Object(object);
+      while (index--) {
+        var data = matchData[index];
+        if ((noCustomizer && data[2])
+              ? data[1] !== object[data[0]]
+              : !(data[0] in object)
+            ) {
+          return false;
+        }
+      }
+      while (++index < length) {
+        data = matchData[index];
+        var key = data[0],
+            objValue = object[key],
+            srcValue = data[1];
+
+        if (noCustomizer && data[2]) {
+          if (objValue === undefined && !(key in object)) {
+            return false;
+          }
+        } else {
+          var stack = new Stack;
+          if (customizer) {
+            var result = customizer(objValue, srcValue, key, object, source, stack);
+          }
+          if (!(result === undefined
+                ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$1 | COMPARE_UNORDERED_FLAG$1, customizer, stack)
+                : result
+              )) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    /**
+     * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` if suitable for strict
+     *  equality comparisons, else `false`.
+     */
+    function isStrictComparable(value) {
+      return value === value && !isObject(value);
+    }
+
+    /**
+     * Gets the property names, values, and compare flags of `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @returns {Array} Returns the match data of `object`.
+     */
+    function getMatchData(object) {
+      var result = keys(object),
+          length = result.length;
+
+      while (length--) {
+        var key = result[length],
+            value = object[key];
+
+        result[length] = [key, value, isStrictComparable(value)];
+      }
+      return result;
+    }
+
+    /**
+     * A specialized version of `matchesProperty` for source values suitable
+     * for strict equality comparisons, i.e. `===`.
+     *
+     * @private
+     * @param {string} key The key of the property to get.
+     * @param {*} srcValue The value to match.
+     * @returns {Function} Returns the new spec function.
+     */
+    function matchesStrictComparable(key, srcValue) {
+      return function(object) {
+        if (object == null) {
+          return false;
+        }
+        return object[key] === srcValue &&
+          (srcValue !== undefined || (key in Object(object)));
+      };
+    }
+
+    /**
+     * The base implementation of `_.matches` which doesn't clone `source`.
+     *
+     * @private
+     * @param {Object} source The object of property values to match.
+     * @returns {Function} Returns the new spec function.
+     */
+    function baseMatches(source) {
+      var matchData = getMatchData(source);
+      if (matchData.length == 1 && matchData[0][2]) {
+        return matchesStrictComparable(matchData[0][0], matchData[0][1]);
+      }
+      return function(object) {
+        return object === source || baseIsMatch(object, source, matchData);
+      };
+    }
+
+    /**
+     * The base implementation of `_.hasIn` without support for deep paths.
+     *
+     * @private
+     * @param {Object} [object] The object to query.
+     * @param {Array|string} key The key to check.
+     * @returns {boolean} Returns `true` if `key` exists, else `false`.
+     */
+    function baseHasIn(object, key) {
+      return object != null && key in Object(object);
+    }
+
+    /**
+     * Checks if `path` exists on `object`.
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {Array|string} path The path to check.
+     * @param {Function} hasFunc The function to check properties.
+     * @returns {boolean} Returns `true` if `path` exists, else `false`.
+     */
+    function hasPath(object, path, hasFunc) {
+      path = castPath(path, object);
+
+      var index = -1,
+          length = path.length,
+          result = false;
+
+      while (++index < length) {
+        var key = toKey(path[index]);
+        if (!(result = object != null && hasFunc(object, key))) {
+          break;
+        }
+        object = object[key];
+      }
+      if (result || ++index != length) {
+        return result;
+      }
+      length = object == null ? 0 : object.length;
+      return !!length && isLength(length) && isIndex(key, length) &&
+        (isArray(object) || isArguments(object));
+    }
+
+    /**
+     * Checks if `path` is a direct or inherited property of `object`.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Object
+     * @param {Object} object The object to query.
+     * @param {Array|string} path The path to check.
+     * @returns {boolean} Returns `true` if `path` exists, else `false`.
+     * @example
+     *
+     * var object = _.create({ 'a': _.create({ 'b': 2 }) });
+     *
+     * _.hasIn(object, 'a');
+     * // => true
+     *
+     * _.hasIn(object, 'a.b');
+     * // => true
+     *
+     * _.hasIn(object, ['a', 'b']);
+     * // => true
+     *
+     * _.hasIn(object, 'b');
+     * // => false
+     */
+    function hasIn(object, path) {
+      return object != null && hasPath(object, path, baseHasIn);
+    }
+
+    /** Used to compose bitmasks for value comparisons. */
+    var COMPARE_PARTIAL_FLAG = 1,
+        COMPARE_UNORDERED_FLAG = 2;
+
+    /**
+     * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
+     *
+     * @private
+     * @param {string} path The path of the property to get.
+     * @param {*} srcValue The value to match.
+     * @returns {Function} Returns the new spec function.
+     */
+    function baseMatchesProperty(path, srcValue) {
+      if (isKey(path) && isStrictComparable(srcValue)) {
+        return matchesStrictComparable(toKey(path), srcValue);
+      }
+      return function(object) {
+        var objValue = get(object, path);
+        return (objValue === undefined && objValue === srcValue)
+          ? hasIn(object, path)
+          : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
+      };
+    }
+
+    /**
+     * The base implementation of `_.property` without support for deep paths.
+     *
+     * @private
+     * @param {string} key The key of the property to get.
+     * @returns {Function} Returns the new accessor function.
+     */
+    function baseProperty(key) {
+      return function(object) {
+        return object == null ? undefined : object[key];
+      };
+    }
+
+    /**
+     * A specialized version of `baseProperty` which supports deep paths.
+     *
+     * @private
+     * @param {Array|string} path The path of the property to get.
+     * @returns {Function} Returns the new accessor function.
+     */
+    function basePropertyDeep(path) {
+      return function(object) {
+        return baseGet(object, path);
+      };
+    }
+
+    /**
+     * Creates a function that returns the value at `path` of a given object.
+     *
+     * @static
+     * @memberOf _
+     * @since 2.4.0
+     * @category Util
+     * @param {Array|string} path The path of the property to get.
+     * @returns {Function} Returns the new accessor function.
+     * @example
+     *
+     * var objects = [
+     *   { 'a': { 'b': 2 } },
+     *   { 'a': { 'b': 1 } }
+     * ];
+     *
+     * _.map(objects, _.property('a.b'));
+     * // => [2, 1]
+     *
+     * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
+     * // => [1, 2]
+     */
+    function property(path) {
+      return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
+    }
+
+    /**
+     * The base implementation of `_.iteratee`.
+     *
+     * @private
+     * @param {*} [value=_.identity] The value to convert to an iteratee.
+     * @returns {Function} Returns the iteratee.
+     */
+    function baseIteratee(value) {
+      // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
+      // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
+      if (typeof value == 'function') {
+        return value;
+      }
+      if (value == null) {
+        return identity;
+      }
+      if (typeof value == 'object') {
+        return isArray(value)
+          ? baseMatchesProperty(value[0], value[1])
+          : baseMatches(value);
+      }
+      return property(value);
+    }
+
+    /**
+     * A specialized version of `baseAggregator` for arrays.
+     *
+     * @private
+     * @param {Array} [array] The array to iterate over.
+     * @param {Function} setter The function to set `accumulator` values.
+     * @param {Function} iteratee The iteratee to transform keys.
+     * @param {Object} accumulator The initial aggregated object.
+     * @returns {Function} Returns `accumulator`.
+     */
+    function arrayAggregator(array, setter, iteratee, accumulator) {
+      var index = -1,
+          length = array == null ? 0 : array.length;
+
+      while (++index < length) {
+        var value = array[index];
+        setter(accumulator, value, iteratee(value), array);
+      }
+      return accumulator;
+    }
+
+    /**
+     * Creates a base function for methods like `_.forIn` and `_.forOwn`.
+     *
+     * @private
+     * @param {boolean} [fromRight] Specify iterating from right to left.
+     * @returns {Function} Returns the new base function.
+     */
+    function createBaseFor(fromRight) {
+      return function(object, iteratee, keysFunc) {
+        var index = -1,
+            iterable = Object(object),
+            props = keysFunc(object),
+            length = props.length;
+
+        while (length--) {
+          var key = props[fromRight ? length : ++index];
+          if (iteratee(iterable[key], key, iterable) === false) {
+            break;
+          }
+        }
+        return object;
+      };
+    }
+
+    /**
+     * The base implementation of `baseForOwn` which iterates over `object`
+     * properties returned by `keysFunc` and invokes `iteratee` for each property.
+     * Iteratee functions may exit iteration early by explicitly returning `false`.
+     *
+     * @private
+     * @param {Object} object The object to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @param {Function} keysFunc The function to get the keys of `object`.
+     * @returns {Object} Returns `object`.
+     */
+    var baseFor = createBaseFor();
+
+    /**
+     * The base implementation of `_.forOwn` without support for iteratee shorthands.
+     *
+     * @private
+     * @param {Object} object The object to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @returns {Object} Returns `object`.
+     */
+    function baseForOwn(object, iteratee) {
+      return object && baseFor(object, iteratee, keys);
+    }
+
+    /**
+     * Creates a `baseEach` or `baseEachRight` function.
+     *
+     * @private
+     * @param {Function} eachFunc The function to iterate over a collection.
+     * @param {boolean} [fromRight] Specify iterating from right to left.
+     * @returns {Function} Returns the new base function.
+     */
+    function createBaseEach(eachFunc, fromRight) {
+      return function(collection, iteratee) {
+        if (collection == null) {
+          return collection;
+        }
+        if (!isArrayLike(collection)) {
+          return eachFunc(collection, iteratee);
+        }
+        var length = collection.length,
+            index = fromRight ? length : -1,
+            iterable = Object(collection);
+
+        while ((fromRight ? index-- : ++index < length)) {
+          if (iteratee(iterable[index], index, iterable) === false) {
+            break;
+          }
+        }
+        return collection;
+      };
+    }
+
+    /**
+     * The base implementation of `_.forEach` without support for iteratee shorthands.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @returns {Array|Object} Returns `collection`.
+     */
+    var baseEach = createBaseEach(baseForOwn);
+
+    /**
+     * Aggregates elements of `collection` on `accumulator` with keys transformed
+     * by `iteratee` and values set by `setter`.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} setter The function to set `accumulator` values.
+     * @param {Function} iteratee The iteratee to transform keys.
+     * @param {Object} accumulator The initial aggregated object.
+     * @returns {Function} Returns `accumulator`.
+     */
+    function baseAggregator(collection, setter, iteratee, accumulator) {
+      baseEach(collection, function(value, key, collection) {
+        setter(accumulator, value, iteratee(value), collection);
+      });
+      return accumulator;
+    }
+
+    /**
+     * Creates a function like `_.groupBy`.
+     *
+     * @private
+     * @param {Function} setter The function to set accumulator values.
+     * @param {Function} [initializer] The accumulator object initializer.
+     * @returns {Function} Returns the new aggregator function.
+     */
+    function createAggregator(setter, initializer) {
+      return function(collection, iteratee) {
+        var func = isArray(collection) ? arrayAggregator : baseAggregator,
+            accumulator = initializer ? initializer() : {};
+
+        return func(collection, setter, baseIteratee(iteratee), accumulator);
+      };
+    }
+
+    /**
+     * The base implementation of `_.map` without support for iteratee shorthands.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} iteratee The function invoked per iteration.
+     * @returns {Array} Returns the new mapped array.
+     */
+    function baseMap(collection, iteratee) {
+      var index = -1,
+          result = isArrayLike(collection) ? Array(collection.length) : [];
+
+      baseEach(collection, function(value, key, collection) {
+        result[++index] = iteratee(value, key, collection);
+      });
+      return result;
+    }
+
+    /** Used for built-in method references. */
+    var objectProto = Object.prototype;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty = objectProto.hasOwnProperty;
+
+    /**
+     * Creates an object composed of keys generated from the results of running
+     * each element of `collection` thru `iteratee`. The order of grouped values
+     * is determined by the order they occur in `collection`. The corresponding
+     * value of each key is an array of elements responsible for generating the
+     * key. The iteratee is invoked with one argument: (value).
+     *
+     * @static
+     * @memberOf _
+     * @since 0.1.0
+     * @category Collection
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
+     * @returns {Object} Returns the composed aggregate object.
+     * @example
+     *
+     * _.groupBy([6.1, 4.2, 6.3], Math.floor);
+     * // => { '4': [4.2], '6': [6.1, 6.3] }
+     *
+     * // The `_.property` iteratee shorthand.
+     * _.groupBy(['one', 'two', 'three'], 'length');
+     * // => { '3': ['one', 'two'], '5': ['three'] }
+     */
+    var groupBy = createAggregator(function(result, value, key) {
+      if (hasOwnProperty.call(result, key)) {
+        result[key].push(value);
+      } else {
+        baseAssignValue(result, key, [value]);
+      }
+    });
+
+    /**
+     * The base implementation of `_.sortBy` which uses `comparer` to define the
+     * sort order of `array` and replaces criteria objects with their corresponding
+     * values.
+     *
+     * @private
+     * @param {Array} array The array to sort.
+     * @param {Function} comparer The function to define sort order.
+     * @returns {Array} Returns `array`.
+     */
+    function baseSortBy(array, comparer) {
+      var length = array.length;
+
+      array.sort(comparer);
+      while (length--) {
+        array[length] = array[length].value;
+      }
+      return array;
+    }
+
+    /**
+     * Compares values to sort them in ascending order.
+     *
+     * @private
+     * @param {*} value The value to compare.
+     * @param {*} other The other value to compare.
+     * @returns {number} Returns the sort order indicator for `value`.
+     */
+    function compareAscending(value, other) {
+      if (value !== other) {
+        var valIsDefined = value !== undefined,
+            valIsNull = value === null,
+            valIsReflexive = value === value,
+            valIsSymbol = isSymbol(value);
+
+        var othIsDefined = other !== undefined,
+            othIsNull = other === null,
+            othIsReflexive = other === other,
+            othIsSymbol = isSymbol(other);
+
+        if ((!othIsNull && !othIsSymbol && !valIsSymbol && value > other) ||
+            (valIsSymbol && othIsDefined && othIsReflexive && !othIsNull && !othIsSymbol) ||
+            (valIsNull && othIsDefined && othIsReflexive) ||
+            (!valIsDefined && othIsReflexive) ||
+            !valIsReflexive) {
+          return 1;
+        }
+        if ((!valIsNull && !valIsSymbol && !othIsSymbol && value < other) ||
+            (othIsSymbol && valIsDefined && valIsReflexive && !valIsNull && !valIsSymbol) ||
+            (othIsNull && valIsDefined && valIsReflexive) ||
+            (!othIsDefined && valIsReflexive) ||
+            !othIsReflexive) {
+          return -1;
+        }
+      }
+      return 0;
+    }
+
+    /**
+     * Used by `_.orderBy` to compare multiple properties of a value to another
+     * and stable sort them.
+     *
+     * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
+     * specify an order of "desc" for descending or "asc" for ascending sort order
+     * of corresponding values.
+     *
+     * @private
+     * @param {Object} object The object to compare.
+     * @param {Object} other The other object to compare.
+     * @param {boolean[]|string[]} orders The order to sort by for each property.
+     * @returns {number} Returns the sort order indicator for `object`.
+     */
+    function compareMultiple(object, other, orders) {
+      var index = -1,
+          objCriteria = object.criteria,
+          othCriteria = other.criteria,
+          length = objCriteria.length,
+          ordersLength = orders.length;
+
+      while (++index < length) {
+        var result = compareAscending(objCriteria[index], othCriteria[index]);
+        if (result) {
+          if (index >= ordersLength) {
+            return result;
+          }
+          var order = orders[index];
+          return result * (order == 'desc' ? -1 : 1);
+        }
+      }
+      // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
+      // that causes it, under certain circumstances, to provide the same value for
+      // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
+      // for more details.
+      //
+      // This also ensures a stable sort in V8 and other engines.
+      // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
+      return object.index - other.index;
+    }
+
+    /**
+     * The base implementation of `_.orderBy` without param guards.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Function[]|Object[]|string[]} iteratees The iteratees to sort by.
+     * @param {string[]} orders The sort orders of `iteratees`.
+     * @returns {Array} Returns the new sorted array.
+     */
+    function baseOrderBy(collection, iteratees, orders) {
+      if (iteratees.length) {
+        iteratees = arrayMap(iteratees, function(iteratee) {
+          if (isArray(iteratee)) {
+            return function(value) {
+              return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
+            }
+          }
+          return iteratee;
+        });
+      } else {
+        iteratees = [identity];
+      }
+
+      var index = -1;
+      iteratees = arrayMap(iteratees, baseUnary(baseIteratee));
+
+      var result = baseMap(collection, function(value, key, collection) {
+        var criteria = arrayMap(iteratees, function(iteratee) {
+          return iteratee(value);
+        });
+        return { 'criteria': criteria, 'index': ++index, 'value': value };
+      });
+
+      return baseSortBy(result, function(object, other) {
+        return compareMultiple(object, other, orders);
+      });
+    }
+
+    /**
+     * This method is like `_.sortBy` except that it allows specifying the sort
+     * orders of the iteratees to sort by. If `orders` is unspecified, all values
+     * are sorted in ascending order. Otherwise, specify an order of "desc" for
+     * descending or "asc" for ascending sort order of corresponding values.
+     *
+     * @static
+     * @memberOf _
+     * @since 4.0.0
+     * @category Collection
+     * @param {Array|Object} collection The collection to iterate over.
+     * @param {Array[]|Function[]|Object[]|string[]} [iteratees=[_.identity]]
+     *  The iteratees to sort by.
+     * @param {string[]} [orders] The sort orders of `iteratees`.
+     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.reduce`.
+     * @returns {Array} Returns the new sorted array.
+     * @example
+     *
+     * var users = [
+     *   { 'user': 'fred',   'age': 48 },
+     *   { 'user': 'barney', 'age': 34 },
+     *   { 'user': 'fred',   'age': 40 },
+     *   { 'user': 'barney', 'age': 36 }
+     * ];
+     *
+     * // Sort by `user` in ascending order and by `age` in descending order.
+     * _.orderBy(users, ['user', 'age'], ['asc', 'desc']);
+     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 40]]
+     */
+    function orderBy(collection, iteratees, orders, guard) {
+      if (collection == null) {
+        return [];
+      }
+      if (!isArray(iteratees)) {
+        iteratees = iteratees == null ? [] : [iteratees];
+      }
+      orders = guard ? undefined : orders;
+      if (!isArray(orders)) {
+        orders = orders == null ? [] : [orders];
+      }
+      return baseOrderBy(collection, iteratees, orders);
+    }
+
+    /* Built-in method references for those with the same name as other `lodash` methods. */
+    var nativeCeil = Math.ceil,
+        nativeMax = Math.max;
+
+    /**
+     * The base implementation of `_.range` and `_.rangeRight` which doesn't
+     * coerce arguments.
+     *
+     * @private
+     * @param {number} start The start of the range.
+     * @param {number} end The end of the range.
+     * @param {number} step The value to increment or decrement by.
+     * @param {boolean} [fromRight] Specify iterating from right to left.
+     * @returns {Array} Returns the range of numbers.
+     */
+    function baseRange(start, end, step, fromRight) {
+      var index = -1,
+          length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
+          result = Array(length);
+
+      while (length--) {
+        result[fromRight ? length : ++index] = start;
+        start += step;
+      }
+      return result;
+    }
+
+    /**
+     * Creates a `_.range` or `_.rangeRight` function.
+     *
+     * @private
+     * @param {boolean} [fromRight] Specify iterating from right to left.
+     * @returns {Function} Returns the new range function.
+     */
+    function createRange(fromRight) {
+      return function(start, end, step) {
+        if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
+          end = step = undefined;
+        }
+        // Ensure the sign of `-0` is preserved.
+        start = toFinite(start);
+        if (end === undefined) {
+          end = start;
+          start = 0;
+        } else {
+          end = toFinite(end);
+        }
+        step = step === undefined ? (start < end ? 1 : -1) : toFinite(step);
+        return baseRange(start, end, step, fromRight);
+      };
+    }
+
+    /**
+     * Creates an array of numbers (positive and/or negative) progressing from
+     * `start` up to, but not including, `end`. A step of `-1` is used if a negative
+     * `start` is specified without an `end` or `step`. If `end` is not specified,
+     * it's set to `start` with `start` then set to `0`.
+     *
+     * **Note:** JavaScript follows the IEEE-754 standard for resolving
+     * floating-point values which can produce unexpected results.
+     *
+     * @static
+     * @since 0.1.0
+     * @memberOf _
+     * @category Util
+     * @param {number} [start=0] The start of the range.
+     * @param {number} end The end of the range.
+     * @param {number} [step=1] The value to increment or decrement by.
+     * @returns {Array} Returns the range of numbers.
+     * @see _.inRange, _.rangeRight
+     * @example
+     *
+     * _.range(4);
+     * // => [0, 1, 2, 3]
+     *
+     * _.range(-4);
+     * // => [0, -1, -2, -3]
+     *
+     * _.range(1, 5);
+     * // => [1, 2, 3, 4]
+     *
+     * _.range(0, 20, 5);
+     * // => [0, 5, 10, 15]
+     *
+     * _.range(0, -4, -1);
+     * // => [0, -1, -2, -3]
+     *
+     * _.range(1, 4, 0);
+     * // => [1, 1, 1]
+     *
+     * _.range(0);
+     * // => []
+     */
+    var range = createRange();
+
+    var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+    function createCommonjsModule(fn) {
+      var module = { exports: {} };
+    	return fn(module, module.exports), module.exports;
+    }
+
+    var big = createCommonjsModule(function (module) {
+    (function (GLOBAL) {
+      var Big,
+
+
+    /************************************** EDITABLE DEFAULTS *****************************************/
+
+
+        // The default values below must be integers within the stated ranges.
+
+        /*
+         * The maximum number of decimal places (DP) of the results of operations involving division:
+         * div and sqrt, and pow with negative exponents.
+         */
+        DP = 20,            // 0 to MAX_DP
+
+        /*
+         * The rounding mode (RM) used when rounding to the above decimal places.
+         *
+         *  0  Towards zero (i.e. truncate, no rounding).       (ROUND_DOWN)
+         *  1  To nearest neighbour. If equidistant, round up.  (ROUND_HALF_UP)
+         *  2  To nearest neighbour. If equidistant, to even.   (ROUND_HALF_EVEN)
+         *  3  Away from zero.                                  (ROUND_UP)
+         */
+        RM = 1,             // 0, 1, 2 or 3
+
+        // The maximum value of DP and Big.DP.
+        MAX_DP = 1E6,       // 0 to 1000000
+
+        // The maximum magnitude of the exponent argument to the pow method.
+        MAX_POWER = 1E6,    // 1 to 1000000
+
+        /*
+         * The negative exponent (NE) at and beneath which toString returns exponential notation.
+         * (JavaScript numbers: -7)
+         * -1000000 is the minimum recommended exponent value of a Big.
+         */
+        NE = -7,            // 0 to -1000000
+
+        /*
+         * The positive exponent (PE) at and above which toString returns exponential notation.
+         * (JavaScript numbers: 21)
+         * 1000000 is the maximum recommended exponent value of a Big, but this limit is not enforced.
+         */
+        PE = 21,            // 0 to 1000000
+
+        /*
+         * When true, an error will be thrown if a primitive number is passed to the Big constructor,
+         * or if valueOf is called, or if toNumber is called on a Big which cannot be converted to a
+         * primitive number without a loss of precision.
+         */
+        STRICT = false,     // true or false
+
+
+    /**************************************************************************************************/
+
+
+        // Error messages.
+        NAME = '[big.js] ',
+        INVALID = NAME + 'Invalid ',
+        INVALID_DP = INVALID + 'decimal places',
+        INVALID_RM = INVALID + 'rounding mode',
+        DIV_BY_ZERO = NAME + 'Division by zero',
+
+        // The shared prototype object.
+        P = {},
+        UNDEFINED = void 0,
+        NUMERIC = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i;
+
+
+      /*
+       * Create and return a Big constructor.
+       */
+      function _Big_() {
+
+        /*
+         * The Big constructor and exported function.
+         * Create and return a new instance of a Big number object.
+         *
+         * n {number|string|Big} A numeric value.
+         */
+        function Big(n) {
+          var x = this;
+
+          // Enable constructor usage without new.
+          if (!(x instanceof Big)) return n === UNDEFINED ? _Big_() : new Big(n);
+
+          // Duplicate.
+          if (n instanceof Big) {
+            x.s = n.s;
+            x.e = n.e;
+            x.c = n.c.slice();
+          } else {
+            if (typeof n !== 'string') {
+              if (Big.strict === true) {
+                throw TypeError(INVALID + 'number');
+              }
+
+              // Minus zero?
+              n = n === 0 && 1 / n < 0 ? '-0' : String(n);
+            }
+
+            parse(x, n);
+          }
+
+          // Retain a reference to this Big constructor.
+          // Shadow Big.prototype.constructor which points to Object.
+          x.constructor = Big;
+        }
+
+        Big.prototype = P;
+        Big.DP = DP;
+        Big.RM = RM;
+        Big.NE = NE;
+        Big.PE = PE;
+        Big.strict = STRICT;
+        Big.roundDown = 0;
+        Big.roundHalfUp = 1;
+        Big.roundHalfEven = 2;
+        Big.roundUp = 3;
+
+        return Big;
+      }
+
+
+      /*
+       * Parse the number or string value passed to a Big constructor.
+       *
+       * x {Big} A Big number instance.
+       * n {number|string} A numeric value.
+       */
+      function parse(x, n) {
+        var e, i, nl;
+
+        if (!NUMERIC.test(n)) {
+          throw Error(INVALID + 'number');
+        }
+
+        // Determine sign.
+        x.s = n.charAt(0) == '-' ? (n = n.slice(1), -1) : 1;
+
+        // Decimal point?
+        if ((e = n.indexOf('.')) > -1) n = n.replace('.', '');
+
+        // Exponential form?
+        if ((i = n.search(/e/i)) > 0) {
+
+          // Determine exponent.
+          if (e < 0) e = i;
+          e += +n.slice(i + 1);
+          n = n.substring(0, i);
+        } else if (e < 0) {
+
+          // Integer.
+          e = n.length;
+        }
+
+        nl = n.length;
+
+        // Determine leading zeros.
+        for (i = 0; i < nl && n.charAt(i) == '0';) ++i;
+
+        if (i == nl) {
+
+          // Zero.
+          x.c = [x.e = 0];
+        } else {
+
+          // Determine trailing zeros.
+          for (; nl > 0 && n.charAt(--nl) == '0';);
+          x.e = e - i - 1;
+          x.c = [];
+
+          // Convert string to array of digits without leading/trailing zeros.
+          for (e = 0; i <= nl;) x.c[e++] = +n.charAt(i++);
+        }
+
+        return x;
+      }
+
+
+      /*
+       * Round Big x to a maximum of sd significant digits using rounding mode rm.
+       *
+       * x {Big} The Big to round.
+       * sd {number} Significant digits: integer, 0 to MAX_DP inclusive.
+       * rm {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+       * [more] {boolean} Whether the result of division was truncated.
+       */
+      function round(x, sd, rm, more) {
+        var xc = x.c;
+
+        if (rm === UNDEFINED) rm = x.constructor.RM;
+        if (rm !== 0 && rm !== 1 && rm !== 2 && rm !== 3) {
+          throw Error(INVALID_RM);
+        }
+
+        if (sd < 1) {
+          more =
+            rm === 3 && (more || !!xc[0]) || sd === 0 && (
+            rm === 1 && xc[0] >= 5 ||
+            rm === 2 && (xc[0] > 5 || xc[0] === 5 && (more || xc[1] !== UNDEFINED))
+          );
+
+          xc.length = 1;
+
+          if (more) {
+
+            // 1, 0.1, 0.01, 0.001, 0.0001 etc.
+            x.e = x.e - sd + 1;
+            xc[0] = 1;
+          } else {
+
+            // Zero.
+            xc[0] = x.e = 0;
+          }
+        } else if (sd < xc.length) {
+
+          // xc[sd] is the digit after the digit that may be rounded up.
+          more =
+            rm === 1 && xc[sd] >= 5 ||
+            rm === 2 && (xc[sd] > 5 || xc[sd] === 5 &&
+              (more || xc[sd + 1] !== UNDEFINED || xc[sd - 1] & 1)) ||
+            rm === 3 && (more || !!xc[0]);
+
+          // Remove any digits after the required precision.
+          xc.length = sd--;
+
+          // Round up?
+          if (more) {
+
+            // Rounding up may mean the previous digit has to be rounded up.
+            for (; ++xc[sd] > 9;) {
+              xc[sd] = 0;
+              if (!sd--) {
+                ++x.e;
+                xc.unshift(1);
+              }
+            }
+          }
+
+          // Remove trailing zeros.
+          for (sd = xc.length; !xc[--sd];) xc.pop();
+        }
+
+        return x;
+      }
+
+
+      /*
+       * Return a string representing the value of Big x in normal or exponential notation.
+       * Handles P.toExponential, P.toFixed, P.toJSON, P.toPrecision, P.toString and P.valueOf.
+       */
+      function stringify(x, doExponential, isNonzero) {
+        var e = x.e,
+          s = x.c.join(''),
+          n = s.length;
+
+        // Exponential notation?
+        if (doExponential) {
+          s = s.charAt(0) + (n > 1 ? '.' + s.slice(1) : '') + (e < 0 ? 'e' : 'e+') + e;
+
+        // Normal notation.
+        } else if (e < 0) {
+          for (; ++e;) s = '0' + s;
+          s = '0.' + s;
+        } else if (e > 0) {
+          if (++e > n) {
+            for (e -= n; e--;) s += '0';
+          } else if (e < n) {
+            s = s.slice(0, e) + '.' + s.slice(e);
+          }
+        } else if (n > 1) {
+          s = s.charAt(0) + '.' + s.slice(1);
+        }
+
+        return x.s < 0 && isNonzero ? '-' + s : s;
+      }
+
+
+      // Prototype/instance methods
+
+
+      /*
+       * Return a new Big whose value is the absolute value of this Big.
+       */
+      P.abs = function () {
+        var x = new this.constructor(this);
+        x.s = 1;
+        return x;
+      };
+
+
+      /*
+       * Return 1 if the value of this Big is greater than the value of Big y,
+       *       -1 if the value of this Big is less than the value of Big y, or
+       *        0 if they have the same value.
+       */
+      P.cmp = function (y) {
+        var isneg,
+          x = this,
+          xc = x.c,
+          yc = (y = new x.constructor(y)).c,
+          i = x.s,
+          j = y.s,
+          k = x.e,
+          l = y.e;
+
+        // Either zero?
+        if (!xc[0] || !yc[0]) return !xc[0] ? !yc[0] ? 0 : -j : i;
+
+        // Signs differ?
+        if (i != j) return i;
+
+        isneg = i < 0;
+
+        // Compare exponents.
+        if (k != l) return k > l ^ isneg ? 1 : -1;
+
+        j = (k = xc.length) < (l = yc.length) ? k : l;
+
+        // Compare digit by digit.
+        for (i = -1; ++i < j;) {
+          if (xc[i] != yc[i]) return xc[i] > yc[i] ^ isneg ? 1 : -1;
+        }
+
+        // Compare lengths.
+        return k == l ? 0 : k > l ^ isneg ? 1 : -1;
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big divided by the value of Big y, rounded,
+       * if necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
+       */
+      P.div = function (y) {
+        var x = this,
+          Big = x.constructor,
+          a = x.c,                  // dividend
+          b = (y = new Big(y)).c,   // divisor
+          k = x.s == y.s ? 1 : -1,
+          dp = Big.DP;
+
+        if (dp !== ~~dp || dp < 0 || dp > MAX_DP) {
+          throw Error(INVALID_DP);
+        }
+
+        // Divisor is zero?
+        if (!b[0]) {
+          throw Error(DIV_BY_ZERO);
+        }
+
+        // Dividend is 0? Return +-0.
+        if (!a[0]) {
+          y.s = k;
+          y.c = [y.e = 0];
+          return y;
+        }
+
+        var bl, bt, n, cmp, ri,
+          bz = b.slice(),
+          ai = bl = b.length,
+          al = a.length,
+          r = a.slice(0, bl),   // remainder
+          rl = r.length,
+          q = y,                // quotient
+          qc = q.c = [],
+          qi = 0,
+          p = dp + (q.e = x.e - y.e) + 1;    // precision of the result
+
+        q.s = k;
+        k = p < 0 ? 0 : p;
+
+        // Create version of divisor with leading zero.
+        bz.unshift(0);
+
+        // Add zeros to make remainder as long as divisor.
+        for (; rl++ < bl;) r.push(0);
+
+        do {
+
+          // n is how many times the divisor goes into current remainder.
+          for (n = 0; n < 10; n++) {
+
+            // Compare divisor and remainder.
+            if (bl != (rl = r.length)) {
+              cmp = bl > rl ? 1 : -1;
+            } else {
+              for (ri = -1, cmp = 0; ++ri < bl;) {
+                if (b[ri] != r[ri]) {
+                  cmp = b[ri] > r[ri] ? 1 : -1;
+                  break;
+                }
+              }
+            }
+
+            // If divisor < remainder, subtract divisor from remainder.
+            if (cmp < 0) {
+
+              // Remainder can't be more than 1 digit longer than divisor.
+              // Equalise lengths using divisor with extra leading zero?
+              for (bt = rl == bl ? b : bz; rl;) {
+                if (r[--rl] < bt[rl]) {
+                  ri = rl;
+                  for (; ri && !r[--ri];) r[ri] = 9;
+                  --r[ri];
+                  r[rl] += 10;
+                }
+                r[rl] -= bt[rl];
+              }
+
+              for (; !r[0];) r.shift();
+            } else {
+              break;
+            }
+          }
+
+          // Add the digit n to the result array.
+          qc[qi++] = cmp ? n : ++n;
+
+          // Update the remainder.
+          if (r[0] && cmp) r[rl] = a[ai] || 0;
+          else r = [a[ai]];
+
+        } while ((ai++ < al || r[0] !== UNDEFINED) && k--);
+
+        // Leading zero? Do not remove if result is simply zero (qi == 1).
+        if (!qc[0] && qi != 1) {
+
+          // There can't be more than one zero.
+          qc.shift();
+          q.e--;
+          p--;
+        }
+
+        // Round?
+        if (qi > p) round(q, p, Big.RM, r[0] !== UNDEFINED);
+
+        return q;
+      };
+
+
+      /*
+       * Return true if the value of this Big is equal to the value of Big y, otherwise return false.
+       */
+      P.eq = function (y) {
+        return this.cmp(y) === 0;
+      };
+
+
+      /*
+       * Return true if the value of this Big is greater than the value of Big y, otherwise return
+       * false.
+       */
+      P.gt = function (y) {
+        return this.cmp(y) > 0;
+      };
+
+
+      /*
+       * Return true if the value of this Big is greater than or equal to the value of Big y, otherwise
+       * return false.
+       */
+      P.gte = function (y) {
+        return this.cmp(y) > -1;
+      };
+
+
+      /*
+       * Return true if the value of this Big is less than the value of Big y, otherwise return false.
+       */
+      P.lt = function (y) {
+        return this.cmp(y) < 0;
+      };
+
+
+      /*
+       * Return true if the value of this Big is less than or equal to the value of Big y, otherwise
+       * return false.
+       */
+      P.lte = function (y) {
+        return this.cmp(y) < 1;
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big minus the value of Big y.
+       */
+      P.minus = P.sub = function (y) {
+        var i, j, t, xlty,
+          x = this,
+          Big = x.constructor,
+          a = x.s,
+          b = (y = new Big(y)).s;
+
+        // Signs differ?
+        if (a != b) {
+          y.s = -b;
+          return x.plus(y);
+        }
+
+        var xc = x.c.slice(),
+          xe = x.e,
+          yc = y.c,
+          ye = y.e;
+
+        // Either zero?
+        if (!xc[0] || !yc[0]) {
+          if (yc[0]) {
+            y.s = -b;
+          } else if (xc[0]) {
+            y = new Big(x);
+          } else {
+            y.s = 1;
+          }
+          return y;
+        }
+
+        // Determine which is the bigger number. Prepend zeros to equalise exponents.
+        if (a = xe - ye) {
+
+          if (xlty = a < 0) {
+            a = -a;
+            t = xc;
+          } else {
+            ye = xe;
+            t = yc;
+          }
+
+          t.reverse();
+          for (b = a; b--;) t.push(0);
+          t.reverse();
+        } else {
+
+          // Exponents equal. Check digit by digit.
+          j = ((xlty = xc.length < yc.length) ? xc : yc).length;
+
+          for (a = b = 0; b < j; b++) {
+            if (xc[b] != yc[b]) {
+              xlty = xc[b] < yc[b];
+              break;
+            }
+          }
+        }
+
+        // x < y? Point xc to the array of the bigger number.
+        if (xlty) {
+          t = xc;
+          xc = yc;
+          yc = t;
+          y.s = -y.s;
+        }
+
+        /*
+         * Append zeros to xc if shorter. No need to add zeros to yc if shorter as subtraction only
+         * needs to start at yc.length.
+         */
+        if ((b = (j = yc.length) - (i = xc.length)) > 0) for (; b--;) xc[i++] = 0;
+
+        // Subtract yc from xc.
+        for (b = i; j > a;) {
+          if (xc[--j] < yc[j]) {
+            for (i = j; i && !xc[--i];) xc[i] = 9;
+            --xc[i];
+            xc[j] += 10;
+          }
+
+          xc[j] -= yc[j];
+        }
+
+        // Remove trailing zeros.
+        for (; xc[--b] === 0;) xc.pop();
+
+        // Remove leading zeros and adjust exponent accordingly.
+        for (; xc[0] === 0;) {
+          xc.shift();
+          --ye;
+        }
+
+        if (!xc[0]) {
+
+          // n - n = +0
+          y.s = 1;
+
+          // Result must be zero.
+          xc = [ye = 0];
+        }
+
+        y.c = xc;
+        y.e = ye;
+
+        return y;
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big modulo the value of Big y.
+       */
+      P.mod = function (y) {
+        var ygtx,
+          x = this,
+          Big = x.constructor,
+          a = x.s,
+          b = (y = new Big(y)).s;
+
+        if (!y.c[0]) {
+          throw Error(DIV_BY_ZERO);
+        }
+
+        x.s = y.s = 1;
+        ygtx = y.cmp(x) == 1;
+        x.s = a;
+        y.s = b;
+
+        if (ygtx) return new Big(x);
+
+        a = Big.DP;
+        b = Big.RM;
+        Big.DP = Big.RM = 0;
+        x = x.div(y);
+        Big.DP = a;
+        Big.RM = b;
+
+        return this.minus(x.times(y));
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big plus the value of Big y.
+       */
+      P.plus = P.add = function (y) {
+        var e, k, t,
+          x = this,
+          Big = x.constructor;
+
+        y = new Big(y);
+
+        // Signs differ?
+        if (x.s != y.s) {
+          y.s = -y.s;
+          return x.minus(y);
+        }
+
+        var xe = x.e,
+          xc = x.c,
+          ye = y.e,
+          yc = y.c;
+
+        // Either zero?
+        if (!xc[0] || !yc[0]) {
+          if (!yc[0]) {
+            if (xc[0]) {
+              y = new Big(x);
+            } else {
+              y.s = x.s;
+            }
+          }
+          return y;
+        }
+
+        xc = xc.slice();
+
+        // Prepend zeros to equalise exponents.
+        // Note: reverse faster than unshifts.
+        if (e = xe - ye) {
+          if (e > 0) {
+            ye = xe;
+            t = yc;
+          } else {
+            e = -e;
+            t = xc;
+          }
+
+          t.reverse();
+          for (; e--;) t.push(0);
+          t.reverse();
+        }
+
+        // Point xc to the longer array.
+        if (xc.length - yc.length < 0) {
+          t = yc;
+          yc = xc;
+          xc = t;
+        }
+
+        e = yc.length;
+
+        // Only start adding at yc.length - 1 as the further digits of xc can be left as they are.
+        for (k = 0; e; xc[e] %= 10) k = (xc[--e] = xc[e] + yc[e] + k) / 10 | 0;
+
+        // No need to check for zero, as +x + +y != 0 && -x + -y != 0
+
+        if (k) {
+          xc.unshift(k);
+          ++ye;
+        }
+
+        // Remove trailing zeros.
+        for (e = xc.length; xc[--e] === 0;) xc.pop();
+
+        y.c = xc;
+        y.e = ye;
+
+        return y;
+      };
+
+
+      /*
+       * Return a Big whose value is the value of this Big raised to the power n.
+       * If n is negative, round to a maximum of Big.DP decimal places using rounding
+       * mode Big.RM.
+       *
+       * n {number} Integer, -MAX_POWER to MAX_POWER inclusive.
+       */
+      P.pow = function (n) {
+        var x = this,
+          one = new x.constructor('1'),
+          y = one,
+          isneg = n < 0;
+
+        if (n !== ~~n || n < -MAX_POWER || n > MAX_POWER) {
+          throw Error(INVALID + 'exponent');
+        }
+
+        if (isneg) n = -n;
+
+        for (;;) {
+          if (n & 1) y = y.times(x);
+          n >>= 1;
+          if (!n) break;
+          x = x.times(x);
+        }
+
+        return isneg ? one.div(y) : y;
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big rounded to a maximum precision of sd
+       * significant digits using rounding mode rm, or Big.RM if rm is not specified.
+       *
+       * sd {number} Significant digits: integer, 1 to MAX_DP inclusive.
+       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+       */
+      P.prec = function (sd, rm) {
+        if (sd !== ~~sd || sd < 1 || sd > MAX_DP) {
+          throw Error(INVALID + 'precision');
+        }
+        return round(new this.constructor(this), sd, rm);
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big rounded to a maximum of dp decimal places
+       * using rounding mode rm, or Big.RM if rm is not specified.
+       * If dp is negative, round to an integer which is a multiple of 10**-dp.
+       * If dp is not specified, round to 0 decimal places.
+       *
+       * dp? {number} Integer, -MAX_DP to MAX_DP inclusive.
+       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+       */
+      P.round = function (dp, rm) {
+        if (dp === UNDEFINED) dp = 0;
+        else if (dp !== ~~dp || dp < -MAX_DP || dp > MAX_DP) {
+          throw Error(INVALID_DP);
+        }
+        return round(new this.constructor(this), dp + this.e + 1, rm);
+      };
+
+
+      /*
+       * Return a new Big whose value is the square root of the value of this Big, rounded, if
+       * necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
+       */
+      P.sqrt = function () {
+        var r, c, t,
+          x = this,
+          Big = x.constructor,
+          s = x.s,
+          e = x.e,
+          half = new Big('0.5');
+
+        // Zero?
+        if (!x.c[0]) return new Big(x);
+
+        // Negative?
+        if (s < 0) {
+          throw Error(NAME + 'No square root');
+        }
+
+        // Estimate.
+        s = Math.sqrt(x + '');
+
+        // Math.sqrt underflow/overflow?
+        // Re-estimate: pass x coefficient to Math.sqrt as integer, then adjust the result exponent.
+        if (s === 0 || s === 1 / 0) {
+          c = x.c.join('');
+          if (!(c.length + e & 1)) c += '0';
+          s = Math.sqrt(c);
+          e = ((e + 1) / 2 | 0) - (e < 0 || e & 1);
+          r = new Big((s == 1 / 0 ? '5e' : (s = s.toExponential()).slice(0, s.indexOf('e') + 1)) + e);
+        } else {
+          r = new Big(s + '');
+        }
+
+        e = r.e + (Big.DP += 4);
+
+        // Newton-Raphson iteration.
+        do {
+          t = r;
+          r = half.times(t.plus(x.div(t)));
+        } while (t.c.slice(0, e).join('') !== r.c.slice(0, e).join(''));
+
+        return round(r, (Big.DP -= 4) + r.e + 1, Big.RM);
+      };
+
+
+      /*
+       * Return a new Big whose value is the value of this Big times the value of Big y.
+       */
+      P.times = P.mul = function (y) {
+        var c,
+          x = this,
+          Big = x.constructor,
+          xc = x.c,
+          yc = (y = new Big(y)).c,
+          a = xc.length,
+          b = yc.length,
+          i = x.e,
+          j = y.e;
+
+        // Determine sign of result.
+        y.s = x.s == y.s ? 1 : -1;
+
+        // Return signed 0 if either 0.
+        if (!xc[0] || !yc[0]) {
+          y.c = [y.e = 0];
+          return y;
+        }
+
+        // Initialise exponent of result as x.e + y.e.
+        y.e = i + j;
+
+        // If array xc has fewer digits than yc, swap xc and yc, and lengths.
+        if (a < b) {
+          c = xc;
+          xc = yc;
+          yc = c;
+          j = a;
+          a = b;
+          b = j;
+        }
+
+        // Initialise coefficient array of result with zeros.
+        for (c = new Array(j = a + b); j--;) c[j] = 0;
+
+        // Multiply.
+
+        // i is initially xc.length.
+        for (i = b; i--;) {
+          b = 0;
+
+          // a is yc.length.
+          for (j = a + i; j > i;) {
+
+            // Current sum of products at this digit position, plus carry.
+            b = c[j] + yc[i] * xc[j - i - 1] + b;
+            c[j--] = b % 10;
+
+            // carry
+            b = b / 10 | 0;
+          }
+
+          c[j] = b;
+        }
+
+        // Increment result exponent if there is a final carry, otherwise remove leading zero.
+        if (b) ++y.e;
+        else c.shift();
+
+        // Remove trailing zeros.
+        for (i = c.length; !c[--i];) c.pop();
+        y.c = c;
+
+        return y;
+      };
+
+
+      /*
+       * Return a string representing the value of this Big in exponential notation rounded to dp fixed
+       * decimal places using rounding mode rm, or Big.RM if rm is not specified.
+       *
+       * dp? {number} Decimal places: integer, 0 to MAX_DP inclusive.
+       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+       */
+      P.toExponential = function (dp, rm) {
+        var x = this,
+          n = x.c[0];
+
+        if (dp !== UNDEFINED) {
+          if (dp !== ~~dp || dp < 0 || dp > MAX_DP) {
+            throw Error(INVALID_DP);
+          }
+          x = round(new x.constructor(x), ++dp, rm);
+          for (; x.c.length < dp;) x.c.push(0);
+        }
+
+        return stringify(x, true, !!n);
+      };
+
+
+      /*
+       * Return a string representing the value of this Big in normal notation rounded to dp fixed
+       * decimal places using rounding mode rm, or Big.RM if rm is not specified.
+       *
+       * dp? {number} Decimal places: integer, 0 to MAX_DP inclusive.
+       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+       *
+       * (-0).toFixed(0) is '0', but (-0.1).toFixed(0) is '-0'.
+       * (-0).toFixed(1) is '0.0', but (-0.01).toFixed(1) is '-0.0'.
+       */
+      P.toFixed = function (dp, rm) {
+        var x = this,
+          n = x.c[0];
+
+        if (dp !== UNDEFINED) {
+          if (dp !== ~~dp || dp < 0 || dp > MAX_DP) {
+            throw Error(INVALID_DP);
+          }
+          x = round(new x.constructor(x), dp + x.e + 1, rm);
+
+          // x.e may have changed if the value is rounded up.
+          for (dp = dp + x.e + 1; x.c.length < dp;) x.c.push(0);
+        }
+
+        return stringify(x, false, !!n);
+      };
+
+
+      /*
+       * Return a string representing the value of this Big.
+       * Return exponential notation if this Big has a positive exponent equal to or greater than
+       * Big.PE, or a negative exponent equal to or less than Big.NE.
+       * Omit the sign for negative zero.
+       */
+      P.toJSON = P.toString = function () {
+        var x = this,
+          Big = x.constructor;
+        return stringify(x, x.e <= Big.NE || x.e >= Big.PE, !!x.c[0]);
+      };
+
+
+      /*
+       * Return the value of this Big as a primitve number.
+       */
+      P.toNumber = function () {
+        var n = Number(stringify(this, true, true));
+        if (this.constructor.strict === true && !this.eq(n.toString())) {
+          throw Error(NAME + 'Imprecise conversion');
+        }
+        return n;
+      };
+
+
+      /*
+       * Return a string representing the value of this Big rounded to sd significant digits using
+       * rounding mode rm, or Big.RM if rm is not specified.
+       * Use exponential notation if sd is less than the number of digits necessary to represent
+       * the integer part of the value in normal notation.
+       *
+       * sd {number} Significant digits: integer, 1 to MAX_DP inclusive.
+       * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+       */
+      P.toPrecision = function (sd, rm) {
+        var x = this,
+          Big = x.constructor,
+          n = x.c[0];
+
+        if (sd !== UNDEFINED) {
+          if (sd !== ~~sd || sd < 1 || sd > MAX_DP) {
+            throw Error(INVALID + 'precision');
+          }
+          x = round(new Big(x), sd, rm);
+          for (; x.c.length < sd;) x.c.push(0);
+        }
+
+        return stringify(x, sd <= x.e || x.e <= Big.NE || x.e >= Big.PE, !!n);
+      };
+
+
+      /*
+       * Return a string representing the value of this Big.
+       * Return exponential notation if this Big has a positive exponent equal to or greater than
+       * Big.PE, or a negative exponent equal to or less than Big.NE.
+       * Include the sign for negative zero.
+       */
+      P.valueOf = function () {
+        var x = this,
+          Big = x.constructor;
+        if (Big.strict === true) {
+          throw Error(NAME + 'valueOf disallowed');
+        }
+        return stringify(x, x.e <= Big.NE || x.e >= Big.PE, true);
+      };
+
+
+      // Export
+
+
+      Big = _Big_();
+
+      Big['default'] = Big.Big = Big;
+
+      //AMD.
+      if (module.exports) {
+        module.exports = Big;
+
+      //Browser.
+      } else {
+        GLOBAL.Big = Big;
+      }
+    })(commonjsGlobal);
+    });
+
+    const { STAGE, NODE_ENV } = process.env;
+    const isProd = NODE_ENV === null || NODE_ENV === void 0 ? void 0 : NODE_ENV.startsWith('prod');
+    const NetworkConfigs = {
+        polkadot: {
+            leasePeriod: 259200,
+            decimal: 10,
+            tokenSymbol: 'DOT',
+            endpoint: ''
+        },
+        kusama: {
+            leasePeriod: 129600,
+            decimal: 12,
+            tokenSymbol: 'KSM',
+            endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction'
+        },
+        rococo: {
+            leasePeriod: 14400,
+            decimal: 12,
+            tokenSymbol: 'ROC',
+            endpoint: 'https://api.subquery.network/sq/subvis-io/rococo-auction'
+        }
+    };
+    const config = Object.assign(Object.assign({}, NetworkConfigs[STAGE || 'rococo']), (!isProd && { endpoint: 'http://localhost:3000' }));
+
+    const file$a = "src/Token.svelte";
+
+    function create_fragment$b(ctx) {
+    	let div;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text(/*title*/ ctx[0]);
+    			attr_dev(div, "class", "inline-block");
+    			add_location(div, file$a, 13, 0, 421);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*title*/ 1) set_data_dev(t, /*title*/ ctx[0]);
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$b.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$b($$self, $$props, $$invalidate) {
+    	let tokenValue;
+    	let title;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Token", slots, []);
+    	let { value } = $$props;
+    	let { allowZero = false } = $$props;
+    	let { emptyDisplay = "" } = $$props;
+    	let { addSymbol = true } = $$props;
+    	const { decimal, tokenSymbol } = config;
+    	const writable_props = ["value", "allowZero", "emptyDisplay", "addSymbol"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Token> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
+    		if ("allowZero" in $$props) $$invalidate(2, allowZero = $$props.allowZero);
+    		if ("emptyDisplay" in $$props) $$invalidate(3, emptyDisplay = $$props.emptyDisplay);
+    		if ("addSymbol" in $$props) $$invalidate(4, addSymbol = $$props.addSymbol);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Big: big,
+    		config,
+    		value,
+    		allowZero,
+    		emptyDisplay,
+    		addSymbol,
+    		decimal,
+    		tokenSymbol,
+    		tokenValue,
+    		title
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
+    		if ("allowZero" in $$props) $$invalidate(2, allowZero = $$props.allowZero);
+    		if ("emptyDisplay" in $$props) $$invalidate(3, emptyDisplay = $$props.emptyDisplay);
+    		if ("addSymbol" in $$props) $$invalidate(4, addSymbol = $$props.addSymbol);
+    		if ("tokenValue" in $$props) $$invalidate(5, tokenValue = $$props.tokenValue);
+    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*value*/ 2) {
+    			$$invalidate(5, tokenValue = big(value || 0).div(10 ** decimal).toNumber());
+    		}
+
+    		if ($$self.$$.dirty & /*allowZero, tokenValue, emptyDisplay, addSymbol*/ 60) {
+    			$$invalidate(0, title = !allowZero && tokenValue == 0
+    			? emptyDisplay
+    			: tokenValue + (addSymbol ? ` ${tokenSymbol}` : ""));
+    		}
+    	};
+
+    	return [title, value, allowZero, emptyDisplay, addSymbol, tokenValue];
+    }
+
+    class Token extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
+    			value: 1,
+    			allowZero: 2,
+    			emptyDisplay: 3,
+    			addSymbol: 4
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Token",
+    			options,
+    			id: create_fragment$b.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
+    			console.warn("<Token> was created without expected prop 'value'");
+    		}
+    	}
+
+    	get value() {
+    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get allowZero() {
+    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set allowZero(value) {
+    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get emptyDisplay() {
+    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set emptyDisplay(value) {
+    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get addSymbol() {
+    		throw new Error("<Token>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set addSymbol(value) {
+    		throw new Error("<Token>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    const file$9 = "src/AuctionSlot.svelte";
+
+    // (31:8) {#if paraId}
+    function create_if_block$5(ctx) {
+    	let img;
+    	let img_src_value;
+
+    	const block = {
+    		c: function create() {
+    			img = element("img");
+    			attr_dev(img, "class", "mx-1 rounded-full");
+    			if (img.src !== (img_src_value = "./ksm-logo.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", /*paraId*/ ctx[2]);
+    			attr_dev(img, "width", "22");
+    			attr_dev(img, "height", "22");
+    			add_location(img, file$9, 31, 8, 1532);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, img, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*paraId*/ 4) {
+    				attr_dev(img, "alt", /*paraId*/ ctx[2]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(img);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$5.name,
+    		type: "if",
+    		source: "(31:8) {#if paraId}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$a(ctx) {
+    	let div15;
+    	let div2;
+    	let div0;
+    	let t0;
+    	let t1_value = /*slots*/ ctx[5].join(" - ") + "";
+    	let t1;
+    	let t2;
+    	let div1;
+    	let t3;
+    	let t4_value = (/*leaseStart*/ ctx[0] || /*blockStart*/ ctx[6]) + "";
+    	let t4;
+    	let t5;
+    	let t6_value = (/*leaseEnd*/ ctx[1] || /*blockEnd*/ ctx[7]) + "";
+    	let t6;
+    	let t7;
+    	let div14;
+    	let div6;
+    	let div3;
+    	let t9;
+    	let div5;
+    	let t10;
+    	let div4;
+    	let t11_value = (/*paraId*/ ctx[2] || "N/A") + "";
+    	let t11;
+    	let t12;
+    	let div9;
+    	let div7;
+    	let t14;
+    	let div8;
+    	let token;
+    	let t15;
+    	let div13;
+    	let div10;
+    	let t17;
+    	let div12;
+    	let div11;
+    	let t18_value = (/*wonBlocks*/ ctx[4] || "N/A") + "";
+    	let t18;
+    	let current;
+    	let if_block = /*paraId*/ ctx[2] && create_if_block$5(ctx);
+
+    	token = new Token({
+    			props: {
+    				class: "fixed-line-height",
+    				value: /*amount*/ ctx[3],
+    				emptyDisplay: "N/A"
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			div15 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			t0 = text("Slot ");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			div1 = element("div");
+    			t3 = text("Block: ");
+    			t4 = text(t4_value);
+    			t5 = text(" - ");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div14 = element("div");
+    			div6 = element("div");
+    			div3 = element("div");
+    			div3.textContent = "Current Winner";
+    			t9 = space();
+    			div5 = element("div");
+    			if (if_block) if_block.c();
+    			t10 = space();
+    			div4 = element("div");
+    			t11 = text(t11_value);
+    			t12 = space();
+    			div9 = element("div");
+    			div7 = element("div");
+    			div7.textContent = "Bid Price";
+    			t14 = space();
+    			div8 = element("div");
+    			create_component(token.$$.fragment);
+    			t15 = space();
+    			div13 = element("div");
+    			div10 = element("div");
+    			div10.textContent = "Winning Chance";
+    			t17 = space();
+    			div12 = element("div");
+    			div11 = element("div");
+    			t18 = text(t18_value);
+    			attr_dev(div0, "class", "col-span-3 text-base");
+    			add_location(div0, file$9, 22, 4, 929);
+    			attr_dev(div1, "class", "col-span-2 text-gray-400 text-xs text-right");
+    			add_location(div1, file$9, 23, 4, 998);
+    			attr_dev(div2, "class", "grid grid-cols-5 mb-2");
+    			add_location(div2, file$9, 21, 2, 889);
+    			attr_dev(div3, "class", "text-gray-400 mb-2");
+    			add_location(div3, file$9, 28, 6, 1388);
+    			attr_dev(div4, "class", "mx-1");
+    			add_location(div4, file$9, 33, 8, 1645);
+    			attr_dev(div5, "class", "flex flex-row justify-center items-center");
+    			add_location(div5, file$9, 29, 6, 1447);
+    			attr_dev(div6, "class", "text-center text-xm flex flex-col");
+    			add_location(div6, file$9, 27, 4, 1334);
+    			attr_dev(div7, "class", "text-gray-400 mb-2");
+    			add_location(div7, file$9, 37, 6, 1769);
+    			attr_dev(div8, "class", "flex flex-row justify-center items-center fixed-line-height svelte-pgbpgd");
+    			add_location(div8, file$9, 38, 6, 1823);
+    			attr_dev(div9, "class", "text-center text-xm flex flex-col");
+    			add_location(div9, file$9, 36, 4, 1715);
+    			attr_dev(div10, "class", "text-gray-400 mb-2");
+    			add_location(div10, file$9, 43, 6, 2056);
+    			attr_dev(div11, "class", "fixed-line-height svelte-pgbpgd");
+    			add_location(div11, file$9, 45, 8, 2179);
+    			attr_dev(div12, "class", "flex flex-row justify-center items-center");
+    			add_location(div12, file$9, 44, 6, 2115);
+    			attr_dev(div13, "class", "text-center text-xm flex flex-col");
+    			add_location(div13, file$9, 42, 4, 2002);
+    			attr_dev(div14, "class", "grid grid-cols-3 gap-1");
+    			add_location(div14, file$9, 26, 2, 1293);
+    			attr_dev(div15, "class", "rounded-lg p-2 col-span-6");
+    			set_style(div15, "background-color", /*bgColor*/ ctx[8]);
+    			set_style(div15, "border", "1px solid " + /*borderColor*/ ctx[9]);
+    			add_location(div15, file$9, 20, 0, 778);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div15, anchor);
+    			append_dev(div15, div2);
+    			append_dev(div2, div0);
+    			append_dev(div0, t0);
+    			append_dev(div0, t1);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div1, t3);
+    			append_dev(div1, t4);
+    			append_dev(div1, t5);
+    			append_dev(div1, t6);
+    			append_dev(div15, t7);
+    			append_dev(div15, div14);
+    			append_dev(div14, div6);
+    			append_dev(div6, div3);
+    			append_dev(div6, t9);
+    			append_dev(div6, div5);
+    			if (if_block) if_block.m(div5, null);
+    			append_dev(div5, t10);
+    			append_dev(div5, div4);
+    			append_dev(div4, t11);
+    			append_dev(div14, t12);
+    			append_dev(div14, div9);
+    			append_dev(div9, div7);
+    			append_dev(div9, t14);
+    			append_dev(div9, div8);
+    			mount_component(token, div8, null);
+    			append_dev(div14, t15);
+    			append_dev(div14, div13);
+    			append_dev(div13, div10);
+    			append_dev(div13, t17);
+    			append_dev(div13, div12);
+    			append_dev(div12, div11);
+    			append_dev(div11, t18);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if ((!current || dirty & /*slots*/ 32) && t1_value !== (t1_value = /*slots*/ ctx[5].join(" - ") + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*leaseStart, blockStart*/ 65) && t4_value !== (t4_value = (/*leaseStart*/ ctx[0] || /*blockStart*/ ctx[6]) + "")) set_data_dev(t4, t4_value);
+    			if ((!current || dirty & /*leaseEnd, blockEnd*/ 130) && t6_value !== (t6_value = (/*leaseEnd*/ ctx[1] || /*blockEnd*/ ctx[7]) + "")) set_data_dev(t6, t6_value);
+
+    			if (/*paraId*/ ctx[2]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$5(ctx);
+    					if_block.c();
+    					if_block.m(div5, t10);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if ((!current || dirty & /*paraId*/ 4) && t11_value !== (t11_value = (/*paraId*/ ctx[2] || "N/A") + "")) set_data_dev(t11, t11_value);
+    			const token_changes = {};
+    			if (dirty & /*amount*/ 8) token_changes.value = /*amount*/ ctx[3];
+    			token.$set(token_changes);
+    			if ((!current || dirty & /*wonBlocks*/ 16) && t18_value !== (t18_value = (/*wonBlocks*/ ctx[4] || "N/A") + "")) set_data_dev(t18, t18_value);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(token.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(token.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div15);
+    			if (if_block) if_block.d();
+    			destroy_component(token);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$a.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$a($$self, $$props, $$invalidate) {
+    	let slots;
+    	let blockStart;
+    	let blockEnd;
+    	let { $$slots: slots$1 = {}, $$scope } = $$props;
+    	validate_slots("AuctionSlot", slots$1, []);
+
+    	let { firstSlot } = $$props,
+    		{ lastSlot } = $$props,
+    		{ leaseStart = "" } = $$props,
+    		{ leaseEnd = "" } = $$props,
+    		{ paraId } = $$props,
+    		{ amount } = $$props,
+    		{ wonBlocks } = $$props,
+    		{ groupIdx } = $$props;
+
+    	const colorConfigs = [
+    		{
+    			bgColor: "#f5f6ff",
+    			borderColor: "#ced8ff",
+    			btnColor: "#9e89f0"
+    		},
+    		{
+    			borderColor: "#d0ebff",
+    			bgColor: "#f3faff",
+    			btnColor: "#5dbdf5"
+    		},
+    		{
+    			bgColor: "#fffcf0",
+    			borderColor: "#fcf4ba",
+    			btnColor: "#f3df2a"
+    		},
+    		{
+    			borderColor: "#d3eaea",
+    			bgColor: "#f3fbfd",
+    			btnColor: "#91dadb"
+    		}
+    	];
+
+    	const { bgColor, borderColor, btnColor } = colorConfigs[groupIdx] || {};
+
+    	const writable_props = [
+    		"firstSlot",
+    		"lastSlot",
+    		"leaseStart",
+    		"leaseEnd",
+    		"paraId",
+    		"amount",
+    		"wonBlocks",
+    		"groupIdx"
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<AuctionSlot> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("firstSlot" in $$props) $$invalidate(10, firstSlot = $$props.firstSlot);
+    		if ("lastSlot" in $$props) $$invalidate(11, lastSlot = $$props.lastSlot);
+    		if ("leaseStart" in $$props) $$invalidate(0, leaseStart = $$props.leaseStart);
+    		if ("leaseEnd" in $$props) $$invalidate(1, leaseEnd = $$props.leaseEnd);
+    		if ("paraId" in $$props) $$invalidate(2, paraId = $$props.paraId);
+    		if ("amount" in $$props) $$invalidate(3, amount = $$props.amount);
+    		if ("wonBlocks" in $$props) $$invalidate(4, wonBlocks = $$props.wonBlocks);
+    		if ("groupIdx" in $$props) $$invalidate(12, groupIdx = $$props.groupIdx);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		range,
+    		Token,
+    		config,
+    		firstSlot,
+    		lastSlot,
+    		leaseStart,
+    		leaseEnd,
+    		paraId,
+    		amount,
+    		wonBlocks,
+    		groupIdx,
+    		colorConfigs,
+    		bgColor,
+    		borderColor,
+    		btnColor,
+    		slots,
+    		blockStart,
+    		blockEnd
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("firstSlot" in $$props) $$invalidate(10, firstSlot = $$props.firstSlot);
+    		if ("lastSlot" in $$props) $$invalidate(11, lastSlot = $$props.lastSlot);
+    		if ("leaseStart" in $$props) $$invalidate(0, leaseStart = $$props.leaseStart);
+    		if ("leaseEnd" in $$props) $$invalidate(1, leaseEnd = $$props.leaseEnd);
+    		if ("paraId" in $$props) $$invalidate(2, paraId = $$props.paraId);
+    		if ("amount" in $$props) $$invalidate(3, amount = $$props.amount);
+    		if ("wonBlocks" in $$props) $$invalidate(4, wonBlocks = $$props.wonBlocks);
+    		if ("groupIdx" in $$props) $$invalidate(12, groupIdx = $$props.groupIdx);
+    		if ("slots" in $$props) $$invalidate(5, slots = $$props.slots);
+    		if ("blockStart" in $$props) $$invalidate(6, blockStart = $$props.blockStart);
+    		if ("blockEnd" in $$props) $$invalidate(7, blockEnd = $$props.blockEnd);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*firstSlot, lastSlot*/ 3072) {
+    			$$invalidate(5, slots = range(firstSlot, lastSlot + 1));
+    		}
+
+    		if ($$self.$$.dirty & /*firstSlot*/ 1024) {
+    			$$invalidate(6, blockStart = firstSlot * config.leasePeriod);
+    		}
+
+    		if ($$self.$$.dirty & /*lastSlot*/ 2048) {
+    			$$invalidate(7, blockEnd = lastSlot * config.leasePeriod);
+    		}
+    	};
+
+    	return [
+    		leaseStart,
+    		leaseEnd,
+    		paraId,
+    		amount,
+    		wonBlocks,
+    		slots,
+    		blockStart,
+    		blockEnd,
+    		bgColor,
+    		borderColor,
+    		firstSlot,
+    		lastSlot,
+    		groupIdx
+    	];
+    }
+
+    class AuctionSlot extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
+    			firstSlot: 10,
+    			lastSlot: 11,
+    			leaseStart: 0,
+    			leaseEnd: 1,
+    			paraId: 2,
+    			amount: 3,
+    			wonBlocks: 4,
+    			groupIdx: 12
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "AuctionSlot",
+    			options,
+    			id: create_fragment$a.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*firstSlot*/ ctx[10] === undefined && !("firstSlot" in props)) {
+    			console.warn("<AuctionSlot> was created without expected prop 'firstSlot'");
+    		}
+
+    		if (/*lastSlot*/ ctx[11] === undefined && !("lastSlot" in props)) {
+    			console.warn("<AuctionSlot> was created without expected prop 'lastSlot'");
+    		}
+
+    		if (/*paraId*/ ctx[2] === undefined && !("paraId" in props)) {
+    			console.warn("<AuctionSlot> was created without expected prop 'paraId'");
+    		}
+
+    		if (/*amount*/ ctx[3] === undefined && !("amount" in props)) {
+    			console.warn("<AuctionSlot> was created without expected prop 'amount'");
+    		}
+
+    		if (/*wonBlocks*/ ctx[4] === undefined && !("wonBlocks" in props)) {
+    			console.warn("<AuctionSlot> was created without expected prop 'wonBlocks'");
+    		}
+
+    		if (/*groupIdx*/ ctx[12] === undefined && !("groupIdx" in props)) {
+    			console.warn("<AuctionSlot> was created without expected prop 'groupIdx'");
+    		}
+    	}
+
+    	get firstSlot() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set firstSlot(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get lastSlot() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set lastSlot(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get leaseStart() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set leaseStart(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get leaseEnd() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set leaseEnd(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get paraId() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set paraId(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get amount() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set amount(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get wonBlocks() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set wonBlocks(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get groupIdx() {
+    		throw new Error("<AuctionSlot>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set groupIdx(value) {
+    		throw new Error("<AuctionSlot>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    const normalize = (node) => {
+        if (Array.isArray(node)) {
+            return node.map(normalize);
+        }
+        if (typeof node === 'object') {
+            return Object.entries(node).reduce((prev, [key, val]) => {
+                if (typeof val == 'object' && Array.isArray(val === null || val === void 0 ? void 0 : val['nodes'])) {
+                    return Object.assign(Object.assign({}, prev), { [key]: normalize(val['nodes']) });
+                }
+                if (Array.isArray(val)) {
+                    return Object.assign(Object.assign({}, prev), { [key]: normalize(val) });
+                }
+                return Object.assign(Object.assign({}, prev), { [key]: val });
+            }, {});
+        }
+        return node;
+    };
+    const getSlotsCombination = (start) => {
+        return [
+            // 0 - 3
+            { start, end: start + 3 },
+            // 0 - 2
+            { start, end: start + 2 },
+            // 1 - 3
+            { start: start + 1, end: start + 3 },
+            // 0 - 1
+            { start, end: start + 1 },
+            // 1 - 2
+            { start: start + 1, end: start + 2 },
+            // 2 - 3
+            { start: start + 2, end: start + 3 },
+            // 0, 1, 2, 3
+            { start, end: start },
+            { start: start + 1, end: start + 1 },
+            { start: start + 2, end: start + 2 },
+            { start: start + 3, end: start + 3 }
+        ];
+    };
+    const getTimeUnitInWord = ({ value, name }) => value > 1 ? `${value} ${value != 1 ? name + 's' : name}` : '';
+    const getTimeDiffInWord = (timeDeltaMs) => {
+        const timeUnits = [
+            { value: 86400000, name: 'day' },
+            { value: 3600000, name: 'hour' },
+            { value: 60000, name: 'min' },
+            { value: 1000, name: 'sec' }
+        ];
+        const { units } = timeUnits.reduce(({ remain, units }, unit) => {
+            const { value, name } = unit;
+            const curUnitValue = Math.floor(remain / value);
+            return { remain: remain % value, units: units.concat({ name, value: curUnitValue }) };
+        }, { remain: timeDeltaMs, units: [] });
+        return units.map(getTimeUnitInWord).join(' ');
+    };
+    const getDateFromBlockNum = (blockNum, curBlockNum, timestamp) => {
+        const diff = blockNum - curBlockNum;
+        const timeDiff = diff * 6000;
+        const date = timestamp ? new Date(timestamp) : new Date();
+        return formatter.format(new Date(date.getTime() + timeDiff)).replace(',', ' ');
+    };
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour12: false,
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    const getColSpan = (allSlots, curSlots) => {
+        const { result: occupied } = allSlots.reduce(({ result, idx }, cur) => {
+            if (cur === curSlots[idx]) {
+                return {
+                    result: result.concat(1),
+                    idx: idx + 1
+                };
+            }
+            return {
+                result: result.concat(0),
+                idx
+            };
+        }, { result: [], idx: 0 });
+        const span = occupied.filter((val) => !!val).reduce((all, cur) => all + cur, 0);
+        const startIdx = occupied.findIndex((val) => !!val);
+        const result = occupied.slice(0, startIdx).concat(span);
+        return result;
+    };
+
+    const timeStr = readable(null, function start(set) {
+        const interval = setInterval(() => {
+            set(formatter.format(new Date()));
+        }, 1000);
+        return function stop() {
+            clearInterval(interval);
+        };
+    });
+    const curAuction = writable(null);
+    const chronicle = writable(null);
+    const lastBlockNum = derived(chronicle, ($chronicle) => ($chronicle === null || $chronicle === void 0 ? void 0 : $chronicle.curBlockNum) || 0);
+    const lastBlockTime = derived(chronicle, ($chronicle) => $chronicle === null || $chronicle === void 0 ? void 0 : $chronicle.updatedAt);
+
+    const CHRONICLE_QUERY = `
+query {
   chronicle(id: "ChronicleKey"){
     curAuctionId
     curBlockNum
+    updatedAt
+  }
+}
+`;
+    const AUCTION_QUERY = `
+query ($auctionStatusFilter: AuctionFilter) {
+  parachainLeaseds {
+    nodes {
+      parachain {
+        paraId
+      }
+      firstSlot
+      lastSlot
+      winningAmount
+    }
   }
   auctions (filter: $auctionStatusFilter, first: 1) {
     nodes {
@@ -16752,65 +17116,70 @@ fragment parachainFields on Parachain {
   createdAt
 }
 `;
+    const CROWDLOAN_QUERY = `
+query {
+  crowdloans(orderBy: BLOCK_NUM_DESC) {
+    nodes {
+      id
+      parachain {
+        paraId
+        manager
+      }
+      retiring
+      depositor
+      verifier
+      cap
+      raised
+      lockExpiredBlock
+      blockNum
+      createdAt
+    }
+  }
+}
+`;
+    const CONTRIBUTORS_QUERY = `
+query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
+  crowdloan (id: $fundId) {
+    id
+    parachain {
+      paraId
+      manager
+    }
+    retiring
+    depositor
+    verifier
+    cap
+    raised
+    lockExpiredBlock
+    createdAt
+  }
+	contributions (filter: $fundIdFilter, orderBy: BLOCK_NUM_DESC) {
+    nodes {
+      id
+      account
+      amount
+      createdAt
+      blockNum
+      parachain {
+        paraId
+        manager
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}
+`;
 
-    const normalize = (node) => {
-        if (Array.isArray(node)) {
-            return node.map(normalize);
-        }
-        if (typeof node === 'object') {
-            return Object.entries(node).reduce((prev, [key, val]) => {
-                if (typeof val == 'object' && Array.isArray(val === null || val === void 0 ? void 0 : val['nodes'])) {
-                    return Object.assign(Object.assign({}, prev), { [key]: normalize(val['nodes']) });
-                }
-                if (Array.isArray(val)) {
-                    return Object.assign(Object.assign({}, prev), { [key]: normalize(val) });
-                }
-                return Object.assign(Object.assign({}, prev), { [key]: val });
-            }, {});
-        }
-        return node;
-    };
-    const getSlotsCombination = (start) => {
-        return [
-            // 0 - 3
-            { start, end: start + 3 },
-            // 0 - 2
-            { start, end: start + 2 },
-            // 1 - 3
-            { start: start + 1, end: start + 3 },
-            // 0 - 1
-            { start, end: start + 1 },
-            // 1 - 2
-            { start: start + 1, end: start + 2 },
-            // 2 - 3
-            { start: start + 2, end: start + 3 },
-            // 0, 1, 2, 3
-            { start, end: start },
-            { start: start + 1, end: start + 1 },
-            { start: start + 2, end: start + 2 },
-            { start: start + 3, end: start + 3 }
-        ];
-    };
-    const getTimeUnitInWord = ({ value, name }) => value > 1 ? `${value} ${value != 1 ? name + 's' : name}` : '';
-    const getTimeDiffInWord = (timeDeltaMs) => {
-        const timeUnits = [
-            { value: 86400000, name: 'day' },
-            { value: 3600000, name: 'hour' },
-            { value: 60000, name: 'min' },
-            { value: 1000, name: 'sec' }
-        ];
-        const { units } = timeUnits.reduce(({ remain, units }, unit) => {
-            const { value, name } = unit;
-            const curUnitValue = Math.floor(remain / value);
-            return { remain: remain % value, units: units.concat({ name, value: curUnitValue }) };
-        }, { remain: timeDeltaMs, units: [] });
-        return units.map(getTimeUnitInWord).join(' ');
-    };
-
-    const file$3 = "src/BidCard.svelte";
+    const file$8 = "src/BidCard.svelte";
 
     // (21:4) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block$3(ctx) {
     	let div;
     	let span;
     	let t0;
@@ -16823,9 +17192,9 @@ fragment parachainFields on Parachain {
     			t0 = text("From bidder ");
     			t1 = text(/*bidder*/ ctx[0]);
     			attr_dev(span, "alt", /*bidder*/ ctx[0]);
-    			add_location(span, file$3, 21, 45, 876);
-    			attr_dev(div, "class", "text-gray-600 fixed-width svelte-1r7q0xh");
-    			add_location(div, file$3, 21, 6, 837);
+    			add_location(span, file$8, 21, 47, 880);
+    			attr_dev(div, "class", "text-gray-600 ellipsis-text svelte-1b6jv3z");
+    			add_location(div, file$8, 21, 6, 839);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -16847,7 +17216,7 @@ fragment parachainFields on Parachain {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block$3.name,
     		type: "else",
     		source: "(21:4) {:else}",
     		ctx
@@ -16857,7 +17226,7 @@ fragment parachainFields on Parachain {
     }
 
     // (19:4) {#if isCrowdloan }
-    function create_if_block$1(ctx) {
+    function create_if_block$4(ctx) {
     	let div;
 
     	const block = {
@@ -16865,7 +17234,7 @@ fragment parachainFields on Parachain {
     			div = element("div");
     			div.textContent = `From Crowdloan ${/*paraId*/ ctx[6]}`;
     			attr_dev(div, "class", "text-gray-600");
-    			add_location(div, file$3, 19, 6, 762);
+    			add_location(div, file$8, 19, 6, 764);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -16878,7 +17247,7 @@ fragment parachainFields on Parachain {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(19:4) {#if isCrowdloan }",
     		ctx
@@ -16887,7 +17256,7 @@ fragment parachainFields on Parachain {
     	return block;
     }
 
-    function create_fragment$4(ctx) {
+    function create_fragment$9(ctx) {
     	let div5;
     	let div1;
     	let div0;
@@ -16907,14 +17276,14 @@ fragment parachainFields on Parachain {
     	let div4;
     	let current;
 
-    	token = new Token$1({
+    	token = new Token({
     			props: { value: /*amount*/ ctx[4] },
     			$$inline: true
     		});
 
     	function select_block_type(ctx, dirty) {
-    		if (/*isCrowdloan*/ ctx[5]) return create_if_block$1;
-    		return create_else_block$1;
+    		if (/*isCrowdloan*/ ctx[5]) return create_if_block$4;
+    		return create_else_block$3;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -16941,17 +17310,17 @@ fragment parachainFields on Parachain {
     			div4 = element("div");
     			if_block.c();
     			attr_dev(div0, "class", "text text-sm");
-    			add_location(div0, file$3, 11, 4, 369);
+    			add_location(div0, file$8, 11, 4, 371);
     			attr_dev(div1, "class", "col-span-2");
-    			add_location(div1, file$3, 10, 2, 340);
+    			add_location(div1, file$8, 10, 2, 342);
     			attr_dev(div2, "class", "text-xs text-gray-500 col-span-3 text-right");
-    			add_location(div2, file$3, 13, 2, 431);
+    			add_location(div2, file$8, 13, 2, 433);
     			attr_dev(div3, "class", "text-base col-span-5");
-    			add_location(div3, file$3, 14, 2, 560);
+    			add_location(div3, file$8, 14, 2, 562);
     			attr_dev(div4, "class", "text-base col-span-5 flex");
-    			add_location(div4, file$3, 17, 2, 693);
+    			add_location(div4, file$8, 17, 2, 695);
     			attr_dev(div5, "class", "box mb-3 px-5 py-3 grid grid-cols-5 grid-flow-row gap-2");
-    			add_location(div5, file$3, 9, 0, 268);
+    			add_location(div5, file$8, 9, 0, 270);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17014,7 +17383,7 @@ fragment parachainFields on Parachain {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$4.name,
+    		id: create_fragment$9.name,
     		type: "component",
     		source: "",
     		ctx
@@ -17023,7 +17392,7 @@ fragment parachainFields on Parachain {
     	return block;
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$9($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BidCard", slots, []);
 
@@ -17063,7 +17432,7 @@ fragment parachainFields on Parachain {
 
     	$$self.$capture_state = () => ({
     		now,
-    		Token: Token$1,
+    		Token,
     		getTimeDiffInWord,
     		bidder,
     		firstSlot,
@@ -17096,7 +17465,7 @@ fragment parachainFields on Parachain {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, {
     			bidder: 0,
     			firstSlot: 1,
     			lastSlot: 2,
@@ -17110,7 +17479,7 @@ fragment parachainFields on Parachain {
     			component: this,
     			tagName: "BidCard",
     			options,
-    			id: create_fragment$4.name
+    			id: create_fragment$9.name
     		});
 
     		const { ctx } = this.$$;
@@ -17202,11 +17571,10 @@ fragment parachainFields on Parachain {
     	}
     }
 
-    const { console: console_1 } = globals;
-    const file$2 = "src/AuctionProgressIndicator.svelte";
+    const file$7 = "src/AuctionProgressIndicator.svelte";
 
-    function create_fragment$3(ctx) {
-    	let div6;
+    function create_fragment$8(ctx) {
+    	let div5;
     	let div0;
     	let svg;
     	let g3;
@@ -17216,20 +17584,19 @@ fragment parachainFields on Parachain {
     	let g0;
     	let path;
     	let t0;
-    	let div5;
+    	let div4;
     	let div1;
     	let t1;
     	let t2;
     	let p;
     	let t3;
     	let t4;
-    	let div4;
     	let div3;
     	let div2;
 
     	const block = {
     		c: function create() {
-    			div6 = element("div");
+    			div5 = element("div");
     			div0 = element("div");
     			svg = svg_element("svg");
     			g3 = svg_element("g");
@@ -17239,14 +17606,13 @@ fragment parachainFields on Parachain {
     			g0 = svg_element("g");
     			path = svg_element("path");
     			t0 = space();
-    			div5 = element("div");
+    			div4 = element("div");
     			div1 = element("div");
-    			t1 = text(/*title*/ ctx[1]);
+    			t1 = text(/*title*/ ctx[0]);
     			t2 = space();
     			p = element("p");
-    			t3 = text(/*timeRemain*/ ctx[2]);
+    			t3 = text(/*timeRemain*/ ctx[1]);
     			t4 = space();
-    			div4 = element("div");
     			div3 = element("div");
     			div2 = element("div");
     			attr_dev(circle, "id", "Color");
@@ -17254,56 +17620,55 @@ fragment parachainFields on Parachain {
     			attr_dev(circle, "cx", "45");
     			attr_dev(circle, "cy", "45");
     			attr_dev(circle, "r", "45");
-    			add_location(circle, file$2, 24, 12, 1253);
+    			add_location(circle, file$7, 23, 12, 1173);
     			attr_dev(path, "d", "M18.5487981,17.681523 L26.2723558,17.681523 C27.1264423,17.681523 27.8170673,18.3628219 27.8170673,19.2053751 C27.8170673,20.0479283 27.1264423,20.7292273 26.2723558,20.7292273 L17.0040865,20.7292273 C16.15,20.7292273 15.459375,20.0479283 15.459375,19.2053751 L15.459375,13.1099664 C15.459375,12.2674132 16.15,11.5861142 17.0040865,11.5861142 C17.8581731,11.5861142 18.5487981,12.2674132 18.5487981,13.1099664 L18.5487981,17.681523 Z M17.0040865,35.9677492 C7.61730769,35.9677492 0.0122596154,28.4613662 0.0122596154,19.2053751 C0.0122596154,9.94535274 7.62139423,2.44300112 17.0040865,2.44300112 C26.3867788,2.44300112 33.9959135,9.9493841 33.9959135,19.2053751 C34,28.4613662 26.3908654,35.9677492 17.0040865,35.9677492 Z M17.0040865,32.9200448 C24.6826923,32.9200448 30.9064904,26.7802912 30.9064904,19.2053751 C30.9064904,11.6304591 24.6826923,5.48667413 17.0040865,5.48667413 C9.32548077,5.48667413 3.10168269,11.6264278 3.10168269,19.2013438 C3.10168269,26.7762598 9.32548077,32.9200448 17.0040865,32.9200448 Z M25.8228365,0.471668533 C26.4276442,-0.124972004 27.4043269,-0.124972004 28.0091346,0.471668533 L32.3776442,4.78118701 C32.9824519,5.37782755 32.9824519,6.34132139 32.3776442,6.93796193 C31.7728365,7.53460246 30.7961538,7.53460246 30.1913462,6.93796193 L25.8228365,2.62844345 C25.2180288,2.02777156 25.2180288,1.06427772 25.8228365,0.471668533 Z M7.65817308,0.471668533 C8.26298077,1.06830907 8.26298077,2.03180291 7.65817308,2.62844345 L3.28966346,6.93393057 C2.68485577,7.53057111 1.70817308,7.53057111 1.10336538,6.93393057 C0.498557692,6.33729003 0.498557692,5.37379619 1.10336538,4.77715566 L5.471875,0.467637178 C6.07668269,-0.124972004 7.05336538,-0.124972004 7.65817308,0.471668533 Z");
     			attr_dev(path, "id", "Shape");
-    			add_location(path, file$2, 26, 14, 1429);
+    			add_location(path, file$7, 25, 14, 1349);
     			attr_dev(g0, "transform", "translate(28.000000, 26.000000)");
     			attr_dev(g0, "fill", "#2549E6");
     			attr_dev(g0, "fill-rule", "nonzero");
-    			add_location(g0, file$2, 25, 12, 1332);
+    			add_location(g0, file$7, 24, 12, 1252);
     			attr_dev(g1, "id", "Group-4");
     			attr_dev(g1, "transform", "translate(963.000000, 135.000000)");
-    			add_location(g1, file$2, 23, 10, 1178);
+    			add_location(g1, file$7, 22, 10, 1098);
     			attr_dev(g2, "id", "Dashboard01_new01");
     			attr_dev(g2, "transform", "translate(-963.000000, -135.000000)");
-    			add_location(g2, file$2, 22, 8, 1093);
+    			add_location(g2, file$7, 21, 8, 1013);
     			attr_dev(g3, "id", "Page-1");
     			attr_dev(g3, "stroke", "none");
     			attr_dev(g3, "stroke-width", "1");
     			attr_dev(g3, "fill", "none");
     			attr_dev(g3, "fill-rule", "evenodd");
-    			add_location(g3, file$2, 21, 6, 1006);
+    			add_location(g3, file$7, 20, 6, 926);
     			attr_dev(svg, "width", "90px");
     			attr_dev(svg, "height", "90px");
     			attr_dev(svg, "viewBox", "0 0 90 90");
     			attr_dev(svg, "version", "1.1");
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "xmlns:xlink", "http://www.w3.org/1999/xlink");
-    			add_location(svg, file$2, 20, 4, 855);
+    			add_location(svg, file$7, 19, 4, 775);
     			attr_dev(div0, "class", "rounded-full h-20 w-20 flex items-center justify-center bg-blue-50");
-    			add_location(div0, file$2, 19, 2, 770);
+    			add_location(div0, file$7, 18, 2, 690);
     			attr_dev(div1, "class", "text-lg");
-    			add_location(div1, file$2, 34, 4, 3268);
-    			add_location(p, file$2, 35, 4, 3307);
-    			attr_dev(div2, "class", "indicator svelte-1x5vr3h");
-    			set_style(div2, "left", /*progress*/ ctx[0] + "%");
-    			add_location(div2, file$2, 38, 8, 3396);
-    			attr_dev(div3, "class", "bar svelte-1x5vr3h");
-    			add_location(div3, file$2, 37, 6, 3370);
-    			attr_dev(div4, "class", "flex flex-row pt-4");
-    			add_location(div4, file$2, 36, 4, 3331);
-    			attr_dev(div5, "class", "px-4");
-    			add_location(div5, file$2, 33, 2, 3245);
-    			attr_dev(div6, "class", "justify-center col-span-2 flex flex-row min-w-max");
-    			add_location(div6, file$2, 18, 0, 704);
+    			add_location(div1, file$7, 33, 4, 3188);
+    			add_location(p, file$7, 34, 4, 3227);
+    			attr_dev(div2, "class", "progress-bar bg-theme-1");
+    			attr_dev(div2, "role", "progressbar");
+    			set_style(div2, "width", /*progress*/ ctx[2] + "%");
+    			add_location(div2, file$7, 36, 6, 3289);
+    			attr_dev(div3, "class", "progress h-1 mt-4");
+    			add_location(div3, file$7, 35, 4, 3251);
+    			attr_dev(div4, "class", "px-4");
+    			add_location(div4, file$7, 32, 2, 3165);
+    			attr_dev(div5, "class", "justify-center col-span-2 flex flex-row min-w-max");
+    			add_location(div5, file$7, 17, 0, 624);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div6, anchor);
-    			append_dev(div6, div0);
+    			insert_dev(target, div5, anchor);
+    			append_dev(div5, div0);
     			append_dev(div0, svg);
     			append_dev(svg, g3);
     			append_dev(g3, g2);
@@ -17311,36 +17676,35 @@ fragment parachainFields on Parachain {
     			append_dev(g1, circle);
     			append_dev(g1, g0);
     			append_dev(g0, path);
-    			append_dev(div6, t0);
-    			append_dev(div6, div5);
-    			append_dev(div5, div1);
-    			append_dev(div1, t1);
-    			append_dev(div5, t2);
-    			append_dev(div5, p);
-    			append_dev(p, t3);
-    			append_dev(div5, t4);
+    			append_dev(div5, t0);
     			append_dev(div5, div4);
+    			append_dev(div4, div1);
+    			append_dev(div1, t1);
+    			append_dev(div4, t2);
+    			append_dev(div4, p);
+    			append_dev(p, t3);
+    			append_dev(div4, t4);
     			append_dev(div4, div3);
     			append_dev(div3, div2);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*title*/ 2) set_data_dev(t1, /*title*/ ctx[1]);
-    			if (dirty & /*timeRemain*/ 4) set_data_dev(t3, /*timeRemain*/ ctx[2]);
+    			if (dirty & /*title*/ 1) set_data_dev(t1, /*title*/ ctx[0]);
+    			if (dirty & /*timeRemain*/ 2) set_data_dev(t3, /*timeRemain*/ ctx[1]);
 
-    			if (dirty & /*progress*/ 1) {
-    				set_style(div2, "left", /*progress*/ ctx[0] + "%");
+    			if (dirty & /*progress*/ 4) {
+    				set_style(div2, "width", /*progress*/ ctx[2] + "%");
     			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div6);
+    			if (detaching) detach_dev(div5);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$3.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -17349,27 +17713,25 @@ fragment parachainFields on Parachain {
     	return block;
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$8($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("AuctionProgressIndicator", slots, []);
 
     	let { closingStart } = $$props,
     		{ closingEnd } = $$props,
-    		{ curBlockNum } = $$props,
-    		{ auctionStart } = $$props;
+    		{ curBlockNum } = $$props;
 
     	let title, timeRemain, isClosing, progress;
-    	const writable_props = ["closingStart", "closingEnd", "curBlockNum", "auctionStart"];
+    	const writable_props = ["closingStart", "closingEnd", "curBlockNum"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<AuctionProgressIndicator> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<AuctionProgressIndicator> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
     		if ("closingStart" in $$props) $$invalidate(3, closingStart = $$props.closingStart);
     		if ("closingEnd" in $$props) $$invalidate(4, closingEnd = $$props.closingEnd);
     		if ("curBlockNum" in $$props) $$invalidate(5, curBlockNum = $$props.curBlockNum);
-    		if ("auctionStart" in $$props) $$invalidate(6, auctionStart = $$props.auctionStart);
     	};
 
     	$$self.$capture_state = () => ({
@@ -17377,7 +17739,6 @@ fragment parachainFields on Parachain {
     		closingStart,
     		closingEnd,
     		curBlockNum,
-    		auctionStart,
     		title,
     		timeRemain,
     		isClosing,
@@ -17388,11 +17749,10 @@ fragment parachainFields on Parachain {
     		if ("closingStart" in $$props) $$invalidate(3, closingStart = $$props.closingStart);
     		if ("closingEnd" in $$props) $$invalidate(4, closingEnd = $$props.closingEnd);
     		if ("curBlockNum" in $$props) $$invalidate(5, curBlockNum = $$props.curBlockNum);
-    		if ("auctionStart" in $$props) $$invalidate(6, auctionStart = $$props.auctionStart);
-    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
-    		if ("timeRemain" in $$props) $$invalidate(2, timeRemain = $$props.timeRemain);
-    		if ("isClosing" in $$props) $$invalidate(7, isClosing = $$props.isClosing);
-    		if ("progress" in $$props) $$invalidate(0, progress = $$props.progress);
+    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
+    		if ("timeRemain" in $$props) $$invalidate(1, timeRemain = $$props.timeRemain);
+    		if ("isClosing" in $$props) $$invalidate(6, isClosing = $$props.isClosing);
+    		if ("progress" in $$props) $$invalidate(2, progress = $$props.progress);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -17400,74 +17760,58 @@ fragment parachainFields on Parachain {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*curBlockNum, closingStart, isClosing, closingEnd, progress, auctionStart*/ 249) {
+    		if ($$self.$$.dirty & /*curBlockNum, closingStart, isClosing, closingEnd*/ 120) {
     			{
-    				$$invalidate(7, isClosing = curBlockNum >= closingStart);
+    				$$invalidate(6, isClosing = curBlockNum >= closingStart);
 
     				const timeDelta = (isClosing
     				? closingEnd - (curBlockNum || 0)
     				: closingStart - curBlockNum) * 6000;
 
     				const timeDiff = getTimeDiffInWord(timeDelta);
-    				$$invalidate(1, title = isClosing ? "Auction ending started" : "Auction started");
-    				$$invalidate(2, timeRemain = (isClosing ? "Closed " : "Ending starts in ") + timeDiff);
+    				$$invalidate(0, title = isClosing ? "Auction ending started" : "Auction started");
+    				$$invalidate(1, timeRemain = (isClosing ? "Closed " : "Ending starts in ") + timeDiff);
 
-    				$$invalidate(0, progress = curBlockNum < closingEnd
+    				$$invalidate(2, progress = curBlockNum < closingEnd
     				? Math.floor(curBlockNum / closingEnd * 100)
     				: 100);
-
-    				console.log(progress, curBlockNum, closingEnd, auctionStart);
     			}
     		}
     	};
 
-    	return [
-    		progress,
-    		title,
-    		timeRemain,
-    		closingStart,
-    		closingEnd,
-    		curBlockNum,
-    		auctionStart,
-    		isClosing
-    	];
+    	return [title, timeRemain, progress, closingStart, closingEnd, curBlockNum, isClosing];
     }
 
     class AuctionProgressIndicator extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {
     			closingStart: 3,
     			closingEnd: 4,
-    			curBlockNum: 5,
-    			auctionStart: 6
+    			curBlockNum: 5
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "AuctionProgressIndicator",
     			options,
-    			id: create_fragment$3.name
+    			id: create_fragment$8.name
     		});
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
     		if (/*closingStart*/ ctx[3] === undefined && !("closingStart" in props)) {
-    			console_1.warn("<AuctionProgressIndicator> was created without expected prop 'closingStart'");
+    			console.warn("<AuctionProgressIndicator> was created without expected prop 'closingStart'");
     		}
 
     		if (/*closingEnd*/ ctx[4] === undefined && !("closingEnd" in props)) {
-    			console_1.warn("<AuctionProgressIndicator> was created without expected prop 'closingEnd'");
+    			console.warn("<AuctionProgressIndicator> was created without expected prop 'closingEnd'");
     		}
 
     		if (/*curBlockNum*/ ctx[5] === undefined && !("curBlockNum" in props)) {
-    			console_1.warn("<AuctionProgressIndicator> was created without expected prop 'curBlockNum'");
-    		}
-
-    		if (/*auctionStart*/ ctx[6] === undefined && !("auctionStart" in props)) {
-    			console_1.warn("<AuctionProgressIndicator> was created without expected prop 'auctionStart'");
+    			console.warn("<AuctionProgressIndicator> was created without expected prop 'curBlockNum'");
     		}
     	}
 
@@ -17494,20 +17838,867 @@ fragment parachainFields on Parachain {
     	set curBlockNum(value) {
     		throw new Error("<AuctionProgressIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+    }
 
-    	get auctionStart() {
-    		throw new Error("<AuctionProgressIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    const file$6 = "src/Loading.svelte";
+
+    function create_fragment$7(ctx) {
+    	let div2;
+    	let div1;
+    	let div0;
+    	let t0;
+    	let h2;
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			h2 = element("h2");
+    			h2.textContent = "Loading...";
+    			attr_dev(div0, "class", "loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-16 w-16 mb-6 svelte-13ld8dg");
+    			add_location(div0, file$6, 8, 4, 325);
+    			attr_dev(h2, "class", "text-center text-gray-600 text-xl font-semibold");
+    			add_location(h2, file$6, 9, 4, 432);
+    			attr_dev(div1, "wire:loading", "");
+    			attr_dev(div1, "class", "w-full overflow-hidden flex flex-col items-center justify-center");
+    			add_location(div1, file$6, 7, 2, 229);
+    			attr_dev(div2, "class", "py-8");
+    			add_location(div2, file$6, 6, 0, 208);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div1);
+    			append_dev(div1, div0);
+    			append_dev(div1, t0);
+    			append_dev(div1, h2);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$7.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$7($$self, $$props) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Loading", slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Loading> was created with unknown prop '${key}'`);
+    	});
+
+    	return [];
+    }
+
+    class Loading extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Loading",
+    			options,
+    			id: create_fragment$7.name
+    		});
+    	}
+    }
+
+    const file$5 = "src/ProgressBar.svelte";
+
+    function create_fragment$6(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			attr_dev(div0, "class", "w-12/12 bg-purple-500 py-1 rounded-full");
+    			add_location(div0, file$5, 1, 2, 41);
+    			attr_dev(div1, "class", "bg-gray-400 rounded-full");
+    			add_location(div1, file$5, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$6($$self, $$props) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("ProgressBar", slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ProgressBar> was created with unknown prop '${key}'`);
+    	});
+
+    	return [];
+    }
+
+    class ProgressBar extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "ProgressBar",
+    			options,
+    			id: create_fragment$6.name
+    		});
+    	}
+    }
+
+    const file$4 = "src/SlotLeaseChart.svelte";
+
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[7] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[10] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_2$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[13] = list[i];
+    	return child_ctx;
+    }
+
+    // (37:6) {#each allSlots as slot (slot.idx)}
+    function create_each_block_2$1(key_1, ctx) {
+    	let td;
+    	let div1;
+    	let p0;
+    	let t0;
+    	let t1_value = /*slot*/ ctx[13].idx + "";
+    	let t1;
+    	let t2;
+    	let p1;
+    	let t3_value = /*slot*/ ctx[13].startBlock + "";
+    	let t3;
+    	let t4;
+    	let t5_value = /*slot*/ ctx[13].startBlock + /*leasePeriod*/ ctx[5] + "";
+    	let t5;
+    	let t6;
+    	let div0;
+    	let t7_value = getDateFromBlockNum(/*slot*/ ctx[13].startBlock, /*$lastBlockNum*/ ctx[2], /*$lastBlockTime*/ ctx[4]) + "";
+    	let t7;
+    	let t8;
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			td = element("td");
+    			div1 = element("div");
+    			p0 = element("p");
+    			t0 = text("Slot ");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			p1 = element("p");
+    			t3 = text(t3_value);
+    			t4 = text(" - ");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			div0 = element("div");
+    			t7 = text(t7_value);
+    			t8 = space();
+    			attr_dev(p0, "class", "text-lg");
+    			add_location(p0, file$4, 39, 10, 1345);
+    			attr_dev(p1, "class", "text-gray-400 text-xs");
+    			add_location(p1, file$4, 40, 10, 1394);
+    			attr_dev(div0, "class", "slot-time text-gray-400 text-xs svelte-dxv2mm");
+    			add_location(div0, file$4, 41, 10, 1493);
+    			attr_dev(div1, "class", "slot-head svelte-dxv2mm");
+    			add_location(div1, file$4, 38, 8, 1311);
+    			add_location(td, file$4, 37, 6, 1298);
+    			this.first = td;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, td, anchor);
+    			append_dev(td, div1);
+    			append_dev(div1, p0);
+    			append_dev(p0, t0);
+    			append_dev(p0, t1);
+    			append_dev(div1, t2);
+    			append_dev(div1, p1);
+    			append_dev(p1, t3);
+    			append_dev(p1, t4);
+    			append_dev(p1, t5);
+    			append_dev(div1, t6);
+    			append_dev(div1, div0);
+    			append_dev(div0, t7);
+    			append_dev(td, t8);
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*allSlots*/ 8 && t1_value !== (t1_value = /*slot*/ ctx[13].idx + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*allSlots*/ 8 && t3_value !== (t3_value = /*slot*/ ctx[13].startBlock + "")) set_data_dev(t3, t3_value);
+    			if (dirty & /*allSlots*/ 8 && t5_value !== (t5_value = /*slot*/ ctx[13].startBlock + /*leasePeriod*/ ctx[5] + "")) set_data_dev(t5, t5_value);
+    			if (dirty & /*allSlots, $lastBlockNum, $lastBlockTime*/ 28 && t7_value !== (t7_value = getDateFromBlockNum(/*slot*/ ctx[13].startBlock, /*$lastBlockNum*/ ctx[2], /*$lastBlockTime*/ ctx[4]) + "")) set_data_dev(t7, t7_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(td);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2$1.name,
+    		type: "each",
+    		source: "(37:6) {#each allSlots as slot (slot.idx)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (48:4) {#if !activeLeases.length}
+    function create_if_block_1$2(ctx) {
+    	let tr;
+    	let td0;
+    	let t0;
+    	let td1;
+    	let div1;
+    	let div0;
+    	let td1_colspan_value;
+
+    	const block = {
+    		c: function create() {
+    			tr = element("tr");
+    			td0 = element("td");
+    			t0 = space();
+    			td1 = element("td");
+    			div1 = element("div");
+    			div0 = element("div");
+    			div0.textContent = "No Parachain Leased Yet";
+    			add_location(td0, file$4, 49, 6, 1723);
+    			add_location(div0, file$4, 52, 10, 1849);
+    			attr_dev(div1, "class", "flex empty-content justify-center items-center svelte-dxv2mm");
+    			add_location(div1, file$4, 51, 8, 1778);
+    			attr_dev(td1, "colspan", td1_colspan_value = /*allSlots*/ ctx[3].length);
+    			add_location(td1, file$4, 50, 6, 1739);
+    			add_location(tr, file$4, 48, 4, 1712);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td0);
+    			append_dev(tr, t0);
+    			append_dev(tr, td1);
+    			append_dev(td1, div1);
+    			append_dev(div1, div0);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*allSlots*/ 8 && td1_colspan_value !== (td1_colspan_value = /*allSlots*/ ctx[3].length)) {
+    				attr_dev(td1, "colspan", td1_colspan_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$2.name,
+    		type: "if",
+    		source: "(48:4) {#if !activeLeases.length}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (68:8) {#if span > 0}
+    function create_if_block$3(ctx) {
+    	let progressbar;
+    	let current;
+    	progressbar = new ProgressBar({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(progressbar.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(progressbar, target, anchor);
+    			current = true;
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(progressbar.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(progressbar.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(progressbar, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$3.name,
+    		type: "if",
+    		source: "(68:8) {#if span > 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (66:6) {#each getColSpan(slotIdxs, lease.slots) as span}
+    function create_each_block_1$1(ctx) {
+    	let td;
+    	let td_colspan_value;
+    	let current;
+    	let if_block = /*span*/ ctx[10] > 0 && create_if_block$3(ctx);
+
+    	const block = {
+    		c: function create() {
+    			td = element("td");
+    			if (if_block) if_block.c();
+    			attr_dev(td, "colspan", td_colspan_value = /*span*/ ctx[10]);
+    			add_location(td, file$4, 66, 6, 2346);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, td, anchor);
+    			if (if_block) if_block.m(td, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*span*/ ctx[10] > 0) {
+    				if (if_block) {
+    					if (dirty & /*slotIdxs, activeLeases*/ 3) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$3(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(td, null);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+
+    			if (!current || dirty & /*slotIdxs, activeLeases*/ 3 && td_colspan_value !== (td_colspan_value = /*span*/ ctx[10])) {
+    				attr_dev(td, "colspan", td_colspan_value);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(td);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1$1.name,
+    		type: "each",
+    		source: "(66:6) {#each getColSpan(slotIdxs, lease.slots) as span}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (58:4) {#each activeLeases as lease (lease.id)}
+    function create_each_block$3(key_1, ctx) {
+    	let tr;
+    	let td;
+    	let div1;
+    	let img;
+    	let img_src_value;
+    	let img_alt_value;
+    	let t0;
+    	let div0;
+    	let t1_value = /*lease*/ ctx[7].parachain.paraId + "";
+    	let t1;
+    	let t2;
+    	let t3;
+    	let current;
+    	let each_value_1 = getColSpan(/*slotIdxs*/ ctx[1], /*lease*/ ctx[7].slots);
+    	validate_each_argument(each_value_1);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
     	}
 
-    	set auctionStart(value) {
-    		throw new Error("<AuctionProgressIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			tr = element("tr");
+    			td = element("td");
+    			div1 = element("div");
+    			img = element("img");
+    			t0 = space();
+    			div0 = element("div");
+    			t1 = text(t1_value);
+    			t2 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t3 = space();
+    			attr_dev(img, "class", "mx-1 rounded-full");
+    			if (img.src !== (img_src_value = "./ksm-logo.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", img_alt_value = /*lease*/ ctx[7].parachain.paraId);
+    			attr_dev(img, "width", "22");
+    			attr_dev(img, "height", "22");
+    			add_location(img, file$4, 61, 10, 2074);
+    			attr_dev(div0, "class", "text-gray-400 text-lg");
+    			add_location(div0, file$4, 62, 10, 2191);
+    			attr_dev(div1, "class", "flex justify-center items-center");
+    			add_location(div1, file$4, 60, 8, 2017);
+    			attr_dev(td, "class", "py-4");
+    			add_location(td, file$4, 59, 6, 1991);
+    			add_location(tr, file$4, 58, 4, 1980);
+    			this.first = tr;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td);
+    			append_dev(td, div1);
+    			append_dev(div1, img);
+    			append_dev(div1, t0);
+    			append_dev(div1, div0);
+    			append_dev(div0, t1);
+    			append_dev(tr, t2);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(tr, null);
+    			}
+
+    			append_dev(tr, t3);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (!current || dirty & /*activeLeases*/ 1 && img_alt_value !== (img_alt_value = /*lease*/ ctx[7].parachain.paraId)) {
+    				attr_dev(img, "alt", img_alt_value);
+    			}
+
+    			if ((!current || dirty & /*activeLeases*/ 1) && t1_value !== (t1_value = /*lease*/ ctx[7].parachain.paraId + "")) set_data_dev(t1, t1_value);
+
+    			if (dirty & /*getColSpan, slotIdxs, activeLeases*/ 3) {
+    				each_value_1 = getColSpan(/*slotIdxs*/ ctx[1], /*lease*/ ctx[7].slots);
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block_1$1(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(tr, t3);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_1.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value_1.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$3.name,
+    		type: "each",
+    		source: "(58:4) {#each activeLeases as lease (lease.id)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$5(ctx) {
+    	let div;
+    	let table;
+    	let tr;
+    	let th;
+    	let t0;
+    	let each_blocks_1 = [];
+    	let each0_lookup = new Map();
+    	let t1;
+    	let t2;
+    	let each_blocks = [];
+    	let each1_lookup = new Map();
+    	let current;
+    	let each_value_2 = /*allSlots*/ ctx[3];
+    	validate_each_argument(each_value_2);
+    	const get_key = ctx => /*slot*/ ctx[13].idx;
+    	validate_each_keys(ctx, each_value_2, get_each_context_2$1, get_key);
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		let child_ctx = get_each_context_2$1(ctx, each_value_2, i);
+    		let key = get_key(child_ctx);
+    		each0_lookup.set(key, each_blocks_1[i] = create_each_block_2$1(key, child_ctx));
+    	}
+
+    	let if_block = !/*activeLeases*/ ctx[0].length && create_if_block_1$2(ctx);
+    	let each_value = /*activeLeases*/ ctx[0];
+    	validate_each_argument(each_value);
+    	const get_key_1 = ctx => /*lease*/ ctx[7].id;
+    	validate_each_keys(ctx, each_value, get_each_context$3, get_key_1);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$3(ctx, each_value, i);
+    		let key = get_key_1(child_ctx);
+    		each1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			table = element("table");
+    			tr = element("tr");
+    			th = element("th");
+    			t0 = space();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			t2 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			attr_dev(th, "class", "empty-head svelte-dxv2mm");
+    			add_location(th, file$4, 35, 6, 1221);
+    			add_location(tr, file$4, 34, 4, 1210);
+    			attr_dev(table, "class", "w-full text-center");
+    			add_location(table, file$4, 33, 2, 1171);
+    			attr_dev(div, "class", "box overflow-x-scroll p-2");
+    			add_location(div, file$4, 32, 0, 1129);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, table);
+    			append_dev(table, tr);
+    			append_dev(tr, th);
+    			append_dev(tr, t0);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(tr, null);
+    			}
+
+    			append_dev(table, t1);
+    			if (if_block) if_block.m(table, null);
+    			append_dev(table, t2);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(table, null);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*getDateFromBlockNum, allSlots, $lastBlockNum, $lastBlockTime, leasePeriod*/ 60) {
+    				each_value_2 = /*allSlots*/ ctx[3];
+    				validate_each_argument(each_value_2);
+    				validate_each_keys(ctx, each_value_2, get_each_context_2$1, get_key);
+    				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_2, each0_lookup, tr, destroy_block, create_each_block_2$1, null, get_each_context_2$1);
+    			}
+
+    			if (!/*activeLeases*/ ctx[0].length) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1$2(ctx);
+    					if_block.c();
+    					if_block.m(table, t2);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty & /*getColSpan, slotIdxs, activeLeases*/ 3) {
+    				each_value = /*activeLeases*/ ctx[0];
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$3, get_key_1);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key_1, 1, ctx, each_value, each1_lookup, table, outro_and_destroy_block, create_each_block$3, null, get_each_context$3);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].d();
+    			}
+
+    			if (if_block) if_block.d();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	let $lastBlockNum;
+    	let $lastBlockTime;
+    	validate_store(lastBlockNum, "lastBlockNum");
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(2, $lastBlockNum = $$value));
+    	validate_store(lastBlockTime, "lastBlockTime");
+    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(4, $lastBlockTime = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("SlotLeaseChart", slots, []);
+    	let { leases } = $$props;
+    	const { leasePeriod } = config;
+    	let activeLeases, slotIdxs, allSlots;
+    	const writable_props = ["leases"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<SlotLeaseChart> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("leases" in $$props) $$invalidate(6, leases = $$props.leases);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		range,
+    		config,
+    		ProgressBar,
+    		lastBlockNum,
+    		lastBlockTime,
+    		getDateFromBlockNum,
+    		getColSpan,
+    		leases,
+    		leasePeriod,
+    		activeLeases,
+    		slotIdxs,
+    		allSlots,
+    		$lastBlockNum,
+    		$lastBlockTime
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("leases" in $$props) $$invalidate(6, leases = $$props.leases);
+    		if ("activeLeases" in $$props) $$invalidate(0, activeLeases = $$props.activeLeases);
+    		if ("slotIdxs" in $$props) $$invalidate(1, slotIdxs = $$props.slotIdxs);
+    		if ("allSlots" in $$props) $$invalidate(3, allSlots = $$props.allSlots);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$lastBlockNum, leases, activeLeases, slotIdxs*/ 71) {
+    			{
+    				const defaultSlotEnd = Math.floor($lastBlockNum / leasePeriod);
+    				const defaultSlotStart = Math.max(defaultSlotEnd - 4, 0);
+
+    				$$invalidate(0, activeLeases = leases.filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum).map(({ firstSlot, lastSlot, ...rest }) => ({
+    					slots: range(firstSlot, lastSlot + 1),
+    					firstSlot,
+    					lastSlot,
+    					...rest
+    				})));
+
+    				const [first, last] = activeLeases.reduce(
+    					([earliest, lastest], { firstSlot, lastSlot }) => {
+    						const first = Math.min(earliest, firstSlot);
+    						const last = Math.max(lastest, lastSlot);
+    						return [first, last];
+    					},
+    					[defaultSlotStart, defaultSlotEnd]
+    				);
+
+    				$$invalidate(1, slotIdxs = range(first, last + 1));
+
+    				$$invalidate(3, allSlots = slotIdxs.map(slotIdx => ({
+    					idx: slotIdx,
+    					startBlock: slotIdx * leasePeriod
+    				})));
+    			}
+    		}
+    	};
+
+    	return [
+    		activeLeases,
+    		slotIdxs,
+    		$lastBlockNum,
+    		allSlots,
+    		$lastBlockTime,
+    		leasePeriod,
+    		leases
+    	];
+    }
+
+    class SlotLeaseChart extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { leases: 6 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SlotLeaseChart",
+    			options,
+    			id: create_fragment$5.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*leases*/ ctx[6] === undefined && !("leases" in props)) {
+    			console.warn("<SlotLeaseChart> was created without expected prop 'leases'");
+    		}
+    	}
+
+    	get leases() {
+    		throw new Error("<SlotLeaseChart>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set leases(value) {
+    		throw new Error("<SlotLeaseChart>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     const { Object: Object_1 } = globals;
-    const file$1 = "src/AuctionPage.svelte";
+    const file$3 = "src/AuctionPage.svelte";
 
-    function get_each_context(ctx, list, i) {
+    function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[12] = list[i];
     	return child_ctx;
@@ -17526,8 +18717,140 @@ fragment parachainFields on Parachain {
     	return child_ctx;
     }
 
-    // (104:2) {:else}
-    function create_else_block(ctx) {
+    // (91:2) {:else}
+    function create_else_block$2(ctx) {
+    	let div;
+    	let slotleasechart;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+
+    	slotleasechart = new SlotLeaseChart({
+    			props: { leases: /*slotLeases*/ ctx[2] },
+    			$$inline: true
+    		});
+
+    	let if_block = /*$curAuction*/ ctx[1] && create_if_block_1$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			create_component(slotleasechart.$$.fragment);
+    			t = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			attr_dev(div, "class", "box mt-4");
+    			add_location(div, file$3, 91, 2, 3008);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			mount_component(slotleasechart, div, null);
+    			insert_dev(target, t, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const slotleasechart_changes = {};
+    			if (dirty & /*slotLeases*/ 4) slotleasechart_changes.leases = /*slotLeases*/ ctx[2];
+    			slotleasechart.$set(slotleasechart_changes);
+
+    			if (/*$curAuction*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*$curAuction*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block_1$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(slotleasechart.$$.fragment, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(slotleasechart.$$.fragment, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_component(slotleasechart);
+    			if (detaching) detach_dev(t);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$2.name,
+    		type: "else",
+    		source: "(91:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (89:0) {#if $activeAuctions.fetching && !chronicle}
+    function create_if_block$2(ctx) {
+    	let loading;
+    	let current;
+    	loading = new Loading({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(loading.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(loading, target, anchor);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(loading.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(loading.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(loading, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$2.name,
+    		type: "if",
+    		source: "(89:0) {#if $activeAuctions.fetching && !chronicle}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (95:2) {#if $curAuction}
+    function create_if_block_1$1(ctx) {
     	let div20;
     	let div12;
     	let div0;
@@ -17539,24 +18862,24 @@ fragment parachainFields on Parachain {
     	let div1;
     	let t3;
     	let div2;
-    	let t4_value = (/*$curAuction*/ ctx[0]?.id || "") + "";
+    	let t4_value = (/*$curAuction*/ ctx[1]?.id || "") + "";
     	let t4;
     	let t5;
     	let div6;
     	let div4;
     	let t7;
     	let div5;
-    	let t8_value = (/*$curAuction*/ ctx[0]?.slotsStart || "") + "";
+    	let t8_value = (/*$curAuction*/ ctx[1]?.slotsStart || "") + "";
     	let t8;
     	let t9;
-    	let t10_value = (/*$curAuction*/ ctx[0]?.slotsEnd || "") + "";
+    	let t10_value = (/*$curAuction*/ ctx[1]?.slotsEnd || "") + "";
     	let t10;
     	let t11;
     	let div9;
     	let div7;
     	let t13;
     	let div8;
-    	let t14_value = /*$chronicle*/ ctx[4]?.curBlockNum + "";
+    	let t14_value = /*$chronicle*/ ctx[6]?.curBlockNum + "";
     	let t14;
     	let t15;
     	let auctionprogressindicator;
@@ -17577,15 +18900,15 @@ fragment parachainFields on Parachain {
 
     	auctionprogressindicator = new AuctionProgressIndicator({
     			props: {
-    				closingStart: /*$curAuction*/ ctx[0]?.closingStart,
-    				closingEnd: /*$curAuction*/ ctx[0]?.closingEnd,
-    				curBlockNum: /*$chronicle*/ ctx[4]?.curBlockNum,
-    				auctionStart: /*$curAuction*/ ctx[0]?.blockNum
+    				closingStart: /*$curAuction*/ ctx[1]?.closingStart,
+    				closingEnd: /*$curAuction*/ ctx[1]?.closingEnd,
+    				curBlockNum: /*$chronicle*/ ctx[6]?.curBlockNum,
+    				auctionStart: /*$curAuction*/ ctx[1]?.blockNum
     			},
     			$$inline: true
     		});
 
-    	let each_value_1 = /*groupedSlots*/ ctx[1];
+    	let each_value_1 = /*groupedSlots*/ ctx[3];
     	validate_each_argument(each_value_1);
     	let each_blocks_1 = [];
 
@@ -17597,12 +18920,12 @@ fragment parachainFields on Parachain {
     		each_blocks_1[i] = null;
     	});
 
-    	let each_value = /*latestBids*/ ctx[2];
+    	let each_value = /*latestBids*/ ctx[4];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
     	}
 
     	const out_1 = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -17668,51 +18991,51 @@ fragment parachainFields on Parachain {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(h2, "class", "text-lg font-medium truncate mr-5");
-    			add_location(h2, file$1, 107, 8, 3576);
-    			attr_dev(div0, "class", "intro-y block sm:flex items-center h-10");
-    			add_location(div0, file$1, 106, 6, 3514);
+    			attr_dev(h2, "class", "text-lg font-medium mr-5");
+    			add_location(h2, file$3, 98, 8, 3267);
+    			attr_dev(div0, "class", "block sm:flex items-center h-10");
+    			add_location(div0, file$3, 97, 6, 3213);
     			attr_dev(div1, "class", "mt-1 text-gray-600 dark:text-gray-600 text-center");
-    			add_location(div1, file$1, 113, 12, 3819);
+    			add_location(div1, file$3, 104, 12, 3501);
     			attr_dev(div2, "class", "text-3xl font-bold mt-4 text-center");
-    			add_location(div2, file$1, 114, 12, 3914);
+    			add_location(div2, file$3, 105, 12, 3596);
     			attr_dev(div3, "class", "justify-center");
-    			add_location(div3, file$1, 112, 10, 3778);
+    			add_location(div3, file$3, 103, 10, 3460);
     			attr_dev(div4, "class", "mt-1 text-gray-600 dark:text-gray-600 text-center");
-    			add_location(div4, file$1, 117, 12, 4061);
+    			add_location(div4, file$3, 108, 12, 3743);
     			attr_dev(div5, "class", "text-3xl font-bold mt-4 text-center");
-    			add_location(div5, file$1, 118, 12, 4156);
+    			add_location(div5, file$3, 109, 12, 3838);
     			attr_dev(div6, "class", "justify-center");
-    			add_location(div6, file$1, 116, 10, 4020);
+    			add_location(div6, file$3, 107, 10, 3702);
     			attr_dev(div7, "class", "mt-1 text-gray-600 dark:text-gray-600 text-center");
-    			add_location(div7, file$1, 121, 12, 4343);
+    			add_location(div7, file$3, 112, 12, 4025);
     			attr_dev(div8, "class", "text-3xl font-bold mt-4 text-center");
-    			add_location(div8, file$1, 122, 12, 4438);
+    			add_location(div8, file$3, 113, 12, 4120);
     			attr_dev(div9, "class", "justify-center");
-    			add_location(div9, file$1, 120, 10, 4302);
+    			add_location(div9, file$3, 111, 10, 3984);
     			attr_dev(div10, "class", "box grid grid-cols-5 gap-4 divide-x divide-gray-200 p-4");
-    			add_location(div10, file$1, 111, 8, 3698);
+    			add_location(div10, file$3, 102, 8, 3380);
     			attr_dev(div11, "class", "mt-4 sm:mt-1");
-    			add_location(div11, file$1, 110, 6, 3663);
+    			add_location(div11, file$3, 101, 6, 3345);
     			attr_dev(div12, "class", "col-span-12 lg:col-span-12 xl:col-span-12 mt-2");
-    			add_location(div12, file$1, 105, 4, 3447);
-    			add_location(p0, file$1, 130, 8, 4872);
+    			add_location(div12, file$3, 96, 4, 3146);
+    			add_location(p0, file$3, 121, 8, 4554);
     			attr_dev(div13, "class", "py-2 text-lg");
-    			add_location(div13, file$1, 129, 6, 4837);
+    			add_location(div13, file$3, 120, 6, 4519);
     			attr_dev(div14, "class", "");
-    			add_location(div14, file$1, 133, 8, 4935);
+    			add_location(div14, file$3, 124, 8, 4617);
     			attr_dev(div15, "class", "");
-    			add_location(div15, file$1, 132, 6, 4912);
+    			add_location(div15, file$3, 123, 6, 4594);
     			attr_dev(div16, "class", "col-span-8 m:col-span-12 s:col-span-12 my-4");
-    			add_location(div16, file$1, 128, 4, 4773);
-    			add_location(p1, file$1, 151, 8, 5506);
+    			add_location(div16, file$3, 119, 4, 4455);
+    			add_location(p1, file$3, 142, 8, 5188);
     			attr_dev(div17, "class", "py-2 text-lg");
-    			add_location(div17, file$1, 150, 6, 5471);
-    			add_location(div18, file$1, 153, 6, 5542);
+    			add_location(div17, file$3, 141, 6, 5153);
+    			add_location(div18, file$3, 144, 6, 5224);
     			attr_dev(div19, "class", "col-span-4 m:col-span-12 s:col-span-12 mt-4");
-    			add_location(div19, file$1, 149, 4, 5407);
+    			add_location(div19, file$3, 140, 4, 5089);
     			attr_dev(div20, "class", "grid grid-cols-12 gap-6");
-    			add_location(div20, file$1, 104, 2, 3405);
+    			add_location(div20, file$3, 95, 2, 3104);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div20, anchor);
@@ -17769,19 +19092,19 @@ fragment parachainFields on Parachain {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty & /*$curAuction*/ 1) && t4_value !== (t4_value = (/*$curAuction*/ ctx[0]?.id || "") + "")) set_data_dev(t4, t4_value);
-    			if ((!current || dirty & /*$curAuction*/ 1) && t8_value !== (t8_value = (/*$curAuction*/ ctx[0]?.slotsStart || "") + "")) set_data_dev(t8, t8_value);
-    			if ((!current || dirty & /*$curAuction*/ 1) && t10_value !== (t10_value = (/*$curAuction*/ ctx[0]?.slotsEnd || "") + "")) set_data_dev(t10, t10_value);
-    			if ((!current || dirty & /*$chronicle*/ 16) && t14_value !== (t14_value = /*$chronicle*/ ctx[4]?.curBlockNum + "")) set_data_dev(t14, t14_value);
+    			if ((!current || dirty & /*$curAuction*/ 2) && t4_value !== (t4_value = (/*$curAuction*/ ctx[1]?.id || "") + "")) set_data_dev(t4, t4_value);
+    			if ((!current || dirty & /*$curAuction*/ 2) && t8_value !== (t8_value = (/*$curAuction*/ ctx[1]?.slotsStart || "") + "")) set_data_dev(t8, t8_value);
+    			if ((!current || dirty & /*$curAuction*/ 2) && t10_value !== (t10_value = (/*$curAuction*/ ctx[1]?.slotsEnd || "") + "")) set_data_dev(t10, t10_value);
+    			if ((!current || dirty & /*$chronicle*/ 64) && t14_value !== (t14_value = /*$chronicle*/ ctx[6]?.curBlockNum + "")) set_data_dev(t14, t14_value);
     			const auctionprogressindicator_changes = {};
-    			if (dirty & /*$curAuction*/ 1) auctionprogressindicator_changes.closingStart = /*$curAuction*/ ctx[0]?.closingStart;
-    			if (dirty & /*$curAuction*/ 1) auctionprogressindicator_changes.closingEnd = /*$curAuction*/ ctx[0]?.closingEnd;
-    			if (dirty & /*$chronicle*/ 16) auctionprogressindicator_changes.curBlockNum = /*$chronicle*/ ctx[4]?.curBlockNum;
-    			if (dirty & /*$curAuction*/ 1) auctionprogressindicator_changes.auctionStart = /*$curAuction*/ ctx[0]?.blockNum;
+    			if (dirty & /*$curAuction*/ 2) auctionprogressindicator_changes.closingStart = /*$curAuction*/ ctx[1]?.closingStart;
+    			if (dirty & /*$curAuction*/ 2) auctionprogressindicator_changes.closingEnd = /*$curAuction*/ ctx[1]?.closingEnd;
+    			if (dirty & /*$chronicle*/ 64) auctionprogressindicator_changes.curBlockNum = /*$chronicle*/ ctx[6]?.curBlockNum;
+    			if (dirty & /*$curAuction*/ 2) auctionprogressindicator_changes.auctionStart = /*$curAuction*/ ctx[1]?.blockNum;
     			auctionprogressindicator.$set(auctionprogressindicator_changes);
 
-    			if (dirty & /*groupedSlots*/ 2) {
-    				each_value_1 = /*groupedSlots*/ ctx[1];
+    			if (dirty & /*groupedSlots*/ 8) {
+    				each_value_1 = /*groupedSlots*/ ctx[3];
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -17808,19 +19131,19 @@ fragment parachainFields on Parachain {
     				check_outros();
     			}
 
-    			if (dirty & /*latestBids*/ 4) {
-    				each_value = /*latestBids*/ ctx[2];
+    			if (dirty & /*latestBids*/ 16) {
+    				each_value = /*latestBids*/ ctx[4];
     				validate_each_argument(each_value);
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i] = create_each_block$2(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(div18, null);
@@ -17876,98 +19199,16 @@ fragment parachainFields on Parachain {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
-    		type: "else",
-    		source: "(104:2) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (98:24) 
-    function create_if_block_1(ctx) {
-    	let div;
-    	let span;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			span = element("span");
-    			span.textContent = "Auction ended";
-    			attr_dev(span, "class", "text-blue-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0");
-    			set_style(span, "top", "30%");
-    			add_location(span, file$1, 99, 4, 3250);
-    			attr_dev(div, "class", "h-screen");
-    			add_location(div, file$1, 98, 2, 3223);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, span);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1.name,
+    		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(98:24) ",
+    		source: "(95:2) {#if $curAuction}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (92:2) {#if activeAuctions.fetch}
-    function create_if_block(ctx) {
-    	let div;
-    	let span;
-    	let i;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			span = element("span");
-    			i = element("i");
-    			attr_dev(i, "class", "fas fa-circle-notch fa-spin fa-5x");
-    			add_location(i, file$1, 94, 6, 3125);
-    			attr_dev(span, "class", "text-blue-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0");
-    			set_style(span, "top", "30%");
-    			add_location(span, file$1, 93, 4, 3017);
-    			attr_dev(div, "class", "h-screen");
-    			add_location(div, file$1, 92, 2, 2990);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, span);
-    			append_dev(span, i);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block.name,
-    		type: "if",
-    		source: "(92:2) {#if activeAuctions.fetch}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (141:14) {#each slots as slot }
+    // (132:14) {#each slots as slot }
     function create_each_block_2(ctx) {
     	let auctionslot;
     	let current;
@@ -17989,7 +19230,7 @@ fragment parachainFields on Parachain {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const auctionslot_changes = (dirty & /*groupedSlots*/ 2)
+    			const auctionslot_changes = (dirty & /*groupedSlots*/ 8)
     			? get_spread_update(auctionslot_spread_levels, [get_spread_object(/*slot*/ ctx[18]), auctionslot_spread_levels[1]])
     			: {};
 
@@ -18013,14 +19254,14 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(141:14) {#each slots as slot }",
+    		source: "(132:14) {#each slots as slot }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (135:8) {#each groupedSlots as slots, groupIdx}
+    // (126:8) {#each groupedSlots as slots, groupIdx}
     function create_each_block_1(ctx) {
     	let div2;
     	let div0;
@@ -18059,13 +19300,13 @@ fragment parachainFields on Parachain {
     			}
 
     			t3 = space();
-    			add_location(p, file$1, 137, 14, 5091);
+    			add_location(p, file$3, 128, 14, 4773);
     			attr_dev(div0, "class", "pl-4 text-base");
-    			add_location(div0, file$1, 136, 12, 5048);
+    			add_location(div0, file$3, 127, 12, 4730);
     			attr_dev(div1, "class", "grid grid-cols-12 gap-6 gap-y-8 p-4");
-    			add_location(div1, file$1, 139, 12, 5150);
+    			add_location(div1, file$3, 130, 12, 4832);
     			attr_dev(div2, "class", "box mb-6 py-4");
-    			add_location(div2, file$1, 135, 10, 5008);
+    			add_location(div2, file$3, 126, 10, 4690);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -18084,9 +19325,9 @@ fragment parachainFields on Parachain {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty & /*groupedSlots*/ 2) && t1_value !== (t1_value = /*slots*/ ctx[15].length + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*groupedSlots*/ 8) && t1_value !== (t1_value = /*slots*/ ctx[15].length + "")) set_data_dev(t1, t1_value);
 
-    			if (dirty & /*groupedSlots*/ 2) {
+    			if (dirty & /*groupedSlots*/ 8) {
     				each_value_2 = /*slots*/ ctx[15];
     				validate_each_argument(each_value_2);
     				let i;
@@ -18142,15 +19383,15 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(135:8) {#each groupedSlots as slots, groupIdx}",
+    		source: "(126:8) {#each groupedSlots as slots, groupIdx}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (155:8) {#each latestBids as bid}
-    function create_each_block(ctx) {
+    // (146:8) {#each latestBids as bid}
+    function create_each_block$2(ctx) {
     	let bidcard;
     	let current;
     	const bidcard_spread_levels = [/*bid*/ ctx[12]];
@@ -18171,7 +19412,7 @@ fragment parachainFields on Parachain {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const bidcard_changes = (dirty & /*latestBids*/ 4)
+    			const bidcard_changes = (dirty & /*latestBids*/ 16)
     			? get_spread_update(bidcard_spread_levels, [get_spread_object(/*bid*/ ctx[12])])
     			: {};
 
@@ -18193,16 +19434,16 @@ fragment parachainFields on Parachain {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block.name,
+    		id: create_each_block$2.name,
     		type: "each",
-    		source: "(155:8) {#each latestBids as bid}",
+    		source: "(146:8) {#each latestBids as bid}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$2(ctx) {
+    function create_fragment$4(ctx) {
     	let div3;
     	let div2;
     	let div0;
@@ -18213,19 +19454,17 @@ fragment parachainFields on Parachain {
     	let a;
     	let t3;
     	let div1;
-    	let t4_value = /*formatter*/ ctx[5].format(/*$time*/ ctx[3]) + "";
     	let t4;
     	let t5;
     	let current_block_type_index;
     	let if_block;
     	let current;
-    	const if_block_creators = [create_if_block, create_if_block_1, create_else_block];
+    	const if_block_creators = [create_if_block$2, create_else_block$2];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*activeAuctions*/ ctx[6].fetch) return 0;
-    		if (!curAuction) return 1;
-    		return 2;
+    		if (/*$activeAuctions*/ ctx[0].fetching && !chronicle) return 0;
+    		return 1;
     	}
 
     	current_block_type_index = select_block_type(ctx);
@@ -18244,11 +19483,11 @@ fragment parachainFields on Parachain {
     			a.textContent = "Auction";
     			t3 = space();
     			div1 = element("div");
-    			t4 = text(t4_value);
+    			t4 = text(/*$timeStr*/ ctx[5]);
     			t5 = space();
     			if_block.c();
     			attr_dev(polyline, "points", "9 18 15 12 9 6");
-    			add_location(polyline, file$1, 84, 63, 2759);
+    			add_location(polyline, file$3, 81, 63, 2751);
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "width", "24");
     			attr_dev(svg, "height", "24");
@@ -18259,17 +19498,17 @@ fragment parachainFields on Parachain {
     			attr_dev(svg, "stroke-linecap", "round");
     			attr_dev(svg, "stroke-linejoin", "round");
     			attr_dev(svg, "class", "feather feather-chevron-right breadcrumb__icon");
-    			add_location(svg, file$1, 74, 16, 2441);
+    			add_location(svg, file$3, 71, 16, 2433);
     			attr_dev(a, "href", "/");
     			attr_dev(a, "class", "breadcrumb--active");
-    			add_location(a, file$1, 85, 8, 2809);
-    			add_location(div0, file$1, 73, 4, 2419);
+    			add_location(a, file$3, 82, 8, 2801);
+    			add_location(div0, file$3, 70, 4, 2411);
     			attr_dev(div1, "class", "text-right flex-1");
-    			add_location(div1, file$1, 87, 4, 2875);
+    			add_location(div1, file$3, 84, 4, 2867);
     			attr_dev(div2, "class", "top-bar");
-    			add_location(div2, file$1, 72, 2, 2393);
+    			add_location(div2, file$3, 69, 2, 2385);
     			attr_dev(div3, "class", "content");
-    			add_location(div3, file$1, 71, 0, 2369);
+    			add_location(div3, file$3, 68, 0, 2361);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -18291,8 +19530,32 @@ fragment parachainFields on Parachain {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*$time*/ 8) && t4_value !== (t4_value = /*formatter*/ ctx[5].format(/*$time*/ ctx[3]) + "")) set_data_dev(t4, t4_value);
-    			if_block.p(ctx, dirty);
+    			if (!current || dirty & /*$timeStr*/ 32) set_data_dev(t4, /*$timeStr*/ ctx[5]);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div3, null);
+    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -18311,7 +19574,7 @@ fragment parachainFields on Parachain {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$2.name,
+    		id: create_fragment$4.name,
     		type: "component",
     		source: "",
     		ctx
@@ -18320,32 +19583,25 @@ fragment parachainFields on Parachain {
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$4($$self, $$props, $$invalidate) {
     	let slotsCombination;
     	let slotsWithWiningBid;
     	let groupedSlots;
     	let latestBids;
     	let $activeAuctions;
     	let $curAuction;
-    	let $time;
+    	let $timeStr;
     	let $chronicle;
     	validate_store(curAuction, "curAuction");
-    	component_subscribe($$self, curAuction, $$value => $$invalidate(0, $curAuction = $$value));
-    	validate_store(time, "time");
-    	component_subscribe($$self, time, $$value => $$invalidate(3, $time = $$value));
+    	component_subscribe($$self, curAuction, $$value => $$invalidate(1, $curAuction = $$value));
+    	validate_store(timeStr, "timeStr");
+    	component_subscribe($$self, timeStr, $$value => $$invalidate(5, $timeStr = $$value));
     	validate_store(chronicle, "chronicle");
-    	component_subscribe($$self, chronicle, $$value => $$invalidate(4, $chronicle = $$value));
+    	component_subscribe($$self, chronicle, $$value => $$invalidate(6, $chronicle = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("AuctionPage", slots, []);
     	let timer = 0;
-
-    	const formatter = new Intl.DateTimeFormat("en",
-    	{
-    			hour12: true,
-    			hour: "numeric",
-    			minute: "2-digit",
-    			second: "2-digit"
-    		});
+    	let slotLeases = [];
 
     	const activeAuction = {
     		auctionStatusFilter: { ongoing: { equalTo: true } }
@@ -18357,11 +19613,11 @@ fragment parachainFields on Parachain {
     	});
 
     	validate_store(activeAuctions, "activeAuctions");
-    	component_subscribe($$self, activeAuctions, value => $$invalidate(7, $activeAuctions = value));
+    	component_subscribe($$self, activeAuctions, value => $$invalidate(0, $activeAuctions = value));
     	query(activeAuctions);
 
     	onMount(async () => {
-    		setInterval(
+    		timer = setInterval(
     			() => {
     				activeAuctions.update(origin => {
     					origin.context = {
@@ -18372,12 +19628,13 @@ fragment parachainFields on Parachain {
     			},
     			5000
     		);
-    	});
 
-    	onDestroy(() => {
-    		if (timer) {
-    			clearInterval(timer);
-    		}
+    		return () => {
+    			if (timer) {
+    				clearInterval(timer);
+    				timer = 0;
+    			}
+    		};
     	});
 
     	const writable_props = [];
@@ -18387,10 +19644,10 @@ fragment parachainFields on Parachain {
     	});
 
     	$$self.$capture_state = () => ({
-    		AuctionSlot,
-    		time,
     		operationStore,
     		query,
+    		AuctionSlot,
+    		timeStr,
     		AUCTION_QUERY,
     		normalize,
     		getSlotsCombination,
@@ -18401,9 +19658,10 @@ fragment parachainFields on Parachain {
     		curAuction,
     		chronicle,
     		onMount,
-    		onDestroy,
+    		Loading,
+    		SlotLeaseChart,
     		timer,
-    		formatter,
+    		slotLeases,
     		activeAuction,
     		activeAuctions,
     		$activeAuctions,
@@ -18412,16 +19670,17 @@ fragment parachainFields on Parachain {
     		slotsWithWiningBid,
     		groupedSlots,
     		latestBids,
-    		$time,
+    		$timeStr,
     		$chronicle
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("timer" in $$props) timer = $$props.timer;
+    		if ("slotLeases" in $$props) $$invalidate(2, slotLeases = $$props.slotLeases);
     		if ("slotsCombination" in $$props) $$invalidate(8, slotsCombination = $$props.slotsCombination);
     		if ("slotsWithWiningBid" in $$props) $$invalidate(9, slotsWithWiningBid = $$props.slotsWithWiningBid);
-    		if ("groupedSlots" in $$props) $$invalidate(1, groupedSlots = $$props.groupedSlots);
-    		if ("latestBids" in $$props) $$invalidate(2, latestBids = $$props.latestBids);
+    		if ("groupedSlots" in $$props) $$invalidate(3, groupedSlots = $$props.groupedSlots);
+    		if ("latestBids" in $$props) $$invalidate(4, latestBids = $$props.latestBids);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -18429,30 +19688,30 @@ fragment parachainFields on Parachain {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$activeAuctions*/ 128) {
+    		if ($$self.$$.dirty & /*$activeAuctions*/ 1) {
     			{
     				if ($activeAuctions.data) {
-    					const { auctions, chronicle: curChronicle } = normalize($activeAuctions.data) || {};
+    					const { auctions, parachainLeaseds: leases } = normalize($activeAuctions.data) || {};
     					const [auction] = auctions;
 
     					if (auction) {
     						curAuction.set(auction);
     					}
 
-    					if (curChronicle) {
-    						chronicle.set(curChronicle);
+    					if (leases) {
+    						$$invalidate(2, slotLeases = leases);
     					}
     				}
     			}
     		}
 
-    		if ($$self.$$.dirty & /*$curAuction*/ 1) {
+    		if ($$self.$$.dirty & /*$curAuction*/ 2) {
     			$$invalidate(8, slotsCombination = $curAuction
     			? getSlotsCombination($curAuction.slotsStart)
     			: []);
     		}
 
-    		if ($$self.$$.dirty & /*slotsCombination, $curAuction*/ 257) {
+    		if ($$self.$$.dirty & /*slotsCombination, $curAuction*/ 258) {
     			$$invalidate(9, slotsWithWiningBid = slotsCombination.map(({ start, end }) => {
     				const { amount, parachain, isCrowdloan, bidder } = $curAuction.winningBids.find(({ firstSlot, lastSlot }) => firstSlot == start && lastSlot == end) || {};
     				const { paraId, manager, id, deposit, creationBlock } = parachain || {};
@@ -18475,25 +19734,25 @@ fragment parachainFields on Parachain {
     		}
 
     		if ($$self.$$.dirty & /*slotsWithWiningBid*/ 512) {
-    			$$invalidate(1, groupedSlots = orderBy(Object.values(groupBy(slotsWithWiningBid, ({ start, end }) => end - start)), ["length"], ["asc"]));
+    			$$invalidate(3, groupedSlots = orderBy(Object.values(groupBy(slotsWithWiningBid, ({ start, end }) => end - start)), ["length"], ["asc"]));
     		}
 
-    		if ($$self.$$.dirty & /*$curAuction*/ 1) {
-    			$$invalidate(2, latestBids = $curAuction
+    		if ($$self.$$.dirty & /*$curAuction*/ 2) {
+    			$$invalidate(4, latestBids = $curAuction
     			? orderBy([].concat($curAuction.winningBids, $curAuction.loseBids), ["createdAt"], ["desc"]).slice(0, 10)
     			: []);
     		}
     	};
 
     	return [
+    		$activeAuctions,
     		$curAuction,
+    		slotLeases,
     		groupedSlots,
     		latestBids,
-    		$time,
+    		$timeStr,
     		$chronicle,
-    		formatter,
     		activeAuctions,
-    		$activeAuctions,
     		slotsCombination,
     		slotsWithWiningBid
     	];
@@ -18502,14 +19761,1541 @@ fragment parachainFields on Parachain {
     class AuctionPage extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {});
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "AuctionPage",
     			options,
+    			id: create_fragment$4.name
+    		});
+    	}
+    }
+
+    const file$2 = "src/CrowdloanPage.svelte";
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	return child_ctx;
+    }
+
+    // (39:2) {:else}
+    function create_else_block$1(ctx) {
+    	let div;
+    	let table;
+    	let thead;
+    	let tr;
+    	let th0;
+    	let t1;
+    	let th1;
+    	let t3;
+    	let th2;
+    	let t5;
+    	let th3;
+    	let t7;
+    	let th4;
+    	let t9;
+    	let th5;
+    	let t11;
+    	let th6;
+    	let t13;
+    	let th7;
+    	let t15;
+    	let tbody;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let current;
+    	let each_value = /*crowdloans*/ ctx[1];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*crowdloan*/ ctx[6].id;
+    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$1(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			table = element("table");
+    			thead = element("thead");
+    			tr = element("tr");
+    			th0 = element("th");
+    			th0.textContent = "Parachain";
+    			t1 = space();
+    			th1 = element("th");
+    			th1.textContent = "Creator";
+    			t3 = space();
+    			th2 = element("th");
+    			th2.textContent = "First slot";
+    			t5 = space();
+    			th3 = element("th");
+    			th3.textContent = "Last slot";
+    			t7 = space();
+    			th4 = element("th");
+    			th4.textContent = "Raised / Cap";
+    			t9 = space();
+    			th5 = element("th");
+    			th5.textContent = "Ends";
+    			t11 = space();
+    			th6 = element("th");
+    			th6.textContent = "Status";
+    			t13 = space();
+    			th7 = element("th");
+    			th7.textContent = "Contributors";
+    			t15 = space();
+    			tbody = element("tbody");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			attr_dev(th0, "class", "whitespace-nowrap");
+    			add_location(th0, file$2, 43, 10, 1287);
+    			attr_dev(th1, "class", "whitespace-nowrap");
+    			add_location(th1, file$2, 44, 10, 1342);
+    			attr_dev(th2, "class", "text-center whitespace-nowrap");
+    			add_location(th2, file$2, 45, 10, 1395);
+    			attr_dev(th3, "class", "text-center whitespace-nowrap");
+    			add_location(th3, file$2, 46, 10, 1463);
+    			attr_dev(th4, "class", "text-right whitespace-nowrap");
+    			add_location(th4, file$2, 47, 10, 1530);
+    			attr_dev(th5, "class", "text-right whitespace-nowrap");
+    			add_location(th5, file$2, 48, 10, 1599);
+    			attr_dev(th6, "class", "text-center whitespace-nowrap");
+    			add_location(th6, file$2, 49, 10, 1660);
+    			attr_dev(th7, "class", "text-center whitespace-nowrap");
+    			add_location(th7, file$2, 50, 10, 1724);
+    			add_location(tr, file$2, 42, 8, 1272);
+    			add_location(thead, file$2, 41, 6, 1256);
+    			add_location(tbody, file$2, 53, 6, 1819);
+    			attr_dev(table, "class", "table table-report -mt-2");
+    			add_location(table, file$2, 40, 4, 1209);
+    			attr_dev(div, "class", "mt-6");
+    			add_location(div, file$2, 39, 2, 1186);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, table);
+    			append_dev(table, thead);
+    			append_dev(thead, tr);
+    			append_dev(tr, th0);
+    			append_dev(tr, t1);
+    			append_dev(tr, th1);
+    			append_dev(tr, t3);
+    			append_dev(tr, th2);
+    			append_dev(tr, t5);
+    			append_dev(tr, th3);
+    			append_dev(tr, t7);
+    			append_dev(tr, th4);
+    			append_dev(tr, t9);
+    			append_dev(tr, th5);
+    			append_dev(tr, t11);
+    			append_dev(tr, th6);
+    			append_dev(tr, t13);
+    			append_dev(tr, th7);
+    			append_dev(table, t15);
+    			append_dev(table, tbody);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(tbody, null);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*crowdloans, getDateFromBlockNum, $lastBlockNum, $lastBlockTime*/ 26) {
+    				each_value = /*crowdloans*/ ctx[1];
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, tbody, outro_and_destroy_block, create_each_block$1, null, get_each_context$1);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$1.name,
+    		type: "else",
+    		source: "(39:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (37:2) {#if $crowdloanOps.fetching }
+    function create_if_block$1(ctx) {
+    	let loading;
+    	let current;
+    	loading = new Loading({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(loading.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(loading, target, anchor);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(loading.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(loading.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(loading, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(37:2) {#if $crowdloanOps.fetching }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (80:14) <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">
+    function create_default_slot$2(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("View");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$2.name,
+    		type: "slot",
+    		source: "(80:14) <Link to=\\\"/crowdloan/{crowdloan.id}\\\" class=\\\"btn text-sm\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (55:8) {#each crowdloans as crowdloan (crowdloan.id) }
+    function create_each_block$1(key_1, ctx) {
+    	let tr;
+    	let td0;
+    	let div2;
+    	let div0;
+    	let t0;
+    	let div1;
+    	let t1_value = /*crowdloan*/ ctx[6].parachain.paraId + "";
+    	let t1;
+    	let t2;
+    	let td1;
+    	let div3;
+    	let t3_value = /*crowdloan*/ ctx[6].depositor + "";
+    	let t3;
+    	let div3_title_value;
+    	let t4;
+    	let td2;
+    	let div4;
+    	let t5_value = /*crowdloan*/ ctx[6].firstSlot + "";
+    	let t5;
+    	let t6;
+    	let td3;
+    	let div5;
+    	let t7_value = /*crowdloan*/ ctx[6].lastSlot + "";
+    	let t7;
+    	let t8;
+    	let td4;
+    	let div6;
+    	let token0;
+    	let t9;
+    	let token1;
+    	let t10;
+    	let div7;
+    	let t11_value = (/*crowdloan*/ ctx[6].raised / /*crowdloan*/ ctx[6].cap * 100).toFixed(2) + "";
+    	let t11;
+    	let t12;
+    	let t13;
+    	let td5;
+    	let div8;
+    	let t14_value = /*crowdloan*/ ctx[6].lockExpiredBlock + "";
+    	let t14;
+    	let t15;
+    	let div9;
+    	let t16_value = getDateFromBlockNum(/*crowdloan*/ ctx[6].lockExpiredBlock, /*$lastBlockNum*/ ctx[3], /*$lastBlockTime*/ ctx[4]) + "";
+    	let t16;
+    	let t17;
+    	let td6;
+    	let div10;
+    	let t18_value = (/*crowdloan*/ ctx[6].retiring ? "Retired" : "Active") + "";
+    	let t18;
+    	let t19;
+    	let td7;
+    	let link;
+    	let t20;
+    	let current;
+
+    	token0 = new Token({
+    			props: {
+    				value: /*crowdloan*/ ctx[6].raised,
+    				allowZero: true,
+    				addSymbol: false
+    			},
+    			$$inline: true
+    		});
+
+    	token1 = new Token({
+    			props: {
+    				allowZero: true,
+    				value: /*crowdloan*/ ctx[6].cap
+    			},
+    			$$inline: true
+    		});
+
+    	link = new Link({
+    			props: {
+    				to: "/crowdloan/" + /*crowdloan*/ ctx[6].id,
+    				class: "btn text-sm",
+    				$$slots: { default: [create_default_slot$2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			tr = element("tr");
+    			td0 = element("td");
+    			div2 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			div1 = element("div");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			td1 = element("td");
+    			div3 = element("div");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			td2 = element("td");
+    			div4 = element("div");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			td3 = element("td");
+    			div5 = element("div");
+    			t7 = text(t7_value);
+    			t8 = space();
+    			td4 = element("td");
+    			div6 = element("div");
+    			create_component(token0.$$.fragment);
+    			t9 = text(" / ");
+    			create_component(token1.$$.fragment);
+    			t10 = space();
+    			div7 = element("div");
+    			t11 = text(t11_value);
+    			t12 = text("%");
+    			t13 = space();
+    			td5 = element("td");
+    			div8 = element("div");
+    			t14 = text(t14_value);
+    			t15 = space();
+    			div9 = element("div");
+    			t16 = text(t16_value);
+    			t17 = space();
+    			td6 = element("td");
+    			div10 = element("div");
+    			t18 = text(t18_value);
+    			t19 = space();
+    			td7 = element("td");
+    			create_component(link.$$.fragment);
+    			t20 = space();
+    			add_location(div0, file$2, 58, 16, 2013);
+    			add_location(div1, file$2, 59, 16, 2041);
+    			attr_dev(div2, "class", "text-center flex");
+    			add_location(div2, file$2, 57, 14, 1966);
+    			attr_dev(td0, "class", "w-40");
+    			add_location(td0, file$2, 56, 12, 1934);
+    			attr_dev(div3, "class", "text-gray-600 whitespace-nowrap ellipsis-text w-40 svelte-1b6jv3z");
+    			attr_dev(div3, "title", div3_title_value = /*crowdloan*/ ctx[6].depositor);
+    			add_location(div3, file$2, 63, 14, 2160);
+    			attr_dev(td1, "class", "");
+    			add_location(td1, file$2, 62, 12, 2132);
+    			attr_dev(div4, "class", "text-center ");
+    			add_location(div4, file$2, 65, 16, 2314);
+    			add_location(td2, file$2, 65, 12, 2310);
+    			attr_dev(div5, "class", "text-center ");
+    			add_location(div5, file$2, 66, 16, 2389);
+    			add_location(td3, file$2, 66, 12, 2385);
+    			attr_dev(div6, "class", "text-right");
+    			add_location(div6, file$2, 68, 14, 2478);
+    			attr_dev(div7, "class", "text-right");
+    			add_location(div7, file$2, 69, 14, 2643);
+    			add_location(td4, file$2, 67, 12, 2459);
+    			attr_dev(div8, "class", "text-right");
+    			add_location(div8, file$2, 72, 14, 2788);
+    			attr_dev(div9, "class", "text-right text-gray-600");
+    			add_location(div9, file$2, 73, 14, 2861);
+    			attr_dev(td5, "class", "");
+    			add_location(td5, file$2, 71, 12, 2760);
+    			attr_dev(div10, "class", "flex justify-center items-center");
+    			add_location(div10, file$2, 76, 14, 3044);
+    			attr_dev(td6, "class", "");
+    			add_location(td6, file$2, 75, 12, 3016);
+    			attr_dev(td7, "class", "text-center");
+    			add_location(td7, file$2, 78, 12, 3170);
+    			attr_dev(tr, "class", "intro-x zoom-in");
+    			add_location(tr, file$2, 55, 10, 1893);
+    			this.first = tr;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td0);
+    			append_dev(td0, div2);
+    			append_dev(div2, div0);
+    			append_dev(div2, t0);
+    			append_dev(div2, div1);
+    			append_dev(div1, t1);
+    			append_dev(tr, t2);
+    			append_dev(tr, td1);
+    			append_dev(td1, div3);
+    			append_dev(div3, t3);
+    			append_dev(tr, t4);
+    			append_dev(tr, td2);
+    			append_dev(td2, div4);
+    			append_dev(div4, t5);
+    			append_dev(tr, t6);
+    			append_dev(tr, td3);
+    			append_dev(td3, div5);
+    			append_dev(div5, t7);
+    			append_dev(tr, t8);
+    			append_dev(tr, td4);
+    			append_dev(td4, div6);
+    			mount_component(token0, div6, null);
+    			append_dev(div6, t9);
+    			mount_component(token1, div6, null);
+    			append_dev(td4, t10);
+    			append_dev(td4, div7);
+    			append_dev(div7, t11);
+    			append_dev(div7, t12);
+    			append_dev(tr, t13);
+    			append_dev(tr, td5);
+    			append_dev(td5, div8);
+    			append_dev(div8, t14);
+    			append_dev(td5, t15);
+    			append_dev(td5, div9);
+    			append_dev(div9, t16);
+    			append_dev(tr, t17);
+    			append_dev(tr, td6);
+    			append_dev(td6, div10);
+    			append_dev(div10, t18);
+    			append_dev(tr, t19);
+    			append_dev(tr, td7);
+    			mount_component(link, td7, null);
+    			append_dev(tr, t20);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if ((!current || dirty & /*crowdloans*/ 2) && t1_value !== (t1_value = /*crowdloan*/ ctx[6].parachain.paraId + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t3_value !== (t3_value = /*crowdloan*/ ctx[6].depositor + "")) set_data_dev(t3, t3_value);
+
+    			if (!current || dirty & /*crowdloans*/ 2 && div3_title_value !== (div3_title_value = /*crowdloan*/ ctx[6].depositor)) {
+    				attr_dev(div3, "title", div3_title_value);
+    			}
+
+    			if ((!current || dirty & /*crowdloans*/ 2) && t5_value !== (t5_value = /*crowdloan*/ ctx[6].firstSlot + "")) set_data_dev(t5, t5_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t7_value !== (t7_value = /*crowdloan*/ ctx[6].lastSlot + "")) set_data_dev(t7, t7_value);
+    			const token0_changes = {};
+    			if (dirty & /*crowdloans*/ 2) token0_changes.value = /*crowdloan*/ ctx[6].raised;
+    			token0.$set(token0_changes);
+    			const token1_changes = {};
+    			if (dirty & /*crowdloans*/ 2) token1_changes.value = /*crowdloan*/ ctx[6].cap;
+    			token1.$set(token1_changes);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t11_value !== (t11_value = (/*crowdloan*/ ctx[6].raised / /*crowdloan*/ ctx[6].cap * 100).toFixed(2) + "")) set_data_dev(t11, t11_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t14_value !== (t14_value = /*crowdloan*/ ctx[6].lockExpiredBlock + "")) set_data_dev(t14, t14_value);
+    			if ((!current || dirty & /*crowdloans, $lastBlockNum, $lastBlockTime*/ 26) && t16_value !== (t16_value = getDateFromBlockNum(/*crowdloan*/ ctx[6].lockExpiredBlock, /*$lastBlockNum*/ ctx[3], /*$lastBlockTime*/ ctx[4]) + "")) set_data_dev(t16, t16_value);
+    			if ((!current || dirty & /*crowdloans*/ 2) && t18_value !== (t18_value = (/*crowdloan*/ ctx[6].retiring ? "Retired" : "Active") + "")) set_data_dev(t18, t18_value);
+    			const link_changes = {};
+    			if (dirty & /*crowdloans*/ 2) link_changes.to = "/crowdloan/" + /*crowdloan*/ ctx[6].id;
+
+    			if (dirty & /*$$scope*/ 512) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(token0.$$.fragment, local);
+    			transition_in(token1.$$.fragment, local);
+    			transition_in(link.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(token0.$$.fragment, local);
+    			transition_out(token1.$$.fragment, local);
+    			transition_out(link.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    			destroy_component(token0);
+    			destroy_component(token1);
+    			destroy_component(link);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$1.name,
+    		type: "each",
+    		source: "(55:8) {#each crowdloans as crowdloan (crowdloan.id) }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$3(ctx) {
+    	let div3;
+    	let div2;
+    	let div0;
+    	let t0;
+    	let svg;
+    	let polyline;
+    	let t1;
+    	let a;
+    	let t3;
+    	let div1;
+    	let t4;
+    	let t5;
+    	let current_block_type_index;
+    	let if_block;
+    	let current;
+    	const if_block_creators = [create_if_block$1, create_else_block$1];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*$crowdloanOps*/ ctx[0].fetching) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			t0 = text("Parachain ");
+    			svg = svg_element("svg");
+    			polyline = svg_element("polyline");
+    			t1 = space();
+    			a = element("a");
+    			a.textContent = "Crowdloan";
+    			t3 = space();
+    			div1 = element("div");
+    			t4 = text(/*$timeStr*/ ctx[2]);
+    			t5 = space();
+    			if_block.c();
+    			attr_dev(polyline, "points", "9 18 15 12 9 6");
+    			add_location(polyline, file$2, 28, 63, 940);
+    			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
+    			attr_dev(svg, "width", "24");
+    			attr_dev(svg, "height", "24");
+    			attr_dev(svg, "viewBox", "0 0 24 24");
+    			attr_dev(svg, "fill", "none");
+    			attr_dev(svg, "stroke", "currentColor");
+    			attr_dev(svg, "stroke-width", "1.5");
+    			attr_dev(svg, "stroke-linecap", "round");
+    			attr_dev(svg, "stroke-linejoin", "round");
+    			attr_dev(svg, "class", "feather feather-chevron-right breadcrumb__icon");
+    			add_location(svg, file$2, 18, 16, 622);
+    			attr_dev(a, "href", "/");
+    			attr_dev(a, "class", "breadcrumb--active");
+    			add_location(a, file$2, 29, 8, 990);
+    			add_location(div0, file$2, 17, 4, 600);
+    			attr_dev(div1, "class", "text-right flex-1");
+    			add_location(div1, file$2, 31, 4, 1058);
+    			attr_dev(div2, "class", "top-bar");
+    			add_location(div2, file$2, 16, 2, 574);
+    			attr_dev(div3, "class", "content");
+    			add_location(div3, file$2, 15, 0, 550);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div2, div0);
+    			append_dev(div0, t0);
+    			append_dev(div0, svg);
+    			append_dev(svg, polyline);
+    			append_dev(div0, t1);
+    			append_dev(div0, a);
+    			append_dev(div2, t3);
+    			append_dev(div2, div1);
+    			append_dev(div1, t4);
+    			append_dev(div3, t5);
+    			if_blocks[current_block_type_index].m(div3, null);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*$timeStr*/ 4) set_data_dev(t4, /*$timeStr*/ ctx[2]);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div3, null);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let crowdloans;
+    	let $crowdloanOps;
+    	let $timeStr;
+    	let $lastBlockNum;
+    	let $lastBlockTime;
+    	validate_store(timeStr, "timeStr");
+    	component_subscribe($$self, timeStr, $$value => $$invalidate(2, $timeStr = $$value));
+    	validate_store(lastBlockNum, "lastBlockNum");
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(3, $lastBlockNum = $$value));
+    	validate_store(lastBlockTime, "lastBlockTime");
+    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(4, $lastBlockTime = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("CrowdloanPage", slots, []);
+    	const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: "network-only" });
+    	validate_store(crowdloanOps, "crowdloanOps");
+    	component_subscribe($$self, crowdloanOps, value => $$invalidate(0, $crowdloanOps = value));
+    	query(crowdloanOps);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<CrowdloanPage> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({
+    		operationStore,
+    		query,
+    		timeStr,
+    		lastBlockNum,
+    		lastBlockTime,
+    		CROWDLOAN_QUERY,
+    		Token,
+    		getDateFromBlockNum,
+    		Link,
+    		Loading,
+    		crowdloanOps,
+    		crowdloans,
+    		$crowdloanOps,
+    		$timeStr,
+    		$lastBlockNum,
+    		$lastBlockTime
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("crowdloans" in $$props) $$invalidate(1, crowdloans = $$props.crowdloans);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$crowdloanOps*/ 1) {
+    			$$invalidate(1, crowdloans = $crowdloanOps.data?.crowdloans.nodes || []);
+    		}
+    	};
+
+    	return [
+    		$crowdloanOps,
+    		crowdloans,
+    		$timeStr,
+    		$lastBlockNum,
+    		$lastBlockTime,
+    		crowdloanOps
+    	];
+    }
+
+    class CrowdloanPage extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "CrowdloanPage",
+    			options,
+    			id: create_fragment$3.name
+    		});
+    	}
+    }
+
+    const file$1 = "src/ContributorPage.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[9] = list[i];
+    	child_ctx[11] = i;
+    	return child_ctx;
+    }
+
+    // (50:8) <Link to="/crowdloan" class="breadcrumb--active">
+    function create_default_slot$1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Crowdloan");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$1.name,
+    		type: "slot",
+    		source: "(50:8) <Link to=\\\"/crowdloan\\\" class=\\\"breadcrumb--active\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (70:2) {:else}
+    function create_else_block(ctx) {
+    	let div1;
+    	let div0;
+    	let table;
+    	let thead;
+    	let tr;
+    	let th0;
+    	let t1;
+    	let th1;
+    	let t3;
+    	let th2;
+    	let t5;
+    	let th3;
+    	let t7;
+    	let tbody;
+    	let current_block_type_index;
+    	let if_block;
+    	let current;
+    	const if_block_creators = [create_if_block_1, create_else_block_1];
+    	const if_blocks = [];
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*contributions*/ ctx[2]?.length) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type_1(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			table = element("table");
+    			thead = element("thead");
+    			tr = element("tr");
+    			th0 = element("th");
+    			th0.textContent = "Contributor";
+    			t1 = space();
+    			th1 = element("th");
+    			th1.textContent = "Amount";
+    			t3 = space();
+    			th2 = element("th");
+    			th2.textContent = "Ratio";
+    			t5 = space();
+    			th3 = element("th");
+    			th3.textContent = "Contributed at";
+    			t7 = space();
+    			tbody = element("tbody");
+    			if_block.c();
+    			attr_dev(th0, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap");
+    			add_location(th0, file$1, 75, 12, 2105);
+    			attr_dev(th1, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
+    			add_location(th1, file$1, 76, 12, 2194);
+    			attr_dev(th2, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
+    			add_location(th2, file$1, 77, 12, 2289);
+    			attr_dev(th3, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
+    			add_location(th3, file$1, 78, 12, 2383);
+    			add_location(tr, file$1, 74, 10, 2088);
+    			add_location(thead, file$1, 73, 8, 2070);
+    			add_location(tbody, file$1, 81, 8, 2515);
+    			attr_dev(table, "class", "table");
+    			add_location(table, file$1, 72, 6, 2040);
+    			attr_dev(div0, "class", "overflow-x-auto");
+    			add_location(div0, file$1, 71, 4, 2003);
+    			attr_dev(div1, "class", "mt-6");
+    			add_location(div1, file$1, 70, 2, 1980);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			append_dev(div0, table);
+    			append_dev(table, thead);
+    			append_dev(thead, tr);
+    			append_dev(tr, th0);
+    			append_dev(tr, t1);
+    			append_dev(tr, th1);
+    			append_dev(tr, t3);
+    			append_dev(tr, th2);
+    			append_dev(tr, t5);
+    			append_dev(tr, th3);
+    			append_dev(table, t7);
+    			append_dev(table, tbody);
+    			if_blocks[current_block_type_index].m(tbody, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type_1(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(tbody, null);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(70:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (68:2) {#if $contributionsOps.fetching}
+    function create_if_block(ctx) {
+    	let loading;
+    	let current;
+    	loading = new Loading({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(loading.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(loading, target, anchor);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(loading.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(loading.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(loading, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(68:2) {#if $contributionsOps.fetching}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (95:10) {:else}
+    function create_else_block_1(ctx) {
+    	let tr;
+    	let td;
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			tr = element("tr");
+    			td = element("td");
+    			div = element("div");
+    			div.textContent = "No contributions found";
+    			attr_dev(div, "class", "py-5 text-xl text-gray-600");
+    			add_location(div, file$1, 96, 48, 3425);
+    			attr_dev(td, "colspan", "4");
+    			attr_dev(td, "class", "text-center");
+    			add_location(td, file$1, 96, 12, 3389);
+    			add_location(tr, file$1, 95, 10, 3372);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td);
+    			append_dev(td, div);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(95:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (83:10) {#if contributions?.length}
+    function create_if_block_1(ctx) {
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let each_1_anchor;
+    	let current;
+    	let each_value = /*contributions*/ ctx[2];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*contribution*/ ctx[9].id;
+    	validate_each_keys(ctx, each_value, get_each_context, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*contributions, getDateFromBlockNum, $lastBlockNum, $lastBlockTime, Big, fund*/ 108) {
+    				each_value = /*contributions*/ ctx[2];
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block, each_1_anchor, get_each_context);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(83:10) {#if contributions?.length}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (84:10) {#each contributions as contribution, i (contribution.id)}
+    function create_each_block(key_1, ctx) {
+    	let tr;
+    	let td0;
+    	let t0_value = /*contribution*/ ctx[9].account + "";
+    	let t0;
+    	let t1;
+    	let td1;
+    	let token;
+    	let t2;
+    	let td2;
+    	let t3_value = big(/*contribution*/ ctx[9].amount).div(/*fund*/ ctx[3].raised).times(100).toFixed(4) + "";
+    	let t3;
+    	let t4;
+    	let t5;
+    	let td3;
+    	let div0;
+    	let t6_value = /*contribution*/ ctx[9].blockNum + "";
+    	let t6;
+    	let t7;
+    	let div1;
+    	let t8_value = getDateFromBlockNum(/*contribution*/ ctx[9].blockNum, /*$lastBlockNum*/ ctx[5], /*$lastBlockTime*/ ctx[6]) + "";
+    	let t8;
+    	let t9;
+    	let tr_class_value;
+    	let current;
+
+    	token = new Token({
+    			props: {
+    				allowZero: true,
+    				value: /*contribution*/ ctx[9].amount
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			tr = element("tr");
+    			td0 = element("td");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			td1 = element("td");
+    			create_component(token.$$.fragment);
+    			t2 = space();
+    			td2 = element("td");
+    			t3 = text(t3_value);
+    			t4 = text("%");
+    			t5 = space();
+    			td3 = element("td");
+    			div0 = element("div");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div1 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			attr_dev(td0, "class", "border-b dark:border-dark-5");
+    			add_location(td0, file$1, 85, 12, 2714);
+    			attr_dev(td1, "class", "border-b dark:border-dark-5 text-right");
+    			add_location(td1, file$1, 86, 12, 2794);
+    			attr_dev(td2, "class", "border-b dark:border-dark-5 text-right");
+    			add_location(td2, file$1, 87, 12, 2917);
+    			attr_dev(div0, "class", "text-right");
+    			add_location(div0, file$1, 89, 14, 3118);
+    			attr_dev(div1, "class", "text-right");
+    			add_location(div1, file$1, 90, 14, 3186);
+    			attr_dev(td3, "class", "border-b dark:border-dark-5 text-right");
+    			add_location(td3, file$1, 88, 12, 3052);
+    			attr_dev(tr, "class", tr_class_value = "" + ((/*i*/ ctx[11] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"));
+    			add_location(tr, file$1, 84, 10, 2640);
+    			this.first = tr;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td0);
+    			append_dev(td0, t0);
+    			append_dev(tr, t1);
+    			append_dev(tr, td1);
+    			mount_component(token, td1, null);
+    			append_dev(tr, t2);
+    			append_dev(tr, td2);
+    			append_dev(td2, t3);
+    			append_dev(td2, t4);
+    			append_dev(tr, t5);
+    			append_dev(tr, td3);
+    			append_dev(td3, div0);
+    			append_dev(div0, t6);
+    			append_dev(td3, t7);
+    			append_dev(td3, div1);
+    			append_dev(div1, t8);
+    			append_dev(tr, t9);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if ((!current || dirty & /*contributions*/ 4) && t0_value !== (t0_value = /*contribution*/ ctx[9].account + "")) set_data_dev(t0, t0_value);
+    			const token_changes = {};
+    			if (dirty & /*contributions*/ 4) token_changes.value = /*contribution*/ ctx[9].amount;
+    			token.$set(token_changes);
+    			if ((!current || dirty & /*contributions, fund*/ 12) && t3_value !== (t3_value = big(/*contribution*/ ctx[9].amount).div(/*fund*/ ctx[3].raised).times(100).toFixed(4) + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*contributions*/ 4) && t6_value !== (t6_value = /*contribution*/ ctx[9].blockNum + "")) set_data_dev(t6, t6_value);
+    			if ((!current || dirty & /*contributions, $lastBlockNum, $lastBlockTime*/ 100) && t8_value !== (t8_value = getDateFromBlockNum(/*contribution*/ ctx[9].blockNum, /*$lastBlockNum*/ ctx[5], /*$lastBlockTime*/ ctx[6]) + "")) set_data_dev(t8, t8_value);
+
+    			if (!current || dirty & /*contributions*/ 4 && tr_class_value !== (tr_class_value = "" + ((/*i*/ ctx[11] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"))) {
+    				attr_dev(tr, "class", tr_class_value);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(token.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(token.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    			destroy_component(token);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(84:10) {#each contributions as contribution, i (contribution.id)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$2(ctx) {
+    	let div3;
+    	let div2;
+    	let div0;
+    	let t0;
+    	let svg0;
+    	let polyline0;
+    	let t1;
+    	let link;
+    	let t2;
+    	let svg1;
+    	let polyline1;
+    	let t3;
+    	let t4;
+    	let t5;
+    	let div1;
+    	let t6;
+    	let t7;
+    	let current_block_type_index;
+    	let if_block;
+    	let current;
+
+    	link = new Link({
+    			props: {
+    				to: "/crowdloan",
+    				class: "breadcrumb--active",
+    				$$slots: { default: [create_default_slot$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const if_block_creators = [create_if_block, create_else_block];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*$contributionsOps*/ ctx[1].fetching) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			t0 = text("Parachain ");
+    			svg0 = svg_element("svg");
+    			polyline0 = svg_element("polyline");
+    			t1 = space();
+    			create_component(link.$$.fragment);
+    			t2 = space();
+    			svg1 = svg_element("svg");
+    			polyline1 = svg_element("polyline");
+    			t3 = space();
+    			t4 = text(/*fundId*/ ctx[0]);
+    			t5 = space();
+    			div1 = element("div");
+    			t6 = text(/*$timeStr*/ ctx[4]);
+    			t7 = space();
+    			if_block.c();
+    			attr_dev(polyline0, "points", "9 18 15 12 9 6");
+    			add_location(polyline0, file$1, 48, 63, 1363);
+    			attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
+    			attr_dev(svg0, "width", "24");
+    			attr_dev(svg0, "height", "24");
+    			attr_dev(svg0, "viewBox", "0 0 24 24");
+    			attr_dev(svg0, "fill", "none");
+    			attr_dev(svg0, "stroke", "currentColor");
+    			attr_dev(svg0, "stroke-width", "1.5");
+    			attr_dev(svg0, "stroke-linecap", "round");
+    			attr_dev(svg0, "stroke-linejoin", "round");
+    			attr_dev(svg0, "class", "feather feather-chevron-right breadcrumb__icon");
+    			add_location(svg0, file$1, 38, 16, 1045);
+    			attr_dev(polyline1, "points", "9 18 15 12 9 6");
+    			add_location(polyline1, file$1, 59, 61, 1777);
+    			attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
+    			attr_dev(svg1, "width", "24");
+    			attr_dev(svg1, "height", "24");
+    			attr_dev(svg1, "viewBox", "0 0 24 24");
+    			attr_dev(svg1, "fill", "none");
+    			attr_dev(svg1, "stroke", "currentColor");
+    			attr_dev(svg1, "stroke-width", "1.5");
+    			attr_dev(svg1, "stroke-linecap", "round");
+    			attr_dev(svg1, "stroke-linejoin", "round");
+    			attr_dev(svg1, "class", "feather feather-chevron-right breadcrumb__icon");
+    			add_location(svg1, file$1, 49, 74, 1479);
+    			add_location(div0, file$1, 37, 4, 1023);
+    			attr_dev(div1, "class", "text-right flex-1");
+    			add_location(div1, file$1, 62, 4, 1849);
+    			attr_dev(div2, "class", "top-bar");
+    			add_location(div2, file$1, 36, 2, 997);
+    			attr_dev(div3, "class", "content");
+    			add_location(div3, file$1, 35, 0, 973);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div2, div0);
+    			append_dev(div0, t0);
+    			append_dev(div0, svg0);
+    			append_dev(svg0, polyline0);
+    			append_dev(div0, t1);
+    			mount_component(link, div0, null);
+    			append_dev(div0, t2);
+    			append_dev(div0, svg1);
+    			append_dev(svg1, polyline1);
+    			append_dev(div0, t3);
+    			append_dev(div0, t4);
+    			append_dev(div2, t5);
+    			append_dev(div2, div1);
+    			append_dev(div1, t6);
+    			append_dev(div3, t7);
+    			if_blocks[current_block_type_index].m(div3, null);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const link_changes = {};
+
+    			if (dirty & /*$$scope*/ 4096) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+    			if (!current || dirty & /*fundId*/ 1) set_data_dev(t4, /*fundId*/ ctx[0]);
+    			if (!current || dirty & /*$timeStr*/ 16) set_data_dev(t6, /*$timeStr*/ ctx[4]);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div3, null);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(link.$$.fragment, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(link.$$.fragment, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			destroy_component(link);
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let $contributionsOps;
+    	let $timeStr;
+    	let $lastBlockNum;
+    	let $lastBlockTime;
+    	validate_store(timeStr, "timeStr");
+    	component_subscribe($$self, timeStr, $$value => $$invalidate(4, $timeStr = $$value));
+    	validate_store(lastBlockNum, "lastBlockNum");
+    	component_subscribe($$self, lastBlockNum, $$value => $$invalidate(5, $lastBlockNum = $$value));
+    	validate_store(lastBlockTime, "lastBlockTime");
+    	component_subscribe($$self, lastBlockTime, $$value => $$invalidate(6, $lastBlockTime = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("ContributorPage", slots, []);
+    	let { fundId } = $$props;
+
+    	const params = {
+    		fundId,
+    		fundIdFilter: { fundId: { equalTo: fundId } }
+    	};
+
+    	let contributions, fund;
+    	const contributionsOps = operationStore(CONTRIBUTORS_QUERY, params, { requestPolicy: "network-only" });
+    	validate_store(contributionsOps, "contributionsOps");
+    	component_subscribe($$self, contributionsOps, value => $$invalidate(1, $contributionsOps = value));
+    	query(contributionsOps);
+    	const writable_props = ["fundId"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ContributorPage> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("fundId" in $$props) $$invalidate(0, fundId = $$props.fundId);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		operationStore,
+    		query,
+    		timeStr,
+    		lastBlockNum,
+    		lastBlockTime,
+    		CONTRIBUTORS_QUERY,
+    		Token,
+    		Big: big,
+    		Link,
+    		normalize,
+    		getDateFromBlockNum,
+    		Loading,
+    		fundId,
+    		params,
+    		contributions,
+    		fund,
+    		contributionsOps,
+    		$contributionsOps,
+    		$timeStr,
+    		$lastBlockNum,
+    		$lastBlockTime
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("fundId" in $$props) $$invalidate(0, fundId = $$props.fundId);
+    		if ("contributions" in $$props) $$invalidate(2, contributions = $$props.contributions);
+    		if ("fund" in $$props) $$invalidate(3, fund = $$props.fund);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$contributionsOps*/ 2) {
+    			{
+    				if (!contributionsOps.fetching && contributionsOps.data) {
+    					const { contributions: fundContribution, crowdloan } = normalize($contributionsOps.data);
+    					$$invalidate(2, contributions = fundContribution);
+    					$$invalidate(3, fund = crowdloan);
+    				}
+    			}
+    		}
+    	};
+
+    	return [
+    		fundId,
+    		$contributionsOps,
+    		contributions,
+    		fund,
+    		$timeStr,
+    		$lastBlockNum,
+    		$lastBlockTime,
+    		contributionsOps
+    	];
+    }
+
+    class ContributorPage extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { fundId: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "ContributorPage",
+    			options,
     			id: create_fragment$2.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*fundId*/ ctx[0] === undefined && !("fundId" in props)) {
+    			console.warn("<ContributorPage> was created without expected prop 'fundId'");
+    		}
+    	}
+
+    	get fundId() {
+    		throw new Error("<ContributorPage>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set fundId(value) {
+    		throw new Error("<ContributorPage>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -18565,7 +21351,7 @@ fragment parachainFields on Parachain {
 
     const file = "src/App.svelte";
 
-    // (21:6) 
+    // (57:6) 
     function create_mobile_menu_slot(ctx) {
     	let div;
     	let mobilemenu;
@@ -18577,7 +21363,7 @@ fragment parachainFields on Parachain {
     			div = element("div");
     			create_component(mobilemenu.$$.fragment);
     			attr_dev(div, "slot", "mobile-menu");
-    			add_location(div, file, 20, 6, 494);
+    			add_location(div, file, 56, 6, 1454);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -18603,14 +21389,14 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_mobile_menu_slot.name,
     		type: "slot",
-    		source: "(21:6) ",
+    		source: "(57:6) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (24:6) 
+    // (60:6) 
     function create_side_menu_slot(ctx) {
     	let div;
     	let sidemenu;
@@ -18622,7 +21408,7 @@ fragment parachainFields on Parachain {
     			div = element("div");
     			create_component(sidemenu.$$.fragment);
     			attr_dev(div, "slot", "side-menu");
-    			add_location(div, file, 23, 6, 561);
+    			add_location(div, file, 59, 6, 1521);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -18648,38 +21434,47 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_side_menu_slot.name,
     		type: "slot",
-    		source: "(24:6) ",
+    		source: "(60:6) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (26:8) <Route path="/">
+    // (64:8) <Route path="/crowdloan/:id" let:params>
     function create_default_slot_1(ctx) {
-    	let auctionpage;
+    	let contributorpage;
     	let current;
-    	auctionpage = new AuctionPage({ $$inline: true });
+
+    	contributorpage = new ContributorPage({
+    			props: { fundId: /*params*/ ctx[3].id },
+    			$$inline: true
+    		});
 
     	const block = {
     		c: function create() {
-    			create_component(auctionpage.$$.fragment);
+    			create_component(contributorpage.$$.fragment);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(auctionpage, target, anchor);
+    			mount_component(contributorpage, target, anchor);
     			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const contributorpage_changes = {};
+    			if (dirty & /*params*/ 8) contributorpage_changes.fundId = /*params*/ ctx[3].id;
+    			contributorpage.$set(contributorpage_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(auctionpage.$$.fragment, local);
+    			transition_in(contributorpage.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(auctionpage.$$.fragment, local);
+    			transition_out(contributorpage.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_component(auctionpage, detaching);
+    			destroy_component(contributorpage, detaching);
     		}
     	};
 
@@ -18687,23 +21482,46 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(26:8) <Route path=\\\"/\\\">",
+    		source: "(64:8) <Route path=\\\"/crowdloan/:id\\\" let:params>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (25:6) 
+    // (61:6) 
     function create_content_slot(ctx) {
     	let div;
-    	let route;
+    	let route0;
+    	let t0;
+    	let route1;
+    	let t1;
+    	let route2;
     	let current;
 
-    	route = new Route({
+    	route0 = new Route({
+    			props: { path: "/", component: AuctionPage },
+    			$$inline: true
+    		});
+
+    	route1 = new Route({
     			props: {
-    				path: "/",
-    				$$slots: { default: [create_default_slot_1] },
+    				path: "/crowdloan",
+    				component: CrowdloanPage
+    			},
+    			$$inline: true
+    		});
+
+    	route2 = new Route({
+    			props: {
+    				path: "/crowdloan/:id",
+    				$$slots: {
+    					default: [
+    						create_default_slot_1,
+    						({ params }) => ({ 3: params }),
+    						({ params }) => params ? 8 : 0
+    					]
+    				},
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -18712,36 +21530,50 @@ fragment parachainFields on Parachain {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			create_component(route.$$.fragment);
+    			create_component(route0.$$.fragment);
+    			t0 = space();
+    			create_component(route1.$$.fragment);
+    			t1 = space();
+    			create_component(route2.$$.fragment);
     			attr_dev(div, "slot", "content");
-    			add_location(div, file, 24, 6, 608);
+    			add_location(div, file, 60, 6, 1568);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
-    			mount_component(route, div, null);
+    			mount_component(route0, div, null);
+    			append_dev(div, t0);
+    			mount_component(route1, div, null);
+    			append_dev(div, t1);
+    			mount_component(route2, div, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const route_changes = {};
+    			const route2_changes = {};
 
-    			if (dirty & /*$$scope*/ 1) {
-    				route_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*$$scope, params*/ 24) {
+    				route2_changes.$$scope = { dirty, ctx };
     			}
 
-    			route.$set(route_changes);
+    			route2.$set(route2_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(route.$$.fragment, local);
+    			transition_in(route0.$$.fragment, local);
+    			transition_in(route1.$$.fragment, local);
+    			transition_in(route2.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(route.$$.fragment, local);
+    			transition_out(route0.$$.fragment, local);
+    			transition_out(route1.$$.fragment, local);
+    			transition_out(route2.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			destroy_component(route);
+    			destroy_component(route0);
+    			destroy_component(route1);
+    			destroy_component(route2);
     		}
     	};
 
@@ -18749,14 +21581,14 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_content_slot.name,
     		type: "slot",
-    		source: "(25:6) ",
+    		source: "(61:6) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (18:0) <Router>
+    // (54:0) <Router>
     function create_default_slot(ctx) {
     	let main;
     	let layout;
@@ -18779,7 +21611,7 @@ fragment parachainFields on Parachain {
     			main = element("main");
     			create_component(layout.$$.fragment);
     			attr_dev(main, "class", "main");
-    			add_location(main, file, 18, 2, 455);
+    			add_location(main, file, 54, 2, 1415);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
@@ -18789,7 +21621,7 @@ fragment parachainFields on Parachain {
     		p: function update(ctx, dirty) {
     			const layout_changes = {};
 
-    			if (dirty & /*$$scope*/ 1) {
+    			if (dirty & /*$$scope*/ 16) {
     				layout_changes.$$scope = { dirty, ctx };
     			}
 
@@ -18814,7 +21646,7 @@ fragment parachainFields on Parachain {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(18:0) <Router>",
+    		source: "(54:0) <Router>",
     		ctx
     	});
 
@@ -18854,7 +21686,7 @@ fragment parachainFields on Parachain {
     		p: function update(ctx, [dirty]) {
     			const router_changes = {};
 
-    			if (dirty & /*$$scope*/ 1) {
+    			if (dirty & /*$$scope*/ 16) {
     				router_changes.$$scope = { dirty, ctx };
     			}
 
@@ -18890,9 +21722,42 @@ fragment parachainFields on Parachain {
     }
 
     function instance($$self, $$props, $$invalidate) {
+    	let $chronicleOps;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
     	initClient({ url: config.endpoint });
+    	let timer = 0;
+
+    	const chronicleOps = operationStore(CHRONICLE_QUERY, null, {
+    		requestPolicy: "network-only",
+    		timeFlag: 0
+    	});
+
+    	validate_store(chronicleOps, "chronicleOps");
+    	component_subscribe($$self, chronicleOps, value => $$invalidate(1, $chronicleOps = value));
+    	query(chronicleOps);
+
+    	onMount(async () => {
+    		if (!timer) {
+    			timer = setInterval(
+    				() => {
+    					chronicleOps.update(origin => {
+    						origin.context = {
+    							...origin.context,
+    							timeFlag: Math.random()
+    						};
+    					});
+    				},
+    				2500
+    			);
+    		}
+
+    		return () => {
+    			clearInterval(timer);
+    			timer = 0;
+    		};
+    	});
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -18902,16 +21767,49 @@ fragment parachainFields on Parachain {
     	$$self.$capture_state = () => ({
     		Router,
     		Route,
+    		useParams,
     		MobileMenu,
     		SideMenu,
     		Layout,
     		AuctionPage,
+    		CrowdloanPage,
+    		ContributorPage,
     		Tailwind,
     		initClient,
-    		config
+    		config,
+    		operationStore,
+    		query,
+    		CHRONICLE_QUERY,
+    		onMount,
+    		onDestroy,
+    		normalize,
+    		chronicle,
+    		timer,
+    		chronicleOps,
+    		$chronicleOps
     	});
 
-    	return [];
+    	$$self.$inject_state = $$props => {
+    		if ("timer" in $$props) timer = $$props.timer;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$chronicleOps*/ 2) {
+    			{
+    				const { chronicle: curChronicle } = normalize($chronicleOps.data) || {};
+
+    				if (curChronicle) {
+    					chronicle.set(curChronicle);
+    				}
+    			}
+    		}
+    	};
+
+    	return [chronicleOps, $chronicleOps];
     }
 
     class App extends SvelteComponentDev {

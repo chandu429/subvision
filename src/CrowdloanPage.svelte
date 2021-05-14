@@ -1,0 +1,99 @@
+<script>
+  import { operationStore, query } from '@urql/svelte';
+  import { timeStr, lastBlockNum, lastBlockTime } from './stores.ts';
+  import { CROWDLOAN_QUERY } from './queries.ts';
+  import Token from './Token.svelte';
+  import { getDateFromBlockNum } from './utils';
+  import { Link } from 'svelte-navigator';
+  import Loading from './Loading.svelte';
+
+  const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: 'network-only'})
+  query(crowdloanOps);
+
+  $: crowdloans = $crowdloanOps.data?.crowdloans.nodes || [];
+</script>
+
+<div class="content">
+  <div class="top-bar">
+    <div>
+      Parachain <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="feather feather-chevron-right breadcrumb__icon"><polyline points="9 18 15 12 9 6" /></svg
+      > <a href="/" class="breadcrumb--active">Crowdloan</a>
+    </div>
+    <div class="text-right flex-1">
+      {$timeStr}
+    </div>
+  </div>
+
+  {#if $crowdloanOps.fetching }
+  <Loading />
+  {:else}
+  <div class="mt-6">
+    <table class="table table-report -mt-2">
+      <thead>
+        <tr>
+          <th class="whitespace-nowrap">Parachain</th>
+          <th class="whitespace-nowrap">Creator</th>
+          <th class="text-center whitespace-nowrap">First slot</th>
+          <th class="text-center whitespace-nowrap">Last slot</th>
+          <th class="text-right whitespace-nowrap">Raised / Cap</th>
+          <th class="text-right whitespace-nowrap">Ends</th>
+          <th class="text-center whitespace-nowrap">Status</th>
+          <th class="text-center whitespace-nowrap">Contributors</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each crowdloans as crowdloan (crowdloan.id) }
+          <tr class="intro-x zoom-in">
+            <td class="w-40">
+              <div class="text-center flex">
+                <div></div>
+                <div>{crowdloan.parachain.paraId}</div>
+              </div>
+            </td>
+            <td class="">
+              <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={crowdloan.depositor}>{crowdloan.depositor}</div>
+            </td>
+            <td><div class="text-center ">{crowdloan.firstSlot}</div></td>
+            <td><div class="text-center ">{crowdloan.lastSlot}</div></td>
+            <td>
+              <div class="text-right"><Token value={crowdloan.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={crowdloan.cap} /></div>
+              <div class="text-right">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
+            </td>
+            <td class="">
+              <div class="text-right">{crowdloan.lockExpiredBlock}</div>
+              <div class="text-right text-gray-600">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
+            </td>
+            <td class="">
+              <div class="flex justify-center items-center">{crowdloan.retiring ? 'Retired' : 'Active'}</div>
+            </td>
+            <td class="text-center">
+              <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">
+                View
+              </Link>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+  {/if}
+  
+</div>
+
+<style>
+  .ellipsis-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+</style>

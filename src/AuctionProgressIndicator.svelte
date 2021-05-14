@@ -1,7 +1,7 @@
 <script>
   import { getTimeDiffInWord } from './utils';
 
-  export let closingStart, closingEnd, curBlockNum, auctionStart;
+  export let closingStart, closingEnd, curBlockNum;
 
   let title, timeRemain, isClosing, progress;
   
@@ -12,7 +12,6 @@
     title = isClosing ? 'Auction ending started' : 'Auction started';
     timeRemain = (isClosing ? 'Closed ' : 'Ending starts in ') + timeDiff;
     progress = (curBlockNum < closingEnd ? Math.floor((curBlockNum / closingEnd) * 100) : 100);
-    console.log(progress, curBlockNum, closingEnd, auctionStart);
   }
 </script>
 
@@ -34,11 +33,14 @@
   <div class="px-4">
     <div class="text-lg">{title}</div>
     <p>{timeRemain}</p>
-    <div class="flex flex-row pt-4">
+    <div class="progress h-1 mt-4">
+      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%"></div>
+    </div>
+    <!-- <div class="flex flex-row pt-4">
       <div class="bar">
         <div class="indicator" style="left: {progress}%"></div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 
@@ -49,12 +51,12 @@
     position: relative;
     @apply bg-gradient-to-r from-green-400 to-blue-500 rounded-lg
   }
-
+  /* 
   .indicator {
     border-right: 2px solid magenta;
     height: 19px;
     position: absolute;
     top: -4px;
-  }
+  } */
 
 </style>

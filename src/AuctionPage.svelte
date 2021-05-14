@@ -1,7 +1,7 @@
 <script>
-  import AuctionSlot from './AuctionSlot.svelte';
-  import { time } from './stores.ts';
   import { operationStore, query } from '@urql/svelte';
+  import AuctionSlot from './AuctionSlot.svelte';
+  import { timeStr } from './stores.ts';
   import { AUCTION_QUERY } from './queries';
   import { normalize, getSlotsCombination } from './utils.ts';
   import groupBy from 'lodash-es/groupBy';
@@ -9,16 +9,13 @@
   import BidCard from './BidCard.svelte';
   import AuctionProgressIndicator from './AuctionProgressIndicator.svelte';
   import { curAuction, chronicle } from './stores';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
+  import Loading from './Loading.svelte';
+  import SlotLeaseChart from './SlotLeaseChart.svelte';
 
   let timer = 0;
 
-  const formatter = new Intl.DateTimeFormat('en', {
-    hour12: true,
-    hour: 'numeric',
-    minute: '2-digit',
-    second: '2-digit'
-  });
+  let slotLeases = [];
 
   const activeAuction = {
     auctionStatusFilter: {
@@ -32,28 +29,28 @@
   query(activeAuctions);
 
   onMount(async () => {
-    setInterval(() => {
+    timer = setInterval(() => {
       activeAuctions.update((origin) => {
         origin.context = {...origin.context, timeFlag: Math.random()}
       })
     }, 5000);
-  });
-
-  onDestroy(() => {
-    if (timer) {
-      clearInterval(timer);
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = 0;
+      }
     }
-  })
+  });
 
   $: {
     if ($activeAuctions.data) {
-      const { auctions, chronicle: curChronicle } = normalize($activeAuctions.data) || {};
+      const { auctions, parachainLeaseds: leases } = normalize($activeAuctions.data) || {};
       const [auction] = auctions;
       if (auction) {
-        curAuction.set(auction)
+        curAuction.set(auction);
       }
-      if (curChronicle) {
-        chronicle.set(curChronicle)
+      if (leases) {
+        slotLeases = leases;
       }
     }
   }
@@ -86,26 +83,20 @@
       > <a href="/" class="breadcrumb--active">Auction</a>
     </div>
     <div class="text-right flex-1">
-      {formatter.format($time)}
+      {$timeStr}
     </div>
   </div>
-  {#if activeAuctions.fetch}
-  <div class="h-screen">
-    <span class="text-blue-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0" style="top: 30%;">
-      <i class="fas fa-circle-notch fa-spin fa-5x"></i>
-    </span>
-  </div>
-  {:else if !curAuction}
-  <div class="h-screen">
-    <span class="text-blue-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0" style="top: 30%;">
-      Auction ended
-    </span>
-  </div>
+{#if $activeAuctions.fetching && !chronicle} 
+  <Loading />
   {:else}
+  <div class="box mt-4">
+    <SlotLeaseChart leases={slotLeases}/>
+  </div>
+  {#if $curAuction}
   <div class="grid grid-cols-12 gap-6">
     <div class="col-span-12 lg:col-span-12 xl:col-span-12 mt-2">
-      <div class="intro-y block sm:flex items-center h-10">
-        <h2 class="text-lg font-medium truncate mr-5">Current Auction</h2>
+      <div class="block sm:flex items-center h-10">
+        <h2 class="text-lg font-medium mr-5">Current Auction</h2>
       </div>
 
       <div class="mt-4 sm:mt-1">
@@ -159,5 +150,6 @@
     </div>
   </div>
   {/if}
+{/if}
   
 </div>
