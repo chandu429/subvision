@@ -94,6 +94,8 @@ query {
       verifier
       cap
       raised
+      firstSlot
+      lastSlot
       lockExpiredBlock
       blockNum
       createdAt
