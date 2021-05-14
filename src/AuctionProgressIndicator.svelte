@@ -30,7 +30,7 @@
       </g>
     </svg>
   </div>
-  <div class="px-4">
+  <div class="px-4 min-w-full">
     <div class="text-lg">{title}</div>
     <p>{timeRemain}</p>
     <div class="progress h-1 mt-4">
