@@ -69,6 +69,7 @@
   <Loading />
   {:else}
   <div class="mt-6">
+    <div class="text-lg mb-4">Latest Contributions</div>
     <div class="overflow-x-auto"> 
       <table class="table">
         <thead>

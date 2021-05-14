@@ -50,7 +50,7 @@
       <td></td>
       <td colspan={allSlots.length}>
         <div class="flex empty-content justify-center items-center">
-          <div>No Parachain Leased Yet</div>
+          <div>No parachain leased yet</div>
         </div>
       </td>
     </tr>

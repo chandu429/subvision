@@ -54,9 +54,6 @@
 <Router>
   <main class="main">
     <Layout>
-      <div slot="mobile-menu">
-        <MobileMenu />
-      </div>
       <div slot="side-menu"><SideMenu /></div>
       <div slot="content">
         <Route path="/" component={AuctionPage} />

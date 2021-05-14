@@ -6488,33 +6488,6 @@ var app = (function () {
     const get_mobile_menu_slot_changes = dirty => ({});
     const get_mobile_menu_slot_context = ctx => ({});
 
-    // (3:29) Mobile menu
-    function fallback_block_1(ctx) {
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			t = text("Mobile menu");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, t, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: fallback_block_1.name,
-    		type: "fallback",
-    		source: "(3:29) Mobile menu",
-    		ctx
-    	});
-
-    	return block;
-    }
-
     // (11:27) Content area
     function fallback_block(ctx) {
     	let t;
@@ -6543,17 +6516,27 @@ var app = (function () {
     }
 
     function create_fragment$c(ctx) {
-    	let div3;
+    	let div5;
     	let div0;
     	let t0;
     	let div2;
     	let nav;
     	let t1;
     	let div1;
+    	let t2;
+    	let footer;
+    	let div4;
+    	let ul;
+    	let li0;
+    	let t4;
+    	let li1;
+    	let t6;
+    	let li2;
+    	let t8;
+    	let div3;
     	let current;
     	const mobile_menu_slot_template = /*#slots*/ ctx[1]["mobile-menu"];
     	const mobile_menu_slot = create_slot(mobile_menu_slot_template, ctx, /*$$scope*/ ctx[0], get_mobile_menu_slot_context);
-    	const mobile_menu_slot_or_fallback = mobile_menu_slot || fallback_block_1(ctx);
     	const side_menu_slot_template = /*#slots*/ ctx[1]["side-menu"];
     	const side_menu_slot = create_slot(side_menu_slot_template, ctx, /*$$scope*/ ctx[0], get_side_menu_slot_context);
     	const content_slot_template = /*#slots*/ ctx[1].content;
@@ -6562,9 +6545,9 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
+    			div5 = element("div");
     			div0 = element("div");
-    			if (mobile_menu_slot_or_fallback) mobile_menu_slot_or_fallback.c();
+    			if (mobile_menu_slot) mobile_menu_slot.c();
     			t0 = space();
     			div2 = element("div");
     			nav = element("nav");
@@ -6572,29 +6555,58 @@ var app = (function () {
     			t1 = space();
     			div1 = element("div");
     			if (content_slot_or_fallback) content_slot_or_fallback.c();
+    			t2 = space();
+    			footer = element("footer");
+    			div4 = element("div");
+    			ul = element("ul");
+    			li0 = element("li");
+    			li0.textContent = "Terms & Conditions";
+    			t4 = space();
+    			li1 = element("li");
+    			li1.textContent = "Privacy";
+    			t6 = space();
+    			li2 = element("li");
+    			li2.textContent = "Cookies";
+    			t8 = space();
+    			div3 = element("div");
+    			div3.textContent = "Subvis.io © 2021";
     			attr_dev(div0, "class", "mobile-menu md:hidden");
     			add_location(div0, file$b, 1, 2, 8);
     			attr_dev(nav, "class", "side-nav");
-    			add_location(nav, file$b, 6, 4, 127);
+    			add_location(nav, file$b, 6, 4, 116);
     			attr_dev(div1, "class", "content");
-    			add_location(div1, file$b, 9, 4, 197);
+    			add_location(div1, file$b, 9, 4, 186);
     			attr_dev(div2, "class", "flex");
-    			add_location(div2, file$b, 5, 2, 104);
-    			add_location(div3, file$b, 0, 0, 0);
+    			add_location(div2, file$b, 5, 2, 93);
+    			attr_dev(li0, "class", "p-2 ");
+    			add_location(li0, file$b, 16, 10, 506);
+    			attr_dev(li1, "class", "p-2 ");
+    			add_location(li1, file$b, 17, 10, 557);
+    			attr_dev(li2, "class", "p-2 ");
+    			add_location(li2, file$b, 18, 10, 597);
+    			attr_dev(ul, "class", "flex mx-auto text-white text-center");
+    			add_location(ul, file$b, 15, 8, 447);
+    			attr_dev(div3, "class", "flex mx-auto text-white text-center");
+    			add_location(div3, file$b, 20, 8, 649);
+    			attr_dev(div4, "class", "container mx-auto flex flex-col flex-wrap items-center justify-between");
+    			add_location(div4, file$b, 14, 4, 354);
+    			attr_dev(footer, "class", "flex flex-wrap items-center justify-between pt-4 m-auto");
+    			add_location(footer, file$b, 13, 2, 277);
+    			add_location(div5, file$b, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div0);
+    			insert_dev(target, div5, anchor);
+    			append_dev(div5, div0);
 
-    			if (mobile_menu_slot_or_fallback) {
-    				mobile_menu_slot_or_fallback.m(div0, null);
+    			if (mobile_menu_slot) {
+    				mobile_menu_slot.m(div0, null);
     			}
 
-    			append_dev(div3, t0);
-    			append_dev(div3, div2);
+    			append_dev(div5, t0);
+    			append_dev(div5, div2);
     			append_dev(div2, nav);
 
     			if (side_menu_slot) {
@@ -6608,6 +6620,17 @@ var app = (function () {
     				content_slot_or_fallback.m(div1, null);
     			}
 
+    			append_dev(div5, t2);
+    			append_dev(div5, footer);
+    			append_dev(footer, div4);
+    			append_dev(div4, ul);
+    			append_dev(ul, li0);
+    			append_dev(ul, t4);
+    			append_dev(ul, li1);
+    			append_dev(ul, t6);
+    			append_dev(ul, li2);
+    			append_dev(div4, t8);
+    			append_dev(div4, div3);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -6631,20 +6654,20 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(mobile_menu_slot_or_fallback, local);
+    			transition_in(mobile_menu_slot, local);
     			transition_in(side_menu_slot, local);
     			transition_in(content_slot_or_fallback, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(mobile_menu_slot_or_fallback, local);
+    			transition_out(mobile_menu_slot, local);
     			transition_out(side_menu_slot, local);
     			transition_out(content_slot_or_fallback, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
-    			if (mobile_menu_slot_or_fallback) mobile_menu_slot_or_fallback.d(detaching);
+    			if (detaching) detach_dev(div5);
+    			if (mobile_menu_slot) mobile_menu_slot.d(detaching);
     			if (side_menu_slot) side_menu_slot.d(detaching);
     			if (content_slot_or_fallback) content_slot_or_fallback.d(detaching);
     		}
@@ -18116,7 +18139,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			td1 = element("td");
     			div1 = element("div");
     			div0 = element("div");
-    			div0.textContent = "No Parachain Leased Yet";
+    			div0.textContent = "No parachain leased yet";
     			add_location(td0, file$4, 49, 6, 1723);
     			add_location(div0, file$4, 52, 10, 1849);
     			attr_dev(div1, "class", "flex empty-content justify-center items-center svelte-dxv2mm");
@@ -20557,19 +20580,21 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     // (70:2) {:else}
     function create_else_block(ctx) {
-    	let div1;
+    	let div2;
     	let div0;
+    	let t1;
+    	let div1;
     	let table;
     	let thead;
     	let tr;
     	let th0;
-    	let t1;
-    	let th1;
     	let t3;
-    	let th2;
+    	let th1;
     	let t5;
-    	let th3;
+    	let th2;
     	let t7;
+    	let th3;
+    	let t9;
     	let tbody;
     	let current_block_type_index;
     	let if_block;
@@ -20587,57 +20612,64 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
+    			div2 = element("div");
     			div0 = element("div");
+    			div0.textContent = "Latest Contributions";
+    			t1 = space();
+    			div1 = element("div");
     			table = element("table");
     			thead = element("thead");
     			tr = element("tr");
     			th0 = element("th");
     			th0.textContent = "Contributor";
-    			t1 = space();
+    			t3 = space();
     			th1 = element("th");
     			th1.textContent = "Amount";
-    			t3 = space();
+    			t5 = space();
     			th2 = element("th");
     			th2.textContent = "Ratio";
-    			t5 = space();
+    			t7 = space();
     			th3 = element("th");
     			th3.textContent = "Contributed at";
-    			t7 = space();
+    			t9 = space();
     			tbody = element("tbody");
     			if_block.c();
-    			attr_dev(th0, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap");
-    			add_location(th0, file$1, 75, 12, 2105);
-    			attr_dev(th1, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
-    			add_location(th1, file$1, 76, 12, 2194);
-    			attr_dev(th2, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
-    			add_location(th2, file$1, 77, 12, 2289);
-    			attr_dev(th3, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
-    			add_location(th3, file$1, 78, 12, 2383);
-    			add_location(tr, file$1, 74, 10, 2088);
-    			add_location(thead, file$1, 73, 8, 2070);
-    			add_location(tbody, file$1, 81, 8, 2515);
-    			attr_dev(table, "class", "table");
-    			add_location(table, file$1, 72, 6, 2040);
-    			attr_dev(div0, "class", "overflow-x-auto");
+    			attr_dev(div0, "class", "text-lg mb-4");
     			add_location(div0, file$1, 71, 4, 2003);
-    			attr_dev(div1, "class", "mt-6");
-    			add_location(div1, file$1, 70, 2, 1980);
+    			attr_dev(th0, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap");
+    			add_location(th0, file$1, 76, 12, 2162);
+    			attr_dev(th1, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
+    			add_location(th1, file$1, 77, 12, 2251);
+    			attr_dev(th2, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
+    			add_location(th2, file$1, 78, 12, 2346);
+    			attr_dev(th3, "class", "border-b-2 dark:border-dark-5 whitespace-nowrap text-right");
+    			add_location(th3, file$1, 79, 12, 2440);
+    			add_location(tr, file$1, 75, 10, 2145);
+    			add_location(thead, file$1, 74, 8, 2127);
+    			add_location(tbody, file$1, 82, 8, 2572);
+    			attr_dev(table, "class", "table");
+    			add_location(table, file$1, 73, 6, 2097);
+    			attr_dev(div1, "class", "overflow-x-auto");
+    			add_location(div1, file$1, 72, 4, 2060);
+    			attr_dev(div2, "class", "mt-6");
+    			add_location(div2, file$1, 70, 2, 1980);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, div0);
-    			append_dev(div0, table);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div0);
+    			append_dev(div2, t1);
+    			append_dev(div2, div1);
+    			append_dev(div1, table);
     			append_dev(table, thead);
     			append_dev(thead, tr);
     			append_dev(tr, th0);
-    			append_dev(tr, t1);
-    			append_dev(tr, th1);
     			append_dev(tr, t3);
-    			append_dev(tr, th2);
+    			append_dev(tr, th1);
     			append_dev(tr, t5);
+    			append_dev(tr, th2);
+    			append_dev(tr, t7);
     			append_dev(tr, th3);
-    			append_dev(table, t7);
+    			append_dev(table, t9);
     			append_dev(table, tbody);
     			if_blocks[current_block_type_index].m(tbody, null);
     			current = true;
@@ -20679,7 +20711,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(div2);
     			if_blocks[current_block_type_index].d();
     		}
     	};
@@ -20735,7 +20767,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     	return block;
     }
 
-    // (95:10) {:else}
+    // (96:10) {:else}
     function create_else_block_1(ctx) {
     	let tr;
     	let td;
@@ -20748,11 +20780,11 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div = element("div");
     			div.textContent = "No contributions found";
     			attr_dev(div, "class", "py-5 text-xl text-gray-600");
-    			add_location(div, file$1, 96, 48, 3425);
+    			add_location(div, file$1, 97, 48, 3482);
     			attr_dev(td, "colspan", "4");
     			attr_dev(td, "class", "text-center");
-    			add_location(td, file$1, 96, 12, 3389);
-    			add_location(tr, file$1, 95, 10, 3372);
+    			add_location(td, file$1, 97, 12, 3446);
+    			add_location(tr, file$1, 96, 10, 3429);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -20771,14 +20803,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(95:10) {:else}",
+    		source: "(96:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (83:10) {#if contributions?.length}
+    // (84:10) {#if contributions?.length}
     function create_if_block_1(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
@@ -20850,14 +20882,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(83:10) {#if contributions?.length}",
+    		source: "(84:10) {#if contributions?.length}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (84:10) {#each contributions as contribution, i (contribution.id)}
+    // (85:10) {#each contributions as contribution, i (contribution.id)}
     function create_each_block(key_1, ctx) {
     	let tr;
     	let td0;
@@ -20915,19 +20947,19 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t8 = text(t8_value);
     			t9 = space();
     			attr_dev(td0, "class", "border-b dark:border-dark-5");
-    			add_location(td0, file$1, 85, 12, 2714);
+    			add_location(td0, file$1, 86, 12, 2771);
     			attr_dev(td1, "class", "border-b dark:border-dark-5 text-right");
-    			add_location(td1, file$1, 86, 12, 2794);
+    			add_location(td1, file$1, 87, 12, 2851);
     			attr_dev(td2, "class", "border-b dark:border-dark-5 text-right");
-    			add_location(td2, file$1, 87, 12, 2917);
+    			add_location(td2, file$1, 88, 12, 2974);
     			attr_dev(div0, "class", "text-right");
-    			add_location(div0, file$1, 89, 14, 3118);
+    			add_location(div0, file$1, 90, 14, 3175);
     			attr_dev(div1, "class", "text-right");
-    			add_location(div1, file$1, 90, 14, 3186);
+    			add_location(div1, file$1, 91, 14, 3243);
     			attr_dev(td3, "class", "border-b dark:border-dark-5 text-right");
-    			add_location(td3, file$1, 88, 12, 3052);
+    			add_location(td3, file$1, 89, 12, 3109);
     			attr_dev(tr, "class", tr_class_value = "" + ((/*i*/ ctx[11] % 2 == 0 ? "bg-gray-200" : "") + " dark:bg-dark-1"));
-    			add_location(tr, file$1, 84, 10, 2640);
+    			add_location(tr, file$1, 85, 10, 2697);
     			this.first = tr;
     		},
     		m: function mount(target, anchor) {
@@ -20984,7 +21016,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(84:10) {#each contributions as contribution, i (contribution.id)}",
+    		source: "(85:10) {#each contributions as contribution, i (contribution.id)}",
     		ctx
     	});
 
@@ -21352,51 +21384,6 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     const file = "src/App.svelte";
 
     // (57:6) 
-    function create_mobile_menu_slot(ctx) {
-    	let div;
-    	let mobilemenu;
-    	let current;
-    	mobilemenu = new MobileMenu({ $$inline: true });
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			create_component(mobilemenu.$$.fragment);
-    			attr_dev(div, "slot", "mobile-menu");
-    			add_location(div, file, 56, 6, 1454);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			mount_component(mobilemenu, div, null);
-    			current = true;
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(mobilemenu.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(mobilemenu.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			destroy_component(mobilemenu);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_mobile_menu_slot.name,
-    		type: "slot",
-    		source: "(57:6) ",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (60:6) 
     function create_side_menu_slot(ctx) {
     	let div;
     	let sidemenu;
@@ -21408,7 +21395,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			div = element("div");
     			create_component(sidemenu.$$.fragment);
     			attr_dev(div, "slot", "side-menu");
-    			add_location(div, file, 59, 6, 1521);
+    			add_location(div, file, 56, 6, 1454);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -21434,14 +21421,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_side_menu_slot.name,
     		type: "slot",
-    		source: "(60:6) ",
+    		source: "(57:6) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (64:8) <Route path="/crowdloan/:id" let:params>
+    // (61:8) <Route path="/crowdloan/:id" let:params>
     function create_default_slot_1(ctx) {
     	let contributorpage;
     	let current;
@@ -21482,14 +21469,14 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(64:8) <Route path=\\\"/crowdloan/:id\\\" let:params>",
+    		source: "(61:8) <Route path=\\\"/crowdloan/:id\\\" let:params>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:6) 
+    // (58:6) 
     function create_content_slot(ctx) {
     	let div;
     	let route0;
@@ -21536,7 +21523,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			t1 = space();
     			create_component(route2.$$.fragment);
     			attr_dev(div, "slot", "content");
-    			add_location(div, file, 60, 6, 1568);
+    			add_location(div, file, 57, 6, 1501);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -21581,7 +21568,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     		block,
     		id: create_content_slot.name,
     		type: "slot",
-    		source: "(61:6) ",
+    		source: "(58:6) ",
     		ctx
     	});
 
@@ -21598,8 +21585,7 @@ query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
     			props: {
     				$$slots: {
     					content: [create_content_slot],
-    					"side-menu": [create_side_menu_slot],
-    					"mobile-menu": [create_mobile_menu_slot]
+    					"side-menu": [create_side_menu_slot]
     				},
     				$$scope: { ctx }
     			},
