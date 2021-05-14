@@ -11,8 +11,8 @@
 
   $: {
 
-    const defaultSlotEnd = Math.floor($lastBlockNum / leasePeriod);
-    const defaultSlotStart = Math.max(defaultSlotEnd - 4, 0);
+    const defaultSlotStart = Math.floor($lastBlockNum / leasePeriod);
+    const defaultSlotEnd = defaultSlotStart + 4;
 
     activeLeases = leases
       .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
