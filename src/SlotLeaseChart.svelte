@@ -11,7 +11,7 @@
 
   $: {
 
-    const defaultSlotStart = Math.floor($lastBlockNum / leasePeriod);
+    const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
     const defaultSlotEnd = defaultSlotStart + 4;
 
     activeLeases = leases
