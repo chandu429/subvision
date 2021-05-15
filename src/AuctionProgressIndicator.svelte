@@ -36,27 +36,5 @@
     <div class="progress h-1 mt-4">
       <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%"></div>
     </div>
-    <!-- <div class="flex flex-row pt-4">
-      <div class="bar">
-        <div class="indicator" style="left: {progress}%"></div>
-      </div>
-    </div> -->
   </div>
 </div>
-
-<style>
-  .bar {
-    height: 10px;
-    width: 100%;
-    position: relative;
-    @apply bg-gradient-to-r from-green-400 to-blue-500 rounded-lg
-  }
-  /* 
-  .indicator {
-    border-right: 2px solid magenta;
-    height: 19px;
-    position: absolute;
-    top: -4px;
-  } */
-
-</style>
