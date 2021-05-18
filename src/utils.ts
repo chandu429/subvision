@@ -1,3 +1,5 @@
+import { range, times } from 'lodash-es';
+
 export const normalize = (node: any) => {
   if (Array.isArray(node)) {
     return node.map(normalize);
@@ -22,26 +24,9 @@ interface Slot {
   end: number;
 }
 
-export const getSlotsCombination = (start: number): Slot[] => {
-  return [
-    // 0 - 3
-    { start, end: start + 3 },
-    // 0 - 2
-    { start, end: start + 2 },
-    // 1 - 3
-    { start: start + 1, end: start + 3 },
-    // 0 - 1
-    { start, end: start + 1 },
-    // 1 - 2
-    { start: start + 1, end: start + 2 },
-    // 2 - 3
-    { start: start + 2, end: start + 3 },
-    // 0, 1, 2, 3
-    { start, end: start },
-    { start: start + 1, end: start + 1 },
-    { start: start + 2, end: start + 2 },
-    { start: start + 3, end: start + 3 }
-  ];
+export const getSlotsCombination = (first: number, last: number): Slot[] => {
+  const length = last - first + 1;
+  return times(length, (idx) => times(length - idx, (n) => ({ start: first + idx, end: last - n }))).flat();
 };
 
 const getTimeUnitInWord = ({ value, name }: { value: number; name: string }) =>
@@ -85,6 +70,7 @@ export const formatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => {
+  console.log('allSlots', allSlots);
   const { result: occupied } = allSlots.reduce(
     ({ result, idx }, cur) => {
       if (cur === curSlots[idx]) {
@@ -103,7 +89,10 @@ export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => 
 
   const span = occupied.filter((val) => !!val).reduce((all, cur) => all + cur, 0);
   const startIdx = occupied.findIndex((val) => !!val);
-  const result = occupied.slice(0, startIdx).concat(span);
-  // console.log(allSlots, curSlots, result);
+  const result = occupied.slice(0, startIdx).concat(
+    span,
+    times(allSlots.length - startIdx - span, () => 0)
+  );
+  console.log('slots:', curSlots, result);
   return result;
 };

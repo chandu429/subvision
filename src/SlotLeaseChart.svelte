@@ -33,11 +33,11 @@
 <div class="box overflow-x-scroll py-2">
   <table class="w-full text-center">
     <tr>
-      <th class="empty-head"></th>
+      <th class="parachain-head"></th>
       {#each allSlots as slot}
       <td>
         <div class="slot-head">
-          <p class="text-lg">Slot {slot.idx}</p>
+          <p class="text-lg">Lease {slot.idx}</p>
           <p class="text-gray-400 text-xs">{slot.startBlock} - {slot.startBlock + leasePeriod}</p>
           <div class="slot-time text-gray-400 text-xs">{getDateFromBlockNum(slot.startBlock, $lastBlockNum, $lastBlockTime)}
           </div>
@@ -64,7 +64,7 @@
         </div>
       </td>
       {#each getColSpan(slotIdxs, lease.slots) as span}
-      <td colspan="{span}">
+      <td colspan="{span}" >
         {#if span > 0}
           <ProgressBar />
         {/if}
@@ -76,13 +76,15 @@
 </div>
 
 <style>
-  .empty-head {
-    width: 150px;
+
+  .parachain-head {
+    min-width: 150px;
   }
   .slot-head {
     position: relative;
     padding: 1em;
     border-bottom: 2px solid #ccc;
+    min-width: 150px;
   }
   .slot-time {
     position: absolute;

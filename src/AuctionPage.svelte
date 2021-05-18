@@ -1,7 +1,6 @@
 <script>
   import { operationStore, query } from '@urql/svelte';
   import AuctionSlot from './AuctionSlot.svelte';
-  import { timeStr } from './stores.ts';
   import { AUCTION_QUERY } from './queries';
   import { normalize, getSlotsCombination } from './utils.ts';
   import groupBy from 'lodash-es/groupBy';
@@ -60,13 +59,13 @@
     }
   }
 
-  $: slotsCombination = $curAuction ? getSlotsCombination($curAuction.slotsStart) : [];
-  $: slotsWithWiningBid = slotsCombination.map(({ start, end }) => {
+  $: slotsCombination = $curAuction ? getSlotsCombination($curAuction.slotsStart, curAuction.slotsEnd) : [];
+  $: slotsWithWinningBid = slotsCombination.map(({ start, end }) => {
     const { amount, parachain, isCrowdloan, bidder } = $curAuction.winningBids.find(({ firstSlot, lastSlot }) => firstSlot == start && lastSlot == end) || {};
     const { paraId, manager, id, deposit, creationBlock } = parachain || {};
     return { firstSlot: start, lastSlot: end, isCrowdloan, amount, bidder, paraId, manager, id, deposit, creationBlock, start, end };
   })
-  $: groupedSlots = orderBy(Object.values(groupBy(slotsWithWiningBid, ({ start, end }) => end - start)), ['length'], ['asc']);
+  $: groupedSlots = orderBy(Object.values(groupBy(slotsWithWinningBid, ({ start, end }) => end - start)), ['length'], ['asc']);
   $: latestBids = $curAuction ? orderBy([].concat($curAuction.winningBids, $curAuction.loseBids), ['createdAt'], ['desc']).slice(0, 10) : [];
 
 </script>
