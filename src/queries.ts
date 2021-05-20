@@ -10,9 +10,33 @@ query {
 }
 `;
 
+export const PARACHAIN_QUERY = `
+query {
+  parachains (filter: { deregistered: {equalTo: false} }){
+    nodes {
+      id
+      paraId
+      manager
+      createdAt
+      funds (first: 1, orderBy: BLOCK_NUM_DESC) {
+        nodes {
+          id
+        }
+      }
+      leased (first: 1, orderBy: BLOCK_NUM_DESC){
+        nodes {
+          firstSlot
+          lastSlot
+        }
+      }
+    }
+  }
+}
+`;
+
 export const AUCTION_QUERY = `
 query ($auctionStatusFilter: AuctionFilter) {
-  parachainLeaseds {
+  parachainLeases {
     nodes {
       id
       parachain {
@@ -23,6 +47,7 @@ query ($auctionStatusFilter: AuctionFilter) {
       winningAmount
     }
   }
+
   auctions (filter: $auctionStatusFilter, first: 1) {
     nodes {
       id

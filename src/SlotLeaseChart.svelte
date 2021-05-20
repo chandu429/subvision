@@ -12,13 +12,13 @@
   $: {
 
     activeLeases = leases
-      // .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
+      .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
       .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot), firstSlot, lastSlot, ...rest }));
 
     const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
     const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
 
-    const leaseSlotStart = minBy(leases, "firstSlot")?.firstSlot;
+    const leaseSlotStart = minBy(activeLeases, "firstSlot")?.firstSlot;
     const leaseSlotEnd = maxBy(leases, "lastSlot")?.lastSlot;
     
     const slotStart = Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
