@@ -9,7 +9,11 @@ interface Config {
   decimal: number;
   tokenSymbol: string;
   endpoint: string;
+  paraMappingUrl: string;
+  defaultParachainIcon: string;
 }
+
+
 
 export const NetworkConfigs: Record<Network, Config> = {
   polkadot: {
@@ -17,25 +21,43 @@ export const NetworkConfigs: Record<Network, Config> = {
     leasesPerSlot: 3,
     decimal: 10,
     tokenSymbol: 'DOT',
-    endpoint: ''
+    endpoint: '',
+    paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/polkadot.json',
+    defaultParachainIcon: './ksm-logo.svg'
   },
   kusama: {
     leasePeriod: 604800,
     leasesPerSlot: 7,
     decimal: 12,
     tokenSymbol: 'KSM',
-    endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction'
+    endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction',
+    paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/kusama.json',
+    defaultParachainIcon: './ksm-logo.svg'
   },
   rococo: {
     leasePeriod: 14400,
     leasesPerSlot: 7,
     decimal: 12,
     tokenSymbol: 'ROC',
-    endpoint: 'https://api.subquery.network/sq/subvis-io/rococo-auction'
+    endpoint: 'https://api.subquery.network/sq/subvis-io/rococo-auction',
+    paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/rococo.json',
+    defaultParachainIcon: './ksm-logo.svg'
+  }
+};
+
+interface IconDetail {
+  name: string;
+  logoUrl: string;
+}
+
+export const icons: Record<string, IconDetail> = {
+  '100': {
+    name: 'Rococo',
+    logoUrl: ''
   }
 };
 
 export const config: Config = {
   ...NetworkConfigs[STAGE || 'rococo']
-  // ...(!isProd && { endpoint: 'http://localhost:3000' })
+  ...(!isProd && { endpoint: 'http://localhost:3000' })
 };

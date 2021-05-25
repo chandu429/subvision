@@ -52,11 +52,11 @@
               <div class="text-right">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
             </td>
             <td class="">
-              <div class="text-right">{crowdloan.lockExpiredBlock}</div>
+              <div class="text-right">Block: {crowdloan.lockExpiredBlock}</div>
               <div class="text-right text-gray-600">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
             </td>
             <td class="">
-              <div class="flex justify-center items-center">{crowdloan.retiring ? 'Retired' : 'Active'}</div>
+              <div class="flex justify-center items-center">{crowdloan.retiring ? 'Retiring' : 'Active'}</div>
             </td>
             <td class="text-center">
               <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">

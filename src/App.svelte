@@ -1,6 +1,5 @@
 <script>
-  import { Router, Route, useParams } from 'svelte-navigator';
-  import MobileMenu from './MobileMenu.svelte';
+  import { Router, Route } from 'svelte-navigator';
   import SideMenu from './SideMenu.svelte';
   import Layout from './Layout.svelte';
   import AuctionPage from './AuctionPage.svelte';
@@ -11,7 +10,7 @@
   import { config } from './constants';
   import { operationStore, query } from '@urql/svelte';
   import { CHRONICLE_QUERY } from './queries';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { normalize } from './utils';
   import { chronicle } from './stores';
 
@@ -51,7 +50,7 @@
 
 <Tailwind />
 
-<Router primary={false} >
+<Router >
   <main class="main">
     <Layout>
       <div slot="side-menu"><SideMenu /></div>

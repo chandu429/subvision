@@ -8,7 +8,12 @@ export const normalize = (node: any) => {
   if (typeof node === 'object') {
     return Object.entries(node).reduce((prev, [key, val]) => {
       if (typeof val == 'object' && Array.isArray(val?.['nodes'])) {
-        return { ...prev, [key]: normalize(val['nodes']) };
+        return {
+          ...prev,
+          [key]: normalize(val['nodes']),
+          [key + 'PageInfo']: val['pageInfo'],
+          [key + 'Total']: val['totalCount']
+        };
       }
       if (Array.isArray(val)) {
         return { ...prev, [key]: normalize(val) };

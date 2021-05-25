@@ -2,8 +2,9 @@
   import { Link } from 'svelte-navigator';
 
   import { config } from './constants';
+  import ParachainIcon from './ParachainIcon.svelte';
   import { lastBlockNum, lastBlockTime } from './stores';
-import Token from './Token.svelte';
+  import Token from './Token.svelte';
   import { getDateFromBlockNum } from './utils';
 
   export let parachains;
@@ -31,17 +32,14 @@ import Token from './Token.svelte';
       <th class="text-center whitespace-nowrap">Lease Ends</th>
       <th class="text-right whitespace-nowrap">Won amount</th>
       <th class="text-right whitespace-nowrap">Won Block</th>
-      <th class="text-right whitespace-nowrap">Active Crowdloan</th>
+      <th class="text-right whitespace-nowrap">Crowdloan</th>
     </tr>
   </thead>
   <tbody>
     {#each paraList as parachain (parachain.paraId)}
       <tr class="intro-x zoom-in">
         <td class="w-40">
-          <div class="text-center flex">
-            <div></div>
-            <div>{parachain.paraId}</div>
-          </div>
+          <ParachainIcon paraId={parachain.paraId} />
         </td>
         <td class="">
           <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={parachain.manager}>{parachain.manager}</div>
@@ -66,7 +64,9 @@ import Token from './Token.svelte';
         <td>
           <div class="text-right ">
           {#if parachain.crowdloan}
-            {parachain.paraId}
+            <Link to="/crowdloan/{parachain.crowdloan.id}" class="btn text-sm">
+              View
+            </Link>
           {/if}
           </div>
         </td>

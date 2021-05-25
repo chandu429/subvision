@@ -1,14 +1,15 @@
 import { readable, writable, derived } from 'svelte/store';
 import { formatter } from './utils';
+import { config } from './constants';
 
 export const timeStr = readable(null, function start(set) {
-	const interval = setInterval(() => {
-		set(formatter.format(new Date()));
-	}, 1000);
+  const interval = setInterval(() => {
+    set(formatter.format(new Date()));
+  }, 1000);
 
-	return function stop() {
-		clearInterval(interval);
-	};
+  return function stop() {
+    clearInterval(interval);
+  };
 });
 
 export const curAuction = writable(null);

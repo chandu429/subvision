@@ -131,22 +131,15 @@ query {
 `;
 
 export const CONTRIBUTORS_QUERY = `
-query ($fundId: String!, $fundIdFilter: ContributionFilter!) {
+query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Cursor, $before: Cursor) {
   crowdloan (id: $fundId) {
     id
-    parachain {
-      paraId
-      manager
-    }
-    retiring
-    depositor
-    verifier
     cap
     raised
-    lockExpiredBlock
-    createdAt
+    lockExpiredBlock,
+    retiring
   }
-	contributions (filter: $fundIdFilter, orderBy: BLOCK_NUM_DESC) {
+	contributions (filter: $contributionFilter, orderBy: BLOCK_NUM_DESC, first: 20, after: $after, before: $before) {
     nodes {
       id
       account
