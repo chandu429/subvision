@@ -13,8 +13,6 @@ interface Config {
   defaultParachainIcon: string;
 }
 
-
-
 export const NetworkConfigs: Record<Network, Config> = {
   polkadot: {
     leasePeriod: 2419200,
@@ -50,14 +48,7 @@ interface IconDetail {
   logoUrl: string;
 }
 
-export const icons: Record<string, IconDetail> = {
-  '100': {
-    name: 'Rococo',
-    logoUrl: ''
-  }
-};
-
 export const config: Config = {
-  ...NetworkConfigs[STAGE || 'rococo']
+  ...NetworkConfigs[STAGE || 'rococo'],
   ...(!isProd && { endpoint: 'http://localhost:3000' })
 };
