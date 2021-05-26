@@ -2,11 +2,8 @@
   import { Link } from 'svelte-navigator';
   import ChevronIcon from './ChevronIcon.svelte';
   import { timeStr, lastBlockNum } from './stores.ts';
-  export let links = []
+  export let links = [];
 
-  $: {
-    console.log(links);
-  }
 </script>
 
 <div class="top-bar">

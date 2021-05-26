@@ -2,8 +2,13 @@
 import AuctionProgressIndicator from './AuctionProgressIndicator.svelte';
 import AuctionSlot from './AuctionSlot.svelte';
 import BidCard from './BidCard.svelte';
-import { chronicle } from './stores';
+import BlockProgressBar from './BlockProgressBar.svelte';
+import { chronicle, lastBlockNum } from './stores';
 export let curAuction, groupedSlots, latestBids;
+
+$: {
+  console.log('received auction', curAuction);
+}
 
 </script>
 
@@ -14,20 +19,25 @@ export let curAuction, groupedSlots, latestBids;
     </div>
 
     <div class="mt-4 sm:mt-1">
-      <div class="box grid grid-cols-5 gap-4 divide-x divide-gray-200 p-4">
+      <div class="box grid grid-cols-6 gap-4 divide-x divide-gray-200 p-4">
         <div class="justify-center">
           <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Auction Index</div>
           <div class="text-3xl font-bold mt-4 text-center">{curAuction?.id || ''}</div>
         </div>
         <div class="justify-center">
-          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Current Lease</div>
+          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Lease Periods</div>
           <div class="text-3xl font-bold mt-4 text-center">{curAuction?.slotsStart || ''} - {curAuction?.slotsEnd || ''}</div>
         </div>
         <div class="justify-center">
-          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Current Block</div>
-          <div class="text-3xl font-bold mt-4 text-center">{chronicle?.curBlockNum}</div>
+          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Auction Stage</div>
+          <div class="text-lg font-bold mt-4 text-center">{curAuction.blockNum} - {curAuction.closingStart - 1}</div>
         </div>
-        <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+        <div class="justify-center">
+          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Ending Stage</div>
+          <div class="text-lg font-bold mt-4 text-center">{curAuction.closingStart} - {curAuction.closingEnd}</div>
+        </div>
+        
+          <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
       </div>
     </div>
   </div>

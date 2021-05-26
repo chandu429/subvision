@@ -17,8 +17,7 @@
       ...rest,
       crowdloan: funds[0],
       curLease: leased[0] && leased[0].lastSlot * leasePeriod > lastBlockNum ? leased[0] : null
-    }))
-    console.log(paraList);
+    }));
   }
   
 </script>

@@ -30,11 +30,11 @@
       </g>
     </svg>
   </div>
-  <div class="px-4 min-w-full">
+  <div class="px-4">
     <div class="text-lg">{title}</div>
     <p>{timeRemain}</p>
-    <div class="progress h-1 mt-4">
-      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%"></div>
+    <div class="progress h-3 mt-2">
+      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%"> {progress}%</div>
     </div>
   </div>
 </div>

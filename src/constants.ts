@@ -43,11 +43,6 @@ export const NetworkConfigs: Record<Network, Config> = {
   }
 };
 
-interface IconDetail {
-  name: string;
-  logoUrl: string;
-}
-
 export const config: Config = {
   ...NetworkConfigs[STAGE || 'rococo'],
   ...(!isProd && { endpoint: 'http://localhost:3000' })

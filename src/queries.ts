@@ -1,5 +1,3 @@
-import { gql } from '@apollo/client';
-
 export const CHRONICLE_QUERY = `
 query {
   chronicle(id: "ChronicleKey"){

@@ -13,6 +13,7 @@
   import ParachainList from './ParachainList.svelte';
   import AuctionPanel from './AuctionPanel.svelte';
 
+
   let timer = 0;
 
   let slotLeases = [], parachains = []
@@ -50,6 +51,7 @@
       const { auctions, parachainLeaseds: leases } = normalize($activeAuctions.data) || {};
       const [auction] = auctions;
       if (auction) {
+        console.log(auction);
         curAuction.set(auction);
       }
       if (leases) {
@@ -81,7 +83,7 @@
       <SlotLeaseChart leases={slotLeases}/>
     </div>
     {#if $curAuction}
-      <AuctionPanel {...{curAuction, groupedSlots, latestBids} }/>
+      <AuctionPanel {...{curAuction: $curAuction, groupedSlots, latestBids} }/>
     {:else}
       <ParachainList {...parachains}/>
     {/if}

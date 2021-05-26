@@ -1,8 +1,3 @@
-<!-- <div class="h-screen">
-  <span class="text-blue-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0" style="top: 30%;">
-    <i class="fas fa-circle-notch fa-spin fa-5x"></i>
-  </span>
-</div> -->
 
 <div class="py-8">
   <div wire:loading class="w-full overflow-hidden flex flex-col items-center justify-center">

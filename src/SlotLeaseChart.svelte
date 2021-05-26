@@ -1,6 +1,7 @@
 <script>
   import { range, minBy, maxBy } from 'lodash-es';
   import { config } from './constants';
+import ParachainIcon from './ParachainIcon.svelte';
   import ProgressBar from './ProgressBar.svelte';
   import { lastBlockNum, lastBlockTime } from './stores';
   import { getDateFromBlockNum, getColSpan } from './utils';
@@ -10,7 +11,6 @@
   let activeLeases, slotIdxs, allSlots;
 
   $: {
-
     activeLeases = leases
       .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
       .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot), firstSlot, lastSlot, ...rest }));
@@ -58,10 +58,7 @@
     {#each activeLeases as lease, idx (lease.id)}
     <tr class="{idx % 2 > 0 ? 'bg-gray-100':''}">
       <td class="py-4">
-        <div class="flex justify-center items-center">
-          <img class="mx-1 rounded-full" src="./ksm-logo.png" alt="{lease.parachain.paraId}" width="22" height="22">
-          <div class="text-gray-400 text-xs">{lease.parachain.paraId}</div>
-        </div>
+        <ParachainIcon paraId={lease.parachain.paraId} />
       </td>
       {#each getColSpan(slotIdxs, lease.slots) as span}
       <td colspan="{span}" >
@@ -76,7 +73,6 @@
 </div>
 
 <style>
-
   .parachain-head {
     min-width: 150px;
   }

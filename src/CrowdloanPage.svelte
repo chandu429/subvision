@@ -7,6 +7,8 @@
   import { Link } from 'svelte-navigator';
   import Loading from './Loading.svelte';
   import Breadcrumb from './Breadcrumb.svelte';
+import ParachainIcon from './ParachainIcon.svelte';
+import ParachainList from './ParachainList.svelte';
 
   const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: 'network-only'})
   query(crowdloanOps);
@@ -36,11 +38,8 @@
       <tbody>
         {#each crowdloans as crowdloan (crowdloan.id) }
           <tr class="intro-x zoom-in">
-            <td class="w-40">
-              <div class="text-center flex">
-                <div></div>
-                <div>{crowdloan.parachain.paraId}</div>
-              </div>
+            <td class="">
+              <ParachainIcon paraId={crowdloan.parachain.paraId} />
             </td>
             <td class="">
               <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={crowdloan.depositor}>{crowdloan.depositor}</div>

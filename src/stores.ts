@@ -1,6 +1,5 @@
 import { readable, writable, derived } from 'svelte/store';
 import { formatter } from './utils';
-import { config } from './constants';
 
 export const timeStr = readable(null, function start(set) {
   const interval = setInterval(() => {
