@@ -7,8 +7,7 @@
   import { Link } from 'svelte-navigator';
   import Loading from './Loading.svelte';
   import Breadcrumb from './Breadcrumb.svelte';
-import ParachainIcon from './ParachainIcon.svelte';
-import ParachainList from './ParachainList.svelte';
+  import ParachainIcon from './ParachainIcon.svelte';
 
   const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: 'network-only'})
   query(crowdloanOps);

@@ -48,10 +48,9 @@
 
   $: {
     if ($activeAuctions.data) {
-      const { auctions, parachainLeaseds: leases } = normalize($activeAuctions.data) || {};
+      const { auctions, parachainLeases: leases } = normalize($activeAuctions.data) || {};
       const [auction] = auctions;
       if (auction) {
-        console.log(auction);
         curAuction.set(auction);
       }
       if (leases) {
@@ -63,7 +62,7 @@
     }
   }
 
-  $: slotsCombination = $curAuction ? getSlotsCombination($curAuction.slotsStart, curAuction.slotsEnd) : [];
+  $: slotsCombination = $curAuction ? getSlotsCombination($curAuction.slotsStart, $curAuction.slotsEnd) : [];
   $: slotsWithWinningBid = slotsCombination.map(({ start, end }) => {
     const { amount, parachain, isCrowdloan, bidder } = $curAuction.winningBids.find(({ firstSlot, lastSlot }) => firstSlot == start && lastSlot == end) || {};
     const { paraId, manager, id, deposit, creationBlock } = parachain || {};

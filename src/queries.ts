@@ -25,6 +25,7 @@ query {
         nodes {
           firstSlot
           lastSlot
+          blockNum
         }
       }
     }

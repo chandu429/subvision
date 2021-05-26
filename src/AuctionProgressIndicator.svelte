@@ -33,7 +33,7 @@
   <div class="px-4">
     <div class="text-lg">{title}</div>
     <p>{timeRemain}</p>
-    <div class="progress h-3 mt-2">
+    <div class="progress h-4 mt-2">
       <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%"> {progress}%</div>
     </div>
   </div>

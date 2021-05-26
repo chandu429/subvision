@@ -2,6 +2,7 @@
   import { range } from 'lodash-es';
   import Token from './Token.svelte';
   import { config } from './constants';
+  import ParachainIcon from './ParachainIcon.svelte';
   export let firstSlot, lastSlot, leaseStart = '', leaseEnd = '', paraId, amount, wonBlocks, groupIdx
 
   const colorConfigs = [
@@ -27,23 +28,24 @@
   <div class="grid grid-cols-3 gap-1">
     <div class="text-center text-xm flex flex-col">
       <div class="text-gray-400 mb-2">Current Winner</div>
-      <div class="flex flex-row justify-center items-center">
-        {#if paraId}
-        <img class="mx-1 rounded-full" src="./ksm-logo.png" alt="{paraId}" width="22" height="22">
-        {/if}
-        <div class="mx-1">{paraId || 'N/A'}</div>
+      {#if paraId}
+      <div class="fixed-line-height">
+        <ParachainIcon paraId={paraId} smallIcon={true}/>
       </div>
+      {:else}
+      N/A
+      {/if}
     </div>
     <div class="text-center text-xm flex flex-col">
       <div class="text-gray-400 mb-2">Bid Price</div>
-      <div class="flex flex-row justify-center items-center fixed-line-height">
+      <div class="fixed-line-height">
         <Token class="fixed-line-height" value={amount} emptyDisplay='N/A'/>
       </div>
     </div>
     <div class="text-center text-xm flex flex-col">
       <div class="text-gray-400 mb-2">Winning Chance</div>
-      <div class="flex flex-row justify-center items-center">
-        <div class="fixed-line-height">{wonBlocks || 'N/A' }</div>
+      <div class="fixed-line-height">
+        <div class="">{wonBlocks || 'N/A' }</div>
       </div>
     </div>
     <!-- <div class="text-center text-sm"><p>Winning Chance:</p><p>{winningChance || 'N/A'}</p></div> -->

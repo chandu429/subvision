@@ -2,12 +2,11 @@
 import AuctionProgressIndicator from './AuctionProgressIndicator.svelte';
 import AuctionSlot from './AuctionSlot.svelte';
 import BidCard from './BidCard.svelte';
-import BlockProgressBar from './BlockProgressBar.svelte';
-import { chronicle, lastBlockNum } from './stores';
+import { chronicle } from './stores';
 export let curAuction, groupedSlots, latestBids;
 
 $: {
-  console.log('received auction', curAuction);
+
 }
 
 </script>

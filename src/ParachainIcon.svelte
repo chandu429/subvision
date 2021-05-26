@@ -20,20 +20,20 @@
 </script>
 
 <script lang="typescript">
-  export let paraId;
+  export let paraId, smallIcon = false;
   const parachain = paraMappings[paraId];
 </script>
 
-<div class="flex items-center"> 
-  <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden mr-2">
+<div class="flex items-center justify-center"> 
+  <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-1">
     <img alt="{parachain?.name || paraId}" src="{parachain?.icon || config.defaultParachainIcon}">
   </div>
-  <div class="text-base">
+  <div class="text-sm">
     {#if parachain}
     {parachain?.name}
-      <p class="text-xs">{paraId}</p>
+      <p class="text-xs text-left">{paraId}</p>
     {:else}
-      {paraId}
+      {paraId || ''}
     {/if}
   </div>
 </div>

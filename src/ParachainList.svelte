@@ -16,7 +16,7 @@
     paraList = (parachains || []).map(({funds, leased, ...rest}) => ({
       ...rest,
       crowdloan: funds[0],
-      curLease: leased[0] && leased[0].lastSlot * leasePeriod > lastBlockNum ? leased[0] : null
+      curLease: leased[0] && leased[0].lastSlot * leasePeriod > $lastBlockNum ? leased[0] : null
     }));
   }
   
@@ -44,14 +44,17 @@
           <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={parachain.manager}>{parachain.manager}</div>
         </td>
         <td class="text-center">
-            {#if parachains.curLease }
+            {#if parachain.curLease }
               {parachain.curLease?.firstSlot} - {parachain.curLease?.lastSlot}
             {:else}
             N/A
             {/if}
         </td>
         <td>
-          <div class="text-center">{parachain.curLease ? getDateFromBlockNum(parachain.curLease.lastSlot * leasePeriod, $lastBlockNum, $lastBlockTime) : 'N/A'}</div>
+          <div class="text-center">
+            {parachain.curLease ? 'Block '+ parachain.curLease?.lastSlot * leasePeriod : 'N/A'}
+            <p class="text-xs">{parachain.curLease ? getDateFromBlockNum(parachain.curLease.lastSlot * leasePeriod, $lastBlockNum, $lastBlockTime) : ''}</p>
+          </div>
         </td>
         
         <td>
@@ -66,6 +69,8 @@
             <Link to="/crowdloan/{parachain.crowdloan.id}" class="btn text-sm">
               View
             </Link>
+          {:else}
+          N/A
           {/if}
           </div>
         </td>
