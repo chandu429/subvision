@@ -10,7 +10,7 @@
     const timeDelta = (isClosing ? closingEnd - (curBlockNum || 0) : (closingStart - curBlockNum)) * 6000;
     const timeDiff = getTimeDiffInWord(timeDelta)
     title = isClosing ? 'Auction ending started' : 'Auction started';
-    timeRemain = (isClosing ? 'Closed ' : 'Ending starts in ') + timeDiff;
+    timeRemain = (isClosing ? 'Closing in ' : 'Ending starts in ') + timeDiff;
     progress = (curBlockNum < closingEnd ? Math.floor((curBlockNum / closingEnd) * 100) : 100);
   }
 </script>
