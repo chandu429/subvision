@@ -10,22 +10,24 @@ query {
 
 export const PARACHAIN_QUERY = `
 query {
-  parachains (filter: { deregistered: {equalTo: false} }){
+  parachains (filter: { deregistered: {equalTo: false} }, orderBy: UPDATED_AT_DESC){
     nodes {
       id
       paraId
       manager
       createdAt
-      funds (first: 1, orderBy: BLOCK_NUM_DESC) {
+      funds (first: 1, orderBy: UPDATED_AT_DESC) {
         nodes {
           id
         }
       }
-      leased (first: 1, orderBy: BLOCK_NUM_DESC){
+      leases (filter: { hasWon: { equalTo: true } }, orderBy: FIRST_LEASE_ASC){
         nodes {
-          firstSlot
-          lastSlot
-          blockNum
+          firstLease
+          lastLease
+          winningResultBlock
+          winningAmount
+          winningResultBlock
         }
       }
     }
@@ -35,15 +37,16 @@ query {
 
 export const AUCTION_QUERY = `
 query ($auctionStatusFilter: AuctionFilter) {
-  parachainLeases {
+  parachainLeases (filter: { hasWon: {equalTo: true}}) {
     nodes {
       id
       parachain {
-        paraId
+        ...parachainFields
       }
-      firstSlot
-      lastSlot
+      firstLease
+      lastLease
       winningAmount
+      winningResultBlock
     }
   }
 
@@ -58,24 +61,23 @@ query ($auctionStatusFilter: AuctionFilter) {
       leaseEnd
       closingEnd
       closingStart
-      winningBids: bids (filter: {winningAuction: { isNull: false }}) {
+      latestBids: bids (orderBy: BLOCK_NUM_DESC) {
         nodes {
           ...bidParachainFields
         }
       }
-      loseBids: bids (filter: {winningAuction: {isNull: true }}) {
+      parachainLeases (filter: {activeForAuction: {isNull: false}}){
         nodes {
-          ...bidParachainFields
-        }
-      }
-      participateParachain: parachains {
-        nodes {
-          parachain {
-            ...parachainFields
-          }
-          blockNum
-          firstSlot
-          lastSlot
+          id
+          paraId
+          leaseRange
+          numBlockWon
+          firstLease
+          lastLease
+          latestBidAmount
+          winningAmount
+          winningResultBlock
+          wonBidFrom
         }
       }
     }

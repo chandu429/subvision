@@ -45,5 +45,5 @@ export const NetworkConfigs: Record<Network, Config> = {
 
 export const config: Config = {
   ...NetworkConfigs[STAGE || 'rococo'],
-  ...(!isProd && { endpoint: 'http://localhost:3000' })
+  ...(!isProd && { endpoint: 'http://localhost:4000' })
 };

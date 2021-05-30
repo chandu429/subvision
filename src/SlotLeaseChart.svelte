@@ -5,6 +5,7 @@
   import ProgressBar from './ProgressBar.svelte';
   import { lastBlockNum, lastBlockTime } from './stores';
   import { getDateFromBlockNum, getColSpan } from './utils';
+
   export let leases;
   const { leasePeriod, leasesPerSlot } = config;
 
@@ -12,9 +13,9 @@
 
   $: {
     activeLeases = leases
-      .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
-      .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot + 1), firstSlot, lastSlot, ...rest }));
-
+    .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
+    .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot + 1), firstSlot, lastSlot, ...rest }));
+    
     const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
     const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
 
@@ -24,9 +25,10 @@
     const slotStart = Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
     const slotEnd = Math.max(leaseSlotEnd || defaultSlotEnd, defaultSlotEnd);
     
-    // console.log({ leaseSlotStart, leaseSlotEnd, defaultSlotStart, defaultSlotEnd, slotStart, slotEnd });
     slotIdxs = range(slotStart, slotEnd+1);
     allSlots = slotIdxs.map((slotIdx) => ({ idx: slotIdx, startBlock: slotIdx * leasePeriod, endBlock: (slotIdx + 1) * leasePeriod  }));
+    // console.log({ slotIdxs, allSlots });
+
   }
 </script>
 
@@ -55,21 +57,22 @@
         </div>
       </td>
     </tr>
-    {/if}
-    {#each activeLeases as lease, idx (lease.id)}
-    <tr class="{idx % 2 > 0 ? 'bg-gray-100':''}">
-      <td class="py-3">
-        <ParachainIcon paraId={lease.parachain.paraId} />
-      </td>
-      {#each getColSpan(slotIdxs, lease.slots) as span}
-      <td colspan="{span}" >
-        {#if span > 0}
-          <ProgressBar />
-        {/if}
-      </td>
+    {:else}
+      {#each activeLeases as lease, idx (lease.id)}
+      <tr class="{idx % 2 > 0 ? 'bg-gray-100':''}">
+        <td class="py-3">
+          <ParachainIcon paraId={lease.parachain.paraId} />
+        </td>
+        {#each getColSpan(slotIdxs, lease.slots) as span}
+        <td colspan="{span}" >
+          {#if span > 0}
+            <ProgressBar />
+          {/if}
+        </td>
+        {/each}
+      </tr>
       {/each}
-    </tr>
-    {/each}
+    {/if}
   </table>
 </div>
 

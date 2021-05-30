@@ -1,9 +1,9 @@
 <script>
 import AuctionProgressIndicator from './AuctionProgressIndicator.svelte';
-import AuctionSlot from './AuctionSlot.svelte';
+import LeaseCard from './LeaseCard.svelte';
 import BidCard from './BidCard.svelte';
 import { chronicle } from './stores';
-export let curAuction, groupedSlots, latestBids;
+export let curAuction, latestBids;
 
 $: {
 
@@ -42,28 +42,21 @@ $: {
   </div>
   <div class="col-span-8 m:col-span-12 s:col-span-12 my-4">
     <div class="py-2 text-lg">
-      <p>Auction Slots</p>
+      <p>Leading Positions</p>
     </div>
     <div class="">
-      <div class="">
-      {#each groupedSlots as slots, groupIdx}
-        <div class="box mb-6 py-4">
-          <div class="pl-4 text-base">
-            <p>Group {slots.length}</p>
-          </div>
-          <div class="grid grid-cols-12 gap-6 gap-y-8 p-4">
-            {#each slots as slot }
-              <AuctionSlot {...slot } {groupIdx}/>
-            {/each}
-          </div>
-        </div>
-      {/each}
+      {#if curAuction.parachainLeases.length}
+      <div class="grid gap-6">
+        {#each curAuction.parachainLeases as lease }
+          <LeaseCard {...lease } closingPeriod={curAuction.closingEnd - curAuction.closingStart}/>
+        {/each}
       </div>
+      {/if}
     </div>
   </div>
   <div class="col-span-4 m:col-span-12 s:col-span-12 mt-4">
     <div class="py-2 text-lg">
-      <p>Live Bids</p>
+      <p>Latest Bids</p>
     </div>
     <div >
       {#each latestBids as bid}
