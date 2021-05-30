@@ -13,21 +13,20 @@
 
   $: {
     activeLeases = leases
-    .filter(({ lastSlot }) => lastSlot * leasePeriod > $lastBlockNum)
-    .map(({firstSlot, lastSlot, ...rest}) => ({ slots: range(firstSlot, lastSlot + 1), firstSlot, lastSlot, ...rest }));
+    .filter(({ lastLease }) => lastLease * leasePeriod > $lastBlockNum)
+    .map(({firstLease, lastLease, ...rest}) => ({ slots: range(firstLease, lastLease + 1), firstLease, lastLease, ...rest }));
     
     const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
     const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
 
-    const leaseSlotStart = minBy(activeLeases, "firstSlot")?.firstSlot;
-    const leaseSlotEnd = maxBy(leases, "lastSlot")?.lastSlot;
+    const leaseSlotStart = minBy(activeLeases, "firstLease")?.firstLease;
+    const leaseSlotEnd = maxBy(leases, "lastLease")?.lastLease;
     
     const slotStart = Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
     const slotEnd = Math.max(leaseSlotEnd || defaultSlotEnd, defaultSlotEnd);
     
     slotIdxs = range(slotStart, slotEnd+1);
     allSlots = slotIdxs.map((slotIdx) => ({ idx: slotIdx, startBlock: slotIdx * leasePeriod, endBlock: (slotIdx + 1) * leasePeriod  }));
-    // console.log({ slotIdxs, allSlots });
 
   }
 </script>
@@ -61,7 +60,7 @@
       {#each activeLeases as lease, idx (lease.id)}
       <tr class="{idx % 2 > 0 ? 'bg-gray-100':''}">
         <td class="py-3">
-          <ParachainIcon paraId={lease.parachain.paraId} />
+          <ParachainIcon paraId={lease.parachain.paraId} smallIcon/>
         </td>
         {#each getColSpan(slotIdxs, lease.slots) as span}
         <td colspan="{span}" >

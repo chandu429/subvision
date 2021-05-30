@@ -4,6 +4,9 @@ query {
     curAuctionId
     curBlockNum
     updatedAt
+    curLease
+    curLeaseStart
+    curLeaseEnd
   }
 }
 `;

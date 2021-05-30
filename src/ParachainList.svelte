@@ -11,7 +11,7 @@
 
   const { leasePeriod } = config;
   $: {
-    console.log('received parachains:', parachains)
+
   }
 
 </script>

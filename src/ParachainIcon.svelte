@@ -19,12 +19,12 @@
 
 </script>
 
-<script lang="typescript">
-  export let paraId, smallIcon = false;
+<script>
+  export let paraId, smallIcon = false, align='center';
   const parachain = paraMappings[paraId];
 </script>
 
-<div class="flex items-center justify-center"> 
+<div class="flex items-center justify-{align}"> 
   <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-1">
     <img alt="{parachain?.name || paraId}" src="{parachain?.icon || config.defaultParachainIcon}">
   </div>

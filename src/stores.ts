@@ -16,3 +16,6 @@ export const chronicle = writable(null);
 
 export const lastBlockNum = derived(chronicle, ($chronicle) => $chronicle?.curBlockNum || 0);
 export const lastBlockTime = derived(chronicle, ($chronicle) => $chronicle?.updatedAt);
+export const curLease = derived(chronicle, ($chronicle) => $chronicle?.curLease);
+export const curLeaseStart = derived(chronicle, ($chronicle) => $chronicle?.curLeaseStart);
+export const curLeaseEnd = derived(chronicle, ($chronicle) => $chronicle?.curLeaseEnd);

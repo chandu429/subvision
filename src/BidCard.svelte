@@ -4,13 +4,13 @@
   import ParachainIcon from './ParachainIcon.svelte';
   import Token from './Token.svelte';
   import { getTimeDiffInWord } from './utils';
-  export let bidder, firstSlot, lastSlot, createdAt, amount, parachain, isCrowdloan;
+  export let bidder, firstSlot, lastSlot, createdAt, amount, parachain, isCrowdloan, id;
   const { paraId } = parachain || {};
 </script>
 
 <div class="box mb-3 px-5 py-3 grid grid-cols-5 grid-flow-row gap-2">
   <div class="col-span-1">
-    <ParachainIcon paraId={paraId} smallIcon />
+    <ParachainIcon paraId={paraId} align="left" smallIcon/>
   </div>
   <div class="text-xs text-gray-500 col-span-4 text-right">{getTimeDiffInWord(Date.now() - new Date(createdAt).getTime())}</div>
   <div class="text-base col-span-5">
@@ -24,7 +24,6 @@
     {/if}
   </div>
 </div>
-
 
 <style>
   .ellipsis-text {

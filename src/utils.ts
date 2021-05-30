@@ -18,6 +18,9 @@ export const normalize = (node: any) => {
       if (Array.isArray(val)) {
         return { ...prev, [key]: normalize(val) };
       }
+      if (key === '__typename') {
+        return prev;
+      }
       return { ...prev, [key]: val };
     }, {});
   }
@@ -75,7 +78,6 @@ export const formatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => {
-  console.log({ allSlots, curSlots });
   const { result: occupied } = allSlots.reduce(
     ({ result, idx }, cur) => {
       if (cur === curSlots[idx]) {
@@ -92,14 +94,11 @@ export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => 
     { result: [], idx: 0 }
   );
 
-  console.log({ occupied });
   const span = occupied.filter((val) => !!val).reduce((all, cur) => all + cur, 0);
   const startIdx = occupied.findIndex((val) => !!val);
-  console.log({ startIdx }, span);
   const result = occupied.slice(0, startIdx).concat(
     span,
     times(allSlots.length - startIdx - span, () => 0)
   );
-  console.log(result);
   return result;
 };
