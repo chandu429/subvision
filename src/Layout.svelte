@@ -1,6 +1,12 @@
+<script>
+import MobileMenu from "./MobileMenu.svelte";
+
+</script>
 <div>
   <div class="mobile-menu md:hidden">
-    <slot name="mobile-menu"></slot>
+    <slot name="mobile-menu">
+      <MobileMenu />
+    </slot>
   </div>
 
   <div class="flex">
