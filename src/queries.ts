@@ -112,7 +112,7 @@ fragment parachainFields on Parachain {
 
 export const CROWDLOAN_QUERY = `
 query {
-  crowdloans(orderBy: BLOCK_NUM_DESC) {
+  crowdloans(orderBy: RAISED_DESC) {
     nodes {
       id
       parachain {
@@ -135,7 +135,7 @@ query {
 `;
 
 export const CONTRIBUTORS_QUERY = `
-query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Cursor, $before: Cursor) {
+query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Cursor, $before: Cursor, $orderBy:[ContributionsOrderBy!]) {
   crowdloan (id: $fundId) {
     id
     cap
@@ -143,7 +143,7 @@ query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Curso
     lockExpiredBlock,
     retiring
   }
-	contributions (filter: $contributionFilter, orderBy: BLOCK_NUM_DESC, first: 20, after: $after, before: $before) {
+	contributions (filter: $contributionFilter, orderBy: $orderBy, first: 20, after: $after, before: $before) {
     nodes {
       id
       account

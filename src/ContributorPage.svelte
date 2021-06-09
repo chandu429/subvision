@@ -8,6 +8,7 @@
   import { getDateFromBlockNum } from './utils';
   import Loading from './Loading.svelte';
   import Breadcrumb from './Breadcrumb.svelte';
+  import SortingButtonGroup from './SortingButtonGroup.svelte';
 
   export let fundId;
 
@@ -22,13 +23,15 @@
       }
     },
     after: "",
-    next: ""
+    next: "",
+    orderBy: "BLOCK_NUM_DESC"
   }
 
   let contributions, fund, pageInfo, totalRecord, searchAddr;
   const contributionsOps = operationStore(CONTRIBUTORS_QUERY, params, { requestPolicy: 'network-only'})
   query(contributionsOps);
   $: {
+    console.log('refetch')
     if (!contributionsOps.fetching && contributionsOps.data) {
       const data = normalize($contributionsOps.data);
       const { contributions: fundContribution, crowdloan, contributionsPageInfo, contributionsTotal } = data;
@@ -46,6 +49,11 @@
     searchAddr=addr;
   }
 
+  const updateOrderBy = (event) => {
+    console.log(event.target.value)
+    $contributionsOps.variables.orderBy = event.target.value || 'BLOCK_NUM_DESC';
+  }
+
 </script>
 
 <div class="content">
@@ -56,8 +64,8 @@
   {:else}
 
   <div class="mt-6">
-    <div class="p-4 grid grid-cols-2">
-      <div class="text-lg">Contributions</div>
+    <div class="p-4 flex justify-between">
+      <div class="text-lg">Contributions ({totalRecord})</div>
       <div class="text-right">
         Raised/Cap: <Token value={fund.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={fund.cap} />
         <p>Unlock block: {fund.lockExpiredBlock}</p>
@@ -66,15 +74,22 @@
       </div>
     </div>
       <div class="intro-y box">
-        <div class="border-b border-gray-200 p-4 grid grid-cols-12 items-center">
-          <div class="col-start-1 col-end-8 text-base text-left">{totalRecord} Contributions {#if searchAddr }found start with "{searchAddr}" {/if}</div>
-          <div class="col-start-8 col-end-13 flex flex-row">
+        <div class="border-b border-gray-200 p-4 items-center flex justify-between">
+          <div class="text-base text-left">{totalRecord} Contributions {#if searchAddr }found start with "{searchAddr}" {/if}</div>
+          <div class="flex flex-row">
             <input type="text" class="form-control w-full mx-4" placeholder="Contributor address" bind:value={searchAddr}>
             <button class="btn btn-primary disabled:opacity-50 mr-4" 
               disabled={!searchAddr}
               on:click={() => updateSearchCriteria(searchAddr)}>Search</button>
             <button class="btn" 
               on:click={() => updateSearchCriteria()}>Reset</button>
+            <select class="form-select box w-full lg:w-auto ml-4 text-sm" on:click={updateOrderBy}>
+              <option>Short By</option>
+              <option value="BLOCK_NUM_DESC">Latest</option>
+              <option value="BLOCK_NUM_ASC">Earliest</option>
+              <option value="AMOUNT_DESC">Highest Price</option>
+              <option value="AMOUNT_ASC">Lowest Price</option>
+          </select>
           </div>
         </div>
         <div class="overflow-x-auto">
@@ -108,8 +123,8 @@
             </tbody>
           </table>
         </div>
-        <div class="mt-6 border-t border-grey-200 px-6 py-4 grid grid-cols-12 ">
-          <div class="col-start-1 col-end-3 text-right">
+        <div class="mt-6 border-t border-grey-200 px-6 py-4 flex flex-1 justify-between">
+          <div class="text-right">
             <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev" 
               on:click={() => {
                   $contributionsOps.variables.before = pageInfo.startCursor
@@ -119,7 +134,7 @@
               disabled={!pageInfo.hasPreviousPage}
             >&lt; Prev</button>
           </div>
-          <div class="col-start-10 col-end-12 text-right">
+          <div class="text-right">
             <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Next Page" title="Next Page" data-page="next"
             on:click={() => {
                 console.log(pageInfo.endCursor);
@@ -135,3 +150,4 @@
   </div>
   {/if}
 </div>
+

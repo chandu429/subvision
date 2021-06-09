@@ -25,7 +25,7 @@
 </script>
 
 <div class="flex items-center justify-{align}"> 
-  <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-1">
+  <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-2">
     <img alt="{parachain?.name || paraId}" src="{parachain?.icon || config.defaultParachainIcon}">
   </div>
   {#if showText}

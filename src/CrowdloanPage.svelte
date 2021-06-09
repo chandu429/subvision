@@ -44,7 +44,7 @@
       <thead>
         <tr>
           <th class="whitespace-nowrap">Parachain</th>
-          <th class="whitespace-nowrap">Creator</th>
+          <th class="whitespace-nowrap md:table-cell">Creator</th>
           <th class="text-center whitespace-nowrap">First slot</th>
           <th class="text-center whitespace-nowrap">Last slot</th>
           <th class="text-right whitespace-nowrap">Raised / Cap</th>
@@ -57,9 +57,9 @@
         {#each crowdloans as crowdloan (crowdloan.id) }
           <tr class="intro-x zoom-in" on:click="{e => navigate(`/crowdloan/${crowdloan.id}`)}">
             <td class="">
-              <ParachainIcon paraId={crowdloan.parachain.paraId} />
+              <ParachainIcon paraId={crowdloan.parachain.paraId} align="start"/>
             </td>
-            <td class="">
+            <td class="md:table-cell">
               <div class="text-gray-600 whitespace-nowrap ellipsis-text lg:w-40 sm:w-6" title={crowdloan.depositor}>{crowdloan.depositor}</div>
             </td>
             <td><div class="text-center ">{crowdloan.firstSlot}</div></td>
