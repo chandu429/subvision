@@ -51,6 +51,8 @@
 
   const updateOrderBy = (event) => {
     console.log(event.target.value)
+    $contributionsOps.variables.before = ''
+    $contributionsOps.variables.after = ''
     $contributionsOps.variables.orderBy = event.target.value || 'BLOCK_NUM_DESC';
   }
 
@@ -83,7 +85,7 @@
               on:click={() => updateSearchCriteria(searchAddr)}>Search</button>
             <button class="btn" 
               on:click={() => updateSearchCriteria()}>Reset</button>
-            <select class="form-select box w-full lg:w-auto ml-4 text-sm" on:click={updateOrderBy}>
+            <select class="form-select box w-full lg:w-auto ml-4 text-sm" on:click={updateOrderBy} value={$contributionsOps.variables.orderBy}>
               <option>Short By</option>
               <option value="BLOCK_NUM_DESC">Latest</option>
               <option value="BLOCK_NUM_ASC">Earliest</option>
