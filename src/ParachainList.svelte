@@ -30,7 +30,7 @@
     {#each parachains as parachain (parachain.paraId)}
       <tr class="intro-x zoom-in">
         <td class="w-40">
-          <ParachainIcon paraId={parachain.paraId} />
+          <ParachainIcon paraId={parachain.paraId} align="start"/>
         </td>
         <td class="">
           <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={parachain.manager}>{parachain.manager}</div>
