@@ -69,7 +69,7 @@ export const getDateFromBlockNum = (blockNum: number, curBlockNum: number, times
 };
 
 export const dateFormatter = new Intl.DateTimeFormat('en-US');
-export const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+export const dateTimeFormatter = new Intl.DateTimeFormat('en-AU', {
   year: 'numeric',
   month: 'numeric',
   day: 'numeric',

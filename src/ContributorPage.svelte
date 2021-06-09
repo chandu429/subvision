@@ -111,7 +111,7 @@
                 <td class="border-b dark:border-dark-5 text-right">{Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%</td>
                 <td class="border-b dark:border-dark-5 text-right">
                   <div class="text-right">Block: {contribution.blockNum}</div>
-                  <div class="text-right">{getDateFromBlockNum(contribution.blockNum, $lastBlockNum, $lastBlockTime)}</div>
+                  <div class="text-right">{getDateFromBlockNum(contribution.blockNum, $lastBlockNum, $lastBlockTime, true)}</div>
                 </td>
               </tr>
               {/each}
