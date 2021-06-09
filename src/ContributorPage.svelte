@@ -109,7 +109,7 @@
           </table>
         </div>
         <div class="mt-6 border-t border-grey-200 px-6 py-4 grid grid-cols-12 ">
-          <div class="col-start-11 text-right">
+          <div class="col-start-1 col-end-3 text-right">
             <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev" 
               on:click={() => {
                   $contributionsOps.variables.before = pageInfo.startCursor
@@ -119,7 +119,7 @@
               disabled={!pageInfo.hasPreviousPage}
             >&lt; Prev</button>
           </div>
-          <div class="col-start-12 text-right">
+          <div class="col-start-10 col-end-12 text-right">
             <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Next Page" title="Next Page" data-page="next"
             on:click={() => {
                 console.log(pageInfo.endCursor);

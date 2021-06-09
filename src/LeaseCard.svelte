@@ -3,12 +3,11 @@
   import Token from './Token.svelte';
   import { config } from './constants';
   import ParachainIcon from './ParachainIcon.svelte';
-  export let firstLease, lastLease, latestBidAmount, numBlockWon, paraId, closingPeriod
+  export let firstLease, lastLease, latestBidAmount, paraId, leadingRate
 
   $: leases = range(firstLease, lastLease + 1);
   $: blockStart = firstLease * config.leasePeriod;
   $: blockEnd = lastLease * config.leasePeriod;
-  $: leadingRate = numBlockWon ? ((numBlockWon / closingPeriod) * 100).toFixed(2) + '%' : 'N/A';
 
 </script>
 
@@ -38,7 +37,7 @@
     <div class="text-center text-xm flex flex-col">
       <div class="text-gray-400 mb-2">Leading rate</div>
       <div class="fixed-line-height">
-        <div class="">{leadingRate}</div>
+        <div class="">{leadingRate ? `${(leadingRate * 100)}%` : 'N/A' }</div>
       </div>
     </div>
   </div>

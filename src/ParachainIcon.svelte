@@ -20,7 +20,7 @@
 </script>
 
 <script>
-  export let paraId, smallIcon = false, align='center';
+  export let paraId, smallIcon = false, align='center', showText=true;
   const parachain = paraMappings[paraId];
 </script>
 
@@ -28,12 +28,13 @@
   <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-1">
     <img alt="{parachain?.name || paraId}" src="{parachain?.icon || config.defaultParachainIcon}">
   </div>
+  {#if showText}
   <div class="text-sm">
     {#if parachain}
-    {parachain?.name}
-      <p class="text-xs text-left">{paraId}</p>
+      <div title={paraId}>{parachain?.name}</div>
     {:else}
       {paraId || ''}
     {/if}
   </div>
+  {/if}
 </div>

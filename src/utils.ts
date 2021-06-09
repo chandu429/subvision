@@ -60,14 +60,16 @@ export const getTimeDiffInWord = (timeDeltaMs: number): string => {
   return units.map(getTimeUnitInWord).join(' ');
 };
 
-export const getDateFromBlockNum = (blockNum: number, curBlockNum: number, timestamp?: string) => {
+export const getDateFromBlockNum = (blockNum: number, curBlockNum: number, timestamp?: string, displayTime?: false) => {
   const diff = blockNum - curBlockNum;
   const timeDiff = diff * 6000;
   const date = timestamp ? new Date(timestamp) : new Date();
+  const formatter = displayTime ? dateTimeFormatter : dateFormatter;
   return formatter.format(new Date(date.getTime() + timeDiff)).replace(',', ' ');
 };
 
-export const formatter = new Intl.DateTimeFormat('en-US', {
+export const dateFormatter = new Intl.DateTimeFormat('en-US');
+export const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'numeric',
   day: 'numeric',
@@ -101,4 +103,54 @@ export const getColSpan = (allSlots: number[], curSlots: number[]): number[] => 
     times(allSlots.length - startIdx - span, () => 0)
   );
   return result;
+};
+
+interface Lease {
+  [key: string]: any;
+  firstLease: number;
+  lastLease: number;
+}
+
+interface GroupedLeaseSeries {
+  starts: number;
+  ends: number;
+  totalBidAmount: number;
+  totalLockupValue: number;
+  series: Lease[];
+  winningChance: number;
+}
+
+const findContinuation = (cur: Lease, segments: Lease[], prev: Lease[] = []): Lease[][] => {
+  const next = cur.lastLease + 1;
+  return segments.reduce((current, { firstLease, lastLease, ...others }, idx) => {
+    if (next === firstLease) {
+      const curBranch = prev.concat({ firstLease, lastLease, ...others });
+      current.push(curBranch);
+      const rest = [...segments.slice(0, idx), ...segments.slice(idx + 1)];
+
+      if (rest.length) {
+        current.push(...findContinuation({ firstLease, lastLease }, rest, curBranch));
+      }
+    }
+    return current;
+  }, [] as Lease[][]);
+};
+
+export const gatherCombination = (sortedLease: Lease[]): GroupedLeaseSeries[] => {
+  return sortedLease.reduce((all, lease) => {
+    const result = findContinuation(lease, sortedLease, [lease]);
+    const group = [...result, [lease]].map((series) => ({
+      starts: series[0].firstLease,
+      ends: series[series.length - 1].lastLease,
+      totalBidAmount: series.reduce((total, { latestBidAmount }) => {
+        return total + (latestBidAmount ? parseInt(latestBidAmount, 10) : 0);
+      }, 0),
+      totalLockupValue: series.reduce((total, { latestBidAmount, firstLease, lastLease }) => {
+        return total + (lastLease - firstLease + 1) * (latestBidAmount ? parseInt(latestBidAmount, 10) : 0);
+      }, 0),
+      winningChance: series.reduce((total, { leadingRate }) => total * (leadingRate ? parseFloat(leadingRate) : 0), 1),
+      series
+    }));
+    return all.concat(group);
+  }, [] as GroupedLeaseSeries[]);
 };

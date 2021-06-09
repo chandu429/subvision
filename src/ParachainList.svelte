@@ -10,9 +10,7 @@
   export let parachains;
 
   const { leasePeriod } = config;
-  $: {
 
-  }
 
 </script>
 {#if parachains?.length }

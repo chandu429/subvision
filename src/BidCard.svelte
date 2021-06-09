@@ -1,6 +1,5 @@
 
 <script>
-  import { now } from 'svelte/internal';
   import ParachainIcon from './ParachainIcon.svelte';
   import Token from './Token.svelte';
   import { getTimeDiffInWord } from './utils';

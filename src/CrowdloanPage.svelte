@@ -1,5 +1,6 @@
 <script>
   import { operationStore, query } from '@urql/svelte';
+  import { navigate } from "svelte-navigator";
   import { lastBlockNum, lastBlockTime } from './stores.ts';
   import { CROWDLOAN_QUERY } from './queries.ts';
   import Token from './Token.svelte';
@@ -8,19 +9,37 @@
   import Loading from './Loading.svelte';
   import Breadcrumb from './Breadcrumb.svelte';
   import ParachainIcon from './ParachainIcon.svelte';
+  import { onMount } from 'svelte';
+
+  let timer = 0;
 
   const crowdloanOps = operationStore(CROWDLOAN_QUERY, null, { requestPolicy: 'network-only'})
   query(crowdloanOps);
+
+  onMount(async () => {
+    if (!timer) {
+      timer = setInterval(() => {
+        crowdloanOps.update((origin) => {
+          origin.context = {...origin.context, timeFlag: Math.random()}
+        })
+      }, 2500);
+    }
+
+    return () => {
+      clearInterval(timer);
+      timer = 0;
+    }
+  });
 
   $: crowdloans = $crowdloanOps.data?.crowdloans.nodes || [];
 </script>
 
 <div class="content">
   <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan'}]}/>
-  {#if $crowdloanOps.fetching }
+  {#if $crowdloanOps.fetching && !crowdloans.length }
   <Loading />
   {:else}
-  <div class="mt-6">
+  <div class="mt-6 overflow-auto lg:overflow-visible">
     <table class="table table-report -mt-2">
       <thead>
         <tr>
@@ -36,12 +55,12 @@
       </thead>
       <tbody>
         {#each crowdloans as crowdloan (crowdloan.id) }
-          <tr class="intro-x zoom-in">
+          <tr class="intro-x zoom-in" on:click="{e => navigate(`/crowdloan/${crowdloan.id}`)}">
             <td class="">
               <ParachainIcon paraId={crowdloan.parachain.paraId} />
             </td>
             <td class="">
-              <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={crowdloan.depositor}>{crowdloan.depositor}</div>
+              <div class="text-gray-600 whitespace-nowrap ellipsis-text lg:w-40 sm:w-6" title={crowdloan.depositor}>{crowdloan.depositor}</div>
             </td>
             <td><div class="text-center ">{crowdloan.firstSlot}</div></td>
             <td><div class="text-center ">{crowdloan.lastSlot}</div></td>

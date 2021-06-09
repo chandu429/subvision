@@ -3,11 +3,15 @@ import AuctionProgressIndicator from './AuctionProgressIndicator.svelte';
 import LeaseCard from './LeaseCard.svelte';
 import BidCard from './BidCard.svelte';
 import { chronicle } from './stores';
+import { round } from 'lodash-es';
+import SlotsCombination from './SlotsCombination.svelte';
 export let curAuction, latestBids;
 
-$: {
-
-}
+$: closingPeriod = curAuction.closingEnd - curAuction.closingStart;
+$: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) => ({
+    ...others,
+    leadingRate: numBlockWon && round(((numBlockWon - 1) / closingPeriod), 4)
+  }));
 
 </script>
 
@@ -16,7 +20,6 @@ $: {
     <div class="block sm:flex items-center h-10">
       <h2 class="text-lg font-medium mr-5">Current Auction</h2>
     </div>
-
     <div class="mt-4 sm:mt-1">
       <div class="box grid grid-cols-6 gap-4 divide-x divide-gray-200 p-4">
         <div class="justify-center">
@@ -40,6 +43,11 @@ $: {
       </div>
     </div>
   </div>
+
+  <div class="col-span-12">
+    <SlotsCombination leases={biddingLeases} firstLease={curAuction.leaseStart} />
+  </div>
+
   <div class="col-span-8 m:col-span-12 s:col-span-12 my-4">
     <div class="py-2 text-lg">
       <p>Leading Positions</p>
@@ -47,8 +55,8 @@ $: {
     <div class="">
       {#if curAuction.parachainLeases.length}
       <div class="grid gap-6">
-        {#each curAuction.parachainLeases as lease }
-          <LeaseCard {...lease } closingPeriod={curAuction.closingEnd - curAuction.closingStart}/>
+        {#each biddingLeases as lease }
+          <LeaseCard {...lease } />
         {/each}
       </div>
       {/if}

@@ -1,9 +1,9 @@
 import { readable, writable, derived } from 'svelte/store';
-import { formatter } from './utils';
+import { dateTimeFormatter } from './utils';
 
 export const timeStr = readable(null, function start(set) {
   const interval = setInterval(() => {
-    set(formatter.format(new Date()));
+    set(dateTimeFormatter.format(new Date()).replace(',', ' '));
   }, 1000);
 
   return function stop() {
