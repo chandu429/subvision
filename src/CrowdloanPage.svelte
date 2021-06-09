@@ -45,8 +45,8 @@
         <tr>
           <th class="whitespace-nowrap">Parachain</th>
           <!-- <th class="whitespace-nowrap md:table-cell">Creator</th> -->
-          <th class="text-center whitespace-nowrap">First slot</th>
-          <th class="text-center whitespace-nowrap">Last slot</th>
+          <th class="text-center whitespace-nowrap">First Lease</th>
+          <th class="text-center whitespace-nowrap">Last Lease</th>
           <th class="text-right whitespace-nowrap">Raised / Cap</th>
           <th class="text-right whitespace-nowrap">Ends</th>
           <th class="text-center whitespace-nowrap">Status</th>

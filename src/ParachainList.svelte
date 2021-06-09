@@ -29,7 +29,7 @@
   </thead>
   <tbody>
     {#each parachains as parachain (parachain.paraId)}
-      <tr class="intro-x zoom-in">
+      <tr class="intro-x">
         <td class="w-40">
           <ParachainIcon paraId={parachain.paraId} align="start"/>
         </td>
