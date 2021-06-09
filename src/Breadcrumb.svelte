@@ -19,6 +19,6 @@
   <div class="text-right flex-1">
     {$timeStr}
     <div class="text-gray-400 text-xs">Block: {$lastBlockNum}</div>
-    <div class="text-gray-400 text-xs">Current lease: {$curLease}</div>
+    <div class="text-gray-400 text-xs">Current lease: {$curLease || 'N/A'}</div>
   </div>
 </div>
