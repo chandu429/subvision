@@ -1,21 +1,23 @@
 <script context="module" lang="typescript">
+  import { config } from './constants';
+
   interface ParachainInfo {
     paraid: string;
     name: string;
-    token: string;
-    description: string;
-    website: string;
+    token?: string;
+    description?: string;
+    website?: string;
     icon: string;
   }
-  
-  import { config } from './constants';
 
+  const { defaultChains } = config;
   let paraMappings: Record<string, ParachainInfo> = {};
   fetch(config.paraMappingUrl)
     .then(response => response.json() as Promise<ParachainInfo[]>)
+    .then((data: ParachainInfo[]) => (defaultChains).concat(data))
     .then((data: ParachainInfo[]) => {
       paraMappings = (data || []).reduce((all, { paraid, ...rest}) => ({...all, [paraid]: rest, id: paraid }), {})
-    });
+    })
 
 </script>
 
@@ -24,12 +26,12 @@
   const parachain = paraMappings[paraId];
 </script>
 
-<div class="flex items-center justify-{align}"> 
-  <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-2">
+<div class="flex items-center justify-{align}" alt="{paraId}"> 
+  <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-2" alt="{paraId}">
     <img alt="{parachain?.name || paraId}" src="{parachain?.icon || config.defaultParachainIcon}">
   </div>
   {#if showText}
-  <div class="text-sm">
+  <div class="text-sm" alt="{paraId}">
     {#if parachain}
       <div title={paraId}>{parachain?.name}</div>
     {:else}

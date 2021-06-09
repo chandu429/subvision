@@ -11,7 +11,7 @@
     <img alt="Subvisio" class="w-40" src="/logo.svg" />
   </Link>
   <button class="btn text-white" aria-label="menu" on:click="{toggleMenu}">
-    <span class="material-icons md-light md-18" >menu</span>
+    <span class="material-icons md-light md-18">menu</span>
   </button>
 </div>
 <ul class="border-t border-theme-29 py-5 {menuOpen ? '' : 'hidden'}" on:click={toggleMenu}>
