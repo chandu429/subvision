@@ -40,7 +40,7 @@
     <div class="px-2 absolute-box"> 
       <div class="rounded-full h-6 w-6 flex items-center justify-center text-white {getBgColorClass(idx)}">{idx + 1} </div>
       <div class="leading-rate text-sm">{round(winningChance * 100, 2)} %</div>
-      <div class="ml-2 text-sm locked-value">TLV: <Token value={totalLockupValue} allowZero={true}/></div>
+      <div class="ml-2 text-xs locked-value">TLV: <Token value={totalLockupValue} allowZero={true}/></div>
     </div>
     {#each series as lease, leaseIdx }
 
@@ -92,15 +92,16 @@
   .leading-rate {
     position: absolute;
     top: 1px;
-    right: 4px;
+    right: 15px;
     z-index: 10;
     overflow: hidden;
   }
   .locked-value {
     position: absolute;
     bottom: 0;
-    right: 4px;
+    right: 15px;
     z-index: 10;
     overflow: hidden;
   }
+
 </style>

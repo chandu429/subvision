@@ -14,11 +14,12 @@
 
 </script>
 {#if parachains?.length }
+<div class="overflow-auto lg:overflow-visible">
 <table class="table table-report mt-6">
   <thead>
     <tr>
       <th class="whitespace-nowrap">Parachain id</th>
-      <th class="whitespace-nowrap">Manager</th>
+      <!-- <th class="whitespace-nowrap">Manager</th> -->
       <th class="text-center whitespace-nowrap">Current Lease</th>
       <th class="text-center whitespace-nowrap">Lease Ends</th>
       <th class="text-right whitespace-nowrap">Won amount</th>
@@ -32,9 +33,9 @@
         <td class="w-40">
           <ParachainIcon paraId={parachain.paraId} align="start"/>
         </td>
-        <td class="">
+        <!-- <td class="">
           <div class="text-gray-600 whitespace-nowrap ellipsis-text w-40" title={parachain.manager}>{parachain.manager}</div>
-        </td>
+        </td> -->
         <td class="text-center">
             {#if parachain.curLease }
               {parachain.curLease?.firstLease} - {parachain.curLease?.lastLease}
@@ -70,6 +71,7 @@
     {/each}
   </tbody>
 </table>
+</div>
 {/if}
 
 <style>

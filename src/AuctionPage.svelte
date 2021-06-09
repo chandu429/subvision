@@ -79,6 +79,7 @@
   {#if $activeAuctions.fetching && !chronicle} 
     <Loading />
   {:else}
+  
     <div class="box mt-4">
       <SlotLeaseChart leases={slotLeases}/>
     </div>
@@ -87,6 +88,6 @@
     {:else}
       <ParachainList {parachains}/>
     {/if}
+
   {/if}
-  
 </div>
