@@ -8,7 +8,7 @@
   import { getDateFromBlockNum } from './utils';
   import Loading from './Loading.svelte';
   import Breadcrumb from './Breadcrumb.svelte';
-  import SortingButtonGroup from './SortingButtonGroup.svelte';
+
 
   export let fundId;
 
@@ -113,7 +113,7 @@
                 <td class="border-b dark:border-dark-5 text-right">{Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%</td>
                 <td class="border-b dark:border-dark-5 text-right">
                   <div class="text-right">Block: {contribution.blockNum}</div>
-                  <div class="text-right">{getDateFromBlockNum(contribution.blockNum, $lastBlockNum, $lastBlockTime, true)}</div>
+                  <div class="text-right">{new Date(contribution.createdAt).toLocaleTimeString()} {new Date(contribution.createdAt).toLocaleDateString()}</div>
                 </td>
               </tr>
               {/each}
