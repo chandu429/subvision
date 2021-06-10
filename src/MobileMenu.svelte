@@ -27,4 +27,23 @@
       <div class="menu__title">Crowdloan</div>
     </Link>
   </li>
+  <li class="side-nav__devider my-4"></li>
+  <li>
+    <Link to="/market" class="menu">
+      <div class="menu__icon"><span class="material-icons md-18">monetization_on</span></div>
+      <div class="menu__title">Market</div>
+    </Link>
+  </li>
+  <li>
+    <Link to="/insight" class="menu">
+      <div class="menu__icon"><span class="material-icons md-18">insights</span></div>
+      <div class="menu__title">Insight</div>
+    </Link>
+  </li>
+  <li>
+    <Link to="/staking" class="menu">
+      <div class="menu__icon"><span class="material-icons md-18">toll</span></div>
+      <div class="menu__title">Staking</div>
+    </Link>
+  </li>
 </ul>

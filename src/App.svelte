@@ -13,6 +13,7 @@
   import { onMount } from 'svelte';
   import { normalize } from './utils';
   import { chronicle } from './stores';
+  import Placeholder from './Placeholder.svelte';
 
 
   initClient({
@@ -60,6 +61,7 @@
         <Route path="/crowdloan/:id" let:params>
           <ContributorPage fundId={params.id} path={params}/>
         </Route>
+        <Route path="/*" component={Placeholder} />
       </div>
     </Layout>
   </main>
