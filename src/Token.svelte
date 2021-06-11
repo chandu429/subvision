@@ -15,13 +15,13 @@
   const numberFormatter = new Intl.NumberFormat('en-US');
 
   const getRoundUpValue = (value) => {
-    if (value > 1000000000) {
+    if (value >= 1000000000) {
       return `${numberFormatter.format(round(Big(value).div(1000000000).toNumber(), 2))}b`
     }
-    if (value > 1000000) {
+    if (value >= 1000000) {
       return `${numberFormatter.format(round(Big(value).div(1000000).toNumber(), 2))}m`
     }
-    if (value > 1000) {
+    if (value >= 1000) {
       return `${numberFormatter.format(round(Big(value).div(1000).toNumber(), 2))}k`
     }
     return numberFormatter.format(value);
