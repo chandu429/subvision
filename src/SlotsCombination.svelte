@@ -70,9 +70,9 @@ import MediaQuery from './MediaQuery.svelte';
         {/each}
       </div>
     {:else}
-      <div class="pt-px">
+      <div class="pt-px box">
       {#each combinations as {series, totalLockupValue, winningChance}, idx}
-        <div class="grid grid-cols-9 gap-1 border-b border-gray-200 my-1 pt-2 pb-2.5">
+        <div class="grid grid-cols-9 gap-1.5 border-b border-gray-200 my-1 pt-2 pb-2.5">
           <div class="px-3 absolute-box"> 
             <div class="rounded-full h-8 w-8 flex items-center justify-center text-white {getBgColorClass(idx)}">{idx + 1} </div>
             <div class="leading-rate text-sm">{round(winningChance * 100, 2)} %</div>

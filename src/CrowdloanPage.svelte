@@ -52,18 +52,18 @@ import MediaQuery from './MediaQuery.svelte';
           </div>
           <div class="flex justify-between mt-2">
             <div class=" text-left">
-              <div class="text-xs">Lease</div>
+              <div class="text-xs text-gray-400">Lease</div>
               <div class="text-lg">{crowdloan.firstSlot} - {crowdloan.lastSlot}</div>
             </div>
             <div class="">
-              <div class="text-xs text-right">Raised / Cap</div>
+              <div class="text-xs text-right text-gray-400">Raised / Cap</div>
               <div><Token value={crowdloan.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={crowdloan.cap} /></div>
               <div class="text-right text-xs">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
             </div>
             <div>
-              <div class="text-xs text-right">Ends</div>
+              <div class="text-xs text-right text-gray-400">Ends</div>
               <div class="text-right">Block: {crowdloan.lockExpiredBlock}</div>
-              <div class="text-right text-gray-600 text-xs">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
+              <div class="text-right text-xs">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
             </div>
           </div>
         </div>

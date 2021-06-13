@@ -80,7 +80,7 @@
     <Loading />
   {:else}
     <div class="box mt-4">
-    {#if !curAuction}
+    {#if !$curAuction}
       <SlotLeaseChart leases={slotLeases}/>
     {/if}
     </div>
