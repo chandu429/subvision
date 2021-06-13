@@ -10,6 +10,7 @@
   import Breadcrumb from './Breadcrumb.svelte';
   import ParachainIcon from './ParachainIcon.svelte';
   import { onMount } from 'svelte';
+import MediaQuery from './MediaQuery.svelte';
 
   let timer = 0;
 
@@ -39,52 +40,85 @@
   {#if $crowdloanOps.fetching && !crowdloans.length }
   <Loading />
   {:else}
-  <div class="mt-6 overflow-auto lg:overflow-visible">
-    <table class="table table-report -mt-2">
-      <thead>
-        <tr>
-          <th class="whitespace-nowrap">Parachain</th>
-          <!-- <th class="whitespace-nowrap md:table-cell">Creator</th> -->
-          <th class="text-center whitespace-nowrap">First Lease</th>
-          <th class="text-center whitespace-nowrap">Last Lease</th>
-          <th class="text-right whitespace-nowrap">Raised / Cap</th>
-          <th class="text-right whitespace-nowrap">Ends</th>
-          <th class="text-center whitespace-nowrap">Status</th>
-          <th class="text-center whitespace-nowrap">Contributors</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each crowdloans as crowdloan (crowdloan.id) }
-          <tr class="intro-x zoom-in" on:click="{e => navigate(`/crowdloan/${crowdloan.id}`)}">
-            <td class="">
-              <ParachainIcon paraId={crowdloan.parachain.paraId} align="start"/>
-            </td>
-            <!-- <td class="md:table-cell">
-              <div class="text-gray-600 whitespace-nowrap ellipsis-text lg:w-40 sm:w-6" title={crowdloan.depositor}>{crowdloan.depositor}</div>
-            </td> -->
-            <td><div class="text-center ">{crowdloan.firstSlot}</div></td>
-            <td><div class="text-center ">{crowdloan.lastSlot}</div></td>
-            <td>
-              <div class="text-right"><Token value={crowdloan.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={crowdloan.cap} /></div>
-              <div class="text-right">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
-            </td>
-            <td class="">
+  <MediaQuery query="(max-width: 640px)" let:matches>
+    {#if matches}
+      {#each crowdloans as crowdloan (crowdloan.id) }
+        <div class="box my-4 p-2" on:click={e => navigate(`/crowdloan/${crowdloan.id}`)}>
+          <div class="flex flex-row justify-between">
+            <ParachainIcon paraId={crowdloan.parachain.paraId} align="start" smallIcon/>
+            <div>
+              <div class="rounded-full py-1 px-2 text-white text-sm {crowdloan.retiring ? 'bg-yellow-600' : 'bg-blue-500'}">{crowdloan.retiring ? 'Retiring' : 'Active'}</div>
+            </div>
+          </div>
+          <div class="flex justify-between mt-2">
+            <div class=" text-left">
+              <div class="text-xs">Lease</div>
+              <div class="text-lg">{crowdloan.firstSlot} - {crowdloan.lastSlot}</div>
+            </div>
+            <div class="">
+              <div class="text-xs text-right">Raised / Cap</div>
+              <div><Token value={crowdloan.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={crowdloan.cap} /></div>
+              <div class="text-right text-xs">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
+            </div>
+            <div>
+              <div class="text-xs text-right">Ends</div>
               <div class="text-right">Block: {crowdloan.lockExpiredBlock}</div>
-              <div class="text-right text-gray-600">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
-            </td>
-            <td class="">
-              <div class="flex justify-center items-center">{crowdloan.retiring ? 'Retiring' : 'Active'}</div>
-            </td>
-            <td class="text-center">
-              <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">
-                View
-              </Link>
-            </td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-  </div>
+              <div class="text-right text-gray-600 text-xs">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
+            </div>
+          </div>
+        </div>
+      {/each}
+    {:else}
+      <div class="mt-6 overflow-auto lg:overflow-visible">
+        <table class="table table-report -mt-2">
+          <thead>
+            <tr>
+              <th class="whitespace-nowrap">Parachain</th>
+              <!-- <th class="whitespace-nowrap md:table-cell">Creator</th> -->
+              <th class="text-center whitespace-nowrap">First Lease</th>
+              <th class="text-center whitespace-nowrap">Last Lease</th>
+              <th class="text-right whitespace-nowrap">Raised / Cap</th>
+              <th class="text-right whitespace-nowrap">Ends</th>
+              <th class="text-center whitespace-nowrap">Status</th>
+              <th class="text-center whitespace-nowrap">Contributors</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each crowdloans as crowdloan (crowdloan.id) }
+              <tr class="intro-x zoom-in" on:click={e => navigate(`/crowdloan/${crowdloan.id}`)}>
+                <td class="">
+                  <ParachainIcon paraId={crowdloan.parachain.paraId} align="start"/>
+                </td>
+                <!-- <td class="md:table-cell">
+                  <div class="text-gray-600 whitespace-nowrap ellipsis-text lg:w-40 sm:w-6" title={crowdloan.depositor}>{crowdloan.depositor}</div>
+                </td> -->
+                <td><div class="text-center ">{crowdloan.firstSlot}</div></td>
+                <td><div class="text-center ">{crowdloan.lastSlot}</div></td>
+                <td>
+                  <div class="text-right"><Token value={crowdloan.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={crowdloan.cap} /></div>
+                  <div class="text-right">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
+                </td>
+                <td class="">
+                  <div class="text-right">Block: {crowdloan.lockExpiredBlock}</div>
+                  <div class="text-right text-gray-600">{getDateFromBlockNum(crowdloan.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
+                </td>
+                <td class="">
+                  <div class="flex justify-center items-center">{crowdloan.retiring ? 'Retiring' : 'Active'}</div>
+                </td>
+                <td class="text-center">
+                  <Link to="/crowdloan/{crowdloan.id}" class="btn text-sm">
+                    View
+                  </Link>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  </MediaQuery>
+
+  
   {/if}
   
 </div>

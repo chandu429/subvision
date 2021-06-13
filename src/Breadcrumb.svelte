@@ -10,13 +10,13 @@
   <div>
     {#each links as link}
       {#if link.path}
-        <Link to={link.path}>{link.title}</Link><ChevronIcon />
+        <Link to={link.path}><span class="text-blue-600 underline">{link.title}</span></Link><ChevronIcon />
       {:else}
         <span>{link.title}</span>
       {/if}
     {/each}
   </div>
-  <div class="text-right flex-1">
+  <div class="text-right flex-1 text-sm">
     {$timeStr}
     <div class="text-gray-400 text-xs">Block: {$lastBlockNum}</div>
     <div class="text-gray-400 text-xs">Current lease: {$curLease || 'N/A'}</div>

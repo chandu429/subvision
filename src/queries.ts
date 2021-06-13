@@ -140,8 +140,12 @@ query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Curso
     id
     cap
     raised
-    lockExpiredBlock,
+    lockExpiredBlock
     retiring
+    parachain {
+      paraId
+      manager
+    }
   }
 	contributions (filter: $contributionFilter, orderBy: $orderBy, first: 20, after: $after, before: $before) {
     nodes {
@@ -150,10 +154,6 @@ query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Curso
       amount
       createdAt
       blockNum
-      parachain {
-        paraId
-        manager
-      }
     }
     pageInfo {
       hasNextPage

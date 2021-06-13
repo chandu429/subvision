@@ -59,7 +59,7 @@
 </script>
 
 <div class="content">
-  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fundId, }]}/>
+  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fund?.parachain?.paraId || '' }]}/>
 
   {#if $contributionsOps.fetching}
   <Loading />
