@@ -51,8 +51,8 @@
     {#if !activeLeases.length} 
     <tr>
       <td colspan={allSlots.length + 1}>
-        <div class="flex empty-content justify-center items-center">
-          <div>No parachain leased yet</div>
+        <div class="flex empty-content px-6 justify-center items-center">
+          <div class="">No parachain leased yet</div>
         </div>
       </td>
     </tr>

@@ -18,6 +18,9 @@ import MediaQuery from './MediaQuery.svelte';
 <MediaQuery query="(max-width: 640px)" let:matches>
   {#if matches}
     <div>
+      <div class="text-lg mt-2">
+        Parachains
+      </div>
       {#each parachains as parachain (parachain.id) }
         <div class="box my-4 p-2">
           <div class="flex flex-row justify-between">

@@ -33,7 +33,13 @@
   {#if showText}
   <div class="text-sm" alt="{paraId}">
     {#if parachain}
-      <div title={paraId}>{parachain?.name}</div>
+      <div title={paraId}>
+        {#if parachain.website}
+          <a href="{parachain.website}" target="_blank" class="text-blue-900">{parachain?.name}</a>
+        {:else}
+          {parachain?.name}
+        {/if}
+      </div>
     {:else}
       {paraId || ''}
     {/if}
