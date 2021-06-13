@@ -5,6 +5,7 @@ import BidCard from './BidCard.svelte';
 import { chronicle } from './stores';
 import { round } from 'lodash-es';
 import SlotsCombination from './SlotsCombination.svelte';
+import MediaQuery from './MediaQuery.svelte';
 export let curAuction, latestBids;
 
 $: closingPeriod = curAuction.closingEnd - curAuction.closingStart;
@@ -15,61 +16,86 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
 
 </script>
 
-<div class="grid grid-cols-12 gap-6">
-  <div class="col-span-12 lg:col-span-12 xl:col-span-12 mt-2">
-    <div class="block sm:flex items-center h-10">
-      <h2 class="text-lg font-medium mr-5">Current Auction</h2>
+<div >
+  <div class="">
+    <div class="block sm:flex items-center text-center">
+      <h2 class="text-lg font-medium mr-5">Auction No.{curAuction.id}</h2>
     </div>
-    <div class="mt-4 sm:mt-1">
-      <div class="box grid grid-cols-6 gap-4 divide-x divide-gray-200 p-4">
-        <div class="justify-center">
-          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Auction Index</div>
-          <div class="text-3xl font-bold mt-4 text-center">{curAuction?.id || ''}</div>
+    <div class="mt-1 sm:mt-4">
+      <div class="box flex flex-row divide-x divide-gray-200 p-3 sm:p-4 justify-between">
+        <div class="flex-grow px-1">
+          <div class="text-gray-600 dark:text-gray-600 text-center">Lease Periods</div>
+          <div class="text-sm sm:text-lg font-bold mt-4 text-center flex flex-col sm:flex-row justify-center flex-wrap">
+            <div>{curAuction?.slotsStart || ''}</div>
+            <div class="sm:mx-2">-</div>
+            <div>{curAuction?.slotsEnd || ''}</div>
+          </div>
         </div>
-        <div class="justify-center">
-          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Lease Periods</div>
-          <div class="text-3xl font-bold mt-4 text-center">{curAuction?.slotsStart || ''} - {curAuction?.slotsEnd || ''}</div>
+        <div class="flex-grow px-1">
+          <div class="text-gray-600 dark:text-gray-600 text-center">Auction Stage</div>
+          <div class="text-sm sm:text-lg font-bold mt-4 text-center flex sm:flex-row flex-col justify-center flex-wrap">
+            <div>{curAuction.blockNum}</div>
+            <div class="mx-1 sm:mx-2">-</div>
+            <div>{curAuction.closingStart - 1}</div>
+          </div>
         </div>
-        <div class="justify-center">
-          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Auction Stage</div>
-          <div class="text-lg font-bold mt-4 text-center">{curAuction.blockNum} - {curAuction.closingStart - 1}</div>
-        </div>
-        <div class="justify-center">
-          <div class="mt-1 text-gray-600 dark:text-gray-600 text-center">Ending Stage</div>
-          <div class="text-lg font-bold mt-4 text-center">{curAuction.closingStart} - {curAuction.closingEnd}</div>
+        <div class="flex-grow px-1">
+          <div class="text-gray-600 dark:text-gray-600 text-center">Ending Stage</div>
+          <div class="text-sm sm:text-lg font-bold mt-4 text-center flex flex-col sm:flex-row justify-center flex-wrap ">
+            <div>{curAuction.closingStart}</div>
+            <div class="mx-1 sm:mx-2">-</div>
+            <div>{curAuction.closingEnd}</div>
+          </div>
         </div>
         
-          <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+        <MediaQuery query="(min-width: 640px)" let:matches>
+          {#if matches}
+            <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+          {/if}
+        </MediaQuery>
       </div>
     </div>
   </div>
 
-  <div class="col-span-12">
+  <MediaQuery query="(max-width: 640px)" let:matches>
+    {#if matches}
+    <div class="box mt-4 p-4">
+      <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+    </div>
+    {/if}
+  </MediaQuery>
+
+  <div class="mt-6">
     <SlotsCombination leases={biddingLeases} firstLease={curAuction.leaseStart} />
   </div>
-
-  <div class="col-span-8 m:col-span-12 s:col-span-12 my-4">
-    <div class="py-2 text-lg">
-      <p>Leading Positions</p>
-    </div>
-    <div class="">
-      {#if curAuction.parachainLeases.length}
-      <div class="grid gap-6">
-        {#each biddingLeases as lease }
-          <LeaseCard {...lease } />
-        {/each}
+  <div class="flex flex-row justify-between">
+    <MediaQuery query="(min-width: 640px)" let:matches>
+      {#if matches}
+      <div class="my-4 w-3/5 flex-grow">
+        <div class="py-2 text-lg">
+          <p>Leading Positions</p>
+        </div>
+        <div class="">
+          {#if curAuction.parachainLeases.length}
+          <div class="grid gap-4">
+            {#each biddingLeases as lease }
+              <LeaseCard {...lease } />
+            {/each}
+          </div>
+          {/if}
+        </div>
       </div>
       {/if}
-    </div>
-  </div>
-  <div class="col-span-4 m:col-span-12 s:col-span-12 mt-4">
-    <div class="py-2 text-lg">
-      <p>Latest Bids</p>
-    </div>
-    <div >
-      {#each latestBids as bid}
-        <BidCard { ...bid } />
-      {/each}
+    </MediaQuery>
+    <div class="mt-4 sm:ml-4 sm:w-2/5">
+      <div class="py-2 text-lg">
+        <p>Latest Bids</p>
+      </div>
+      <div class="box">
+        {#each latestBids as bid}
+          <BidCard { ...bid } />
+        {/each}
+      </div>
     </div>
   </div>
 </div>

@@ -7,7 +7,7 @@
   const { paraId } = parachain || {};
 </script>
 
-<div class="box mb-3 px-5 py-3 grid grid-cols-5 grid-flow-row gap-2">
+<div class="mb-3 px-5 py-3 grid grid-cols-5 grid-flow-row gap-2 border-b">
   <div class="col-span-1">
     <ParachainIcon paraId={paraId} align="left" smallIcon/>
   </div>

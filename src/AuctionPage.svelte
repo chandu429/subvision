@@ -79,9 +79,10 @@
   {#if $activeAuctions.fetching && !chronicle} 
     <Loading />
   {:else}
-  
     <div class="box mt-4">
+    {#if !curAuction}
       <SlotLeaseChart leases={slotLeases}/>
+    {/if}
     </div>
     {#if $curAuction}
       <AuctionPanel {...{curAuction: $curAuction, latestBids} }/>
