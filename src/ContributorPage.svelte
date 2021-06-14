@@ -50,11 +50,11 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
     $contributionsOps.variables.contributionFilter.account.startsWithInsensitive = addr;
     $contributionsOps.variables.before = ''
     $contributionsOps.variables.after = ''
-    searchAddr=addr;
+    searchAddr = addr;
   }
 
   const updateOrderBy = (event) => {
-    console.log(event.target.value)
+    // $contributionsOps.variables.contributionFilter.account.startsWithInsensitive = searchAddr;
     $contributionsOps.variables.before = ''
     $contributionsOps.variables.after = ''
     $contributionsOps.variables.orderBy = event.target.value || 'BLOCK_NUM_DESC';
@@ -94,12 +94,13 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
                 </div>
                 <div>
                   <div class="border p-2 rounded-md ">
-                    <select class="text-sm outline-none" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
-                      <option>Short By</option>
-                      <option value="BLOCK_NUM_DESC">Latest</option>
-                      <option value="BLOCK_NUM_ASC">Earliest</option>
-                      <option value="AMOUNT_DESC">Highest Price</option>
-                      <option value="AMOUNT_ASC">Lowest Price</option>
+                    <select class="text-sm outline-none bg-white" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
+                      <optgroup label="Short By">
+                        <option value="BLOCK_NUM_DESC">Latest</option>
+                        <option value="BLOCK_NUM_ASC">Earliest</option>
+                        <option value="AMOUNT_DESC">Highest Price</option>
+                        <option value="AMOUNT_ASC">Lowest Price</option>
+                      </optgroup>
                     </select>
                   </div>
                 </div>
@@ -194,12 +195,13 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
           <div class="flex flex-row justify-between p-2 items-center">
             <div>{totalRecord} Contributions</div>
             <div class="border p-2 rounded-md">
-              <select class="text-sm bg-white" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
-                <option>Short By</option>
-                <option value="BLOCK_NUM_DESC">Latest</option>
-                <option value="BLOCK_NUM_ASC">Earliest</option>
-                <option value="AMOUNT_DESC">Highest Price</option>
-                <option value="AMOUNT_ASC">Lowest Price</option>
+              <select class="text-sm bg-white outline-none" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
+                <optgroup label="Short By">
+                  <option value="BLOCK_NUM_DESC">Latest</option>
+                  <option value="BLOCK_NUM_ASC">Earliest</option>
+                  <option value="AMOUNT_DESC">Highest Price</option>
+                  <option value="AMOUNT_ASC">Lowest Price</option>
+                </optgroup>
               </select>
             </div>
           </div>
