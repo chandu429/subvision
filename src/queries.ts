@@ -13,7 +13,7 @@ query {
 
 export const PARACHAIN_QUERY = `
 query {
-  parachains (filter: { deregistered: {equalTo: false} }, orderBy: UPDATED_AT_DESC){
+  parachains (filter: { deregistered: {equalTo: false} }, orderBy: CREATED_AT_DESC){
     nodes {
       id
       paraId

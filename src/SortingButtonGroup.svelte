@@ -2,49 +2,28 @@
   export let title;
 </script>
 
-<div class="flex text-right justify-end">
+<div class="flex text-right justify-end min-w-max">
   <div class="">{title}</div>
-  <div class="btn-groups">
-    <span class="chevron top"></span>
-    <span class="chevron bottom"></span>
+  <div class="btn-groups relative mr-4">
+    <span class="material-icons up-btn">arrow_drop_up</span>
+    <span class="material-icons down-btn">arrow_drop_down</span>
   </div>
 </div>
 
 <style>
   .btn-groups {
-    position: relative;
-    margin: 0 5px;
+    transform: scale(0.75, 0.75);
   }
-  .chevron::before {
-    border-style: solid;
-    border-width: 0.25em 0.25em 0 0;
-    content: '';
-    display: inline-block;
-    height: 0.45em;
+
+  .up-btn {
     position: absolute;
-    top: 0;
-    transform: rotate(-45deg);
-    vertical-align: top;
-    width: 0.45em;
-    color: black;
+    top: -6px;
+
   }
 
-  .chevron.top:before {
-    top: 5px;
+  .down-btn {
+    position: absolute;
+    top: 3px;
   }
-
-  .chevron.right:before {
-    left: 0;
-    transform: rotate(45deg);
-  }
-
-  .chevron.bottom:before {
-    top: 10px;
-    transform: rotate(135deg);
-  }
-
-  .chevron.left:before {
-    left: 0.25em;
-    transform: rotate(-135deg);
-  }
+  
 </style>

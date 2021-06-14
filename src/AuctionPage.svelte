@@ -63,13 +63,7 @@
     }
   }
 
-  // $: slotsCombination = $curAuction ? getSlotsCombination($curAuction.slotsStart, $curAuction.slotsEnd) : [];
-  // $: slotsWithWinningBid = slotsCombination.map(({ start, end }) => {
-  //   const { amount, parachain, isCrowdloan, bidder } = $curAuction.winningBids.find(({ firstSlot, lastSlot }) => firstSlot == start && lastSlot == end) || {};
-  //   const { paraId, manager, id, deposit, creationBlock } = parachain || {};
-  //   return { firstSlot: start, lastSlot: end, isCrowdloan, amount, bidder, paraId, manager, id, deposit, creationBlock, start, end };
-  // })
-  // $: groupedSlots = orderBy(Object.values(groupBy(slotsWithWinningBid, ({ start, end }) => end - start)), ['length'], ['asc']);
+
   $: latestBids = $curAuction ? orderBy([].concat($curAuction.latestBids), ['createdAt'], ['desc']).slice(0, 10) : [];
 
 </script>
