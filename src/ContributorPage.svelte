@@ -86,7 +86,7 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
               <div class="flex flex-row items-center flex-grow justify-end">
                 <div class="mr-2 search-box flex-grow text-right">
                   <input class="p-2 w-2/4 border rounded-md" placeholder="Search wallet address" bind:value={searchAddr} on:keydown={(e) =>
-                    (e.charCode === 13 || e.keyCode === 13) ? void updateSearchCriteria(searchAddr) : void ''
+                    (e.key === 'Enter') ? void updateSearchCriteria(searchAddr) : void ''
                   }/>
                   {#if searchAddr}
                     <div class="reset-btn large-pos" on:click={() => updateSearchCriteria()}><span class="material-icons text-gray-300">cancel</span></div>
@@ -171,13 +171,9 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
           </div>
           <div class="flex flex-row justify-between mt-2.5">
             <div class="text-left">
-              <div class="text-xs text-gray-400">Contributors</div>
-              <div class="">{totalRecord}</div>
-            </div>
-            <div class="text-right">
               <div class="text-xs text-gray-400">Raised / Cap</div>
               <div><Token value={fund.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={fund.cap} /></div>
-              <div class="text-right text-xs">{((fund.raised / fund.cap) * 100).toFixed(2)}%</div>
+              <div class="text-xs">{((fund.raised / fund.cap) * 100).toFixed(2)}%</div>
             </div>
             <div class="text-right">
               <div class="text-xs text-right text-gray-400">Ends</div>
@@ -188,8 +184,8 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
         </div>
         <div class="mt-4 box">
           <div class="p-3 search-box">
-            <input class="p-2 w-full border rounded-md" placeholder="Search wallet address" bind:value={searchAddr} on:keydown={(e) =>
-              (e.charCode === 13 || e.keyCode === 13) ? void updateSearchCriteria(searchAddr) : void ''
+            <input class="p-2 w-full border rounded-md outline-none" placeholder="Search wallet address" bind:value={searchAddr} on:keydown={(e) =>
+              (e.key === 'Enter') ? void updateSearchCriteria(searchAddr) : void ''
             }/>
             {#if searchAddr}
               <div class="reset-btn" on:click={() => updateSearchCriteria()}><span class="material-icons text-gray-300">cancel</span></div>
@@ -198,7 +194,7 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
           <div class="flex flex-row justify-between p-2 items-center">
             <div>{totalRecord} Contributions</div>
             <div class="border p-2 rounded-md">
-              <select class="text-sm" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
+              <select class="text-sm bg-white" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
                 <option>Short By</option>
                 <option value="BLOCK_NUM_DESC">Latest</option>
                 <option value="BLOCK_NUM_ASC">Earliest</option>
