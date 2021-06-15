@@ -54,13 +54,12 @@
       width: 280px;
     }
   }
-
-  
   
   .progress-text {
     position: absolute;
     color: white;
     top: 0;
+    z-index: 2;
   }
   .meter {
     box-sizing: content-box;
@@ -92,7 +91,7 @@
   .animate > span {
     content: "";
     position: absolute;
-    top: 1px;
+    top: 0px;
     left: 0;
     bottom: 0;
     right: 0;
