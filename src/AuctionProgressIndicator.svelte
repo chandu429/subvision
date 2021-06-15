@@ -36,7 +36,9 @@
     <div class="text-base">{title}</div>
     <p class="text-xs break-words">{timeRemain}</p>
     <div class="progress h-4 mt-1 relative">
-      <div class="progress-bar bg-theme-1 rounded-full" role="progressbar" style="width: {Math.max(progress, 5)}%;"></div>
+      <div class="meter">
+        <span style="width: {Math.max(progress, 1)}%;"></span>
+      </div>
       <div class="progress-text text-xs" style="left: {progress}px">{progress}%</div>
     </div>
   </div>
@@ -50,5 +52,75 @@
     position: absolute;
     color: white;
     top: 0;
+  }
+  .meter {
+    box-sizing: content-box;
+    height: 14px;
+    position: relative;
+    background: #bbb;
+    border-radius: 25px;
+    padding: 1px;
+  }
+
+  .meter > span {
+    display: block;
+    height: 100%;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: rgb(28, 63, 170);
+    background-image: linear-gradient(
+      center bottom,
+      rgb(28, 63, 170) 37%,
+      rgb(255, 255, 255) 69%
+    );
+    position: relative;
+    overflow: hidden;
+  }
+  .meter > span:after,
+  .animate > span > span {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.2) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      transparent 75%,
+      transparent
+    );
+    z-index: 1;
+    background-size: 50px 50px;
+    animation: move 2s linear infinite;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+  }
+
+  .animate > span:after {
+    display: none;
+  }
+
+  .orange > span {
+    background-image: linear-gradient(#f1a165, #f36d0a);
+  }
+
+
+  @keyframes move {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 50px 50px;
+    }
   }
 </style>
