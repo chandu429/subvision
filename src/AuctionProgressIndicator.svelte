@@ -1,7 +1,7 @@
 <script>
   import { getTimeDiffInWord } from './utils';
 
-  export let closingStart, closingEnd, curBlockNum;
+  export let closingStart, closingEnd, curBlockNum, auctionStart;
 
   let title, timeRemain, isClosing, progress;
   
@@ -11,11 +11,14 @@
     const timeDiff = getTimeDiffInWord(timeDelta)
     title = isClosing ? 'Auction ending started' : 'Auction started';
     timeRemain = (isClosing ? 'Closing in ' : 'Ending starts in ') + timeDiff;
-    progress = (curBlockNum < closingEnd ? Math.floor((curBlockNum / closingEnd) * 100) : 100);
+    const total = closingEnd - auctionStart;
+    const cur = curBlockNum - auctionStart;
+    progress = (curBlockNum < closingEnd ? Math.floor((cur / total) * 100) : 100);
+    console.log(cur, total, progress);
   }
 </script>
 
-<div class="justify-center col-span-2 flex flex-row min-w-max px-4">
+<div class="justify-center col-span-2 flex flex-row px-4">
   <div class="rounded-full flex items-center justify-center">
     <svg width="70px" height="70px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -31,10 +34,14 @@
     </svg>
   </div>
   <div class="px-4">
-    <div class="text-lg">{title}</div>
-    <p class="text-sm">{timeRemain}</p>
+    <div class="text-base">{title}</div>
+    <p class="text-xs break-words">{timeRemain}</p>
     <div class="progress h-4 mt-1">
-      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%"> {progress}%</div>
+      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress+1}%">
+        {#if progress}
+          {progress}%
+        {/if}
+      </div>
     </div>
   </div>
 </div>

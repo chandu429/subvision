@@ -6,6 +6,7 @@ import { chronicle } from './stores';
 import { round } from 'lodash-es';
 import SlotsCombination from './SlotsCombination.svelte';
 import MediaQuery from './MediaQuery.svelte';
+import { Link } from 'svelte-navigator';
 export let curAuction, latestBids;
 
 $: closingPeriod = curAuction.closingEnd - curAuction.closingStart;
@@ -69,7 +70,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
     <SlotsCombination leases={biddingLeases} firstLease={curAuction.leaseStart} />
   </div>
   <div class="flex flex-row justify-between">
-    <MediaQuery query="(min-width: 640px)" let:matches>
+    <MediaQuery query="(min-width: 600px)" let:matches>
       {#if matches}
       <div class="my-4 w-3/5 flex-grow">
         <div class="py-2 text-lg">
@@ -87,14 +88,20 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
       </div>
       {/if}
     </MediaQuery>
-    <div class="mt-4 sm:ml-4 sm:w-2/5">
+    <div class="mt-4 sm:ml-4 sm:w-2/5 flex-grow">
       <div class="py-2 text-lg">
         <p>Latest Bids</p>
       </div>
       <div class="box">
-        {#each latestBids as bid}
-          <BidCard { ...bid } />
-        {/each}
+        {#if !latestBids.length}
+          <div class="box mt-2 p-6 text-center">
+            No bids submitted yet, Checkout <Link to="/crowdloan" class="text-blue-600 underline">Crowdloans</Link>
+          </div>
+        {:else}
+          {#each latestBids as bid}
+            <BidCard { ...bid } />
+          {/each}
+        {/if}
       </div>
     </div>
   </div>

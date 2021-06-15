@@ -38,7 +38,7 @@ export const getSlotsCombination = (first: number, last: number): Slot[] => {
 };
 
 const getTimeUnitInWord = ({ value, name }: { value: number; name: string }) =>
-  value > 1 ? `${value} ${value != 1 ? name + 's' : name}` : '';
+  value > 0 ? `${value} ${value != 1 ? name + 's' : name}` : '';
 
 export const getTimeDiffInWord = (timeDeltaMs: number): string => {
   const timeUnits = [
@@ -52,12 +52,13 @@ export const getTimeDiffInWord = (timeDeltaMs: number): string => {
     ({ remain, units }, unit) => {
       const { value, name } = unit;
       const curUnitValue = Math.floor(remain / value);
+      console.log(curUnitValue, name);
       return { remain: remain % value, units: units.concat({ name, value: curUnitValue }) };
     },
     { remain: timeDeltaMs, units: [] }
   );
-
-  return units.map(getTimeUnitInWord).join(' ');
+  const result = units.map(getTimeUnitInWord).join(' ');
+  return result;
 };
 
 export const getDateFromBlockNum = (blockNum: number, curBlockNum: number, timestamp?: string, displayTime?: false) => {
