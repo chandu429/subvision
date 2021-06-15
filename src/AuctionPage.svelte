@@ -12,6 +12,7 @@
   import Breadcrumb from './Breadcrumb.svelte';
   import ParachainList from './ParachainList.svelte';
   import AuctionPanel from './AuctionPanel.svelte';
+  import MediaQuery from './MediaQuery.svelte';
 
 
   let timer = 0;
@@ -69,11 +70,16 @@
 </script>
 
 <div class="content">
-  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Auction'}]}/>
+  <MediaQuery query="max-width: 600px" let:matches={isMobile}>
+    {#if isMobile}
+      <Breadcrumb links={[{title: 'Auction'}]}/>
+    {/if}
+  </MediaQuery>
+  
   {#if $activeAuctions.fetching && !chronicle} 
     <Loading />
   {:else}
-    <div class="box my-4">
+    <div class="my-4">
     {#if !$curAuction}
       <SlotLeaseChart leases={slotLeases}/>
     {/if}

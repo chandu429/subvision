@@ -6380,7 +6380,7 @@ video {
 	margin-left: -2rem;
 	margin-right: -2rem;
 	margin-top: -1.25rem;
-	margin-bottom: 1.5rem;
+	/* margin-bottom: 1.5rem; */
 	border-bottom-width: 1px;
 	--tw-border-opacity: 1;
 	border-color: rgba(40, 78, 178, var(--tw-border-opacity));

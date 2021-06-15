@@ -12,7 +12,6 @@
   import ParachainIcon from './ParachainIcon.svelte';
 
 
-
   export let fundId;
 
   const params = {
@@ -63,7 +62,7 @@
 <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
   <div class="content">
     {#if !isMobile}
-      <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fund?.parachain?.paraId || '' }]}/>
+      <Breadcrumb links={[{title: 'Auction', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fund?.parachain?.paraId || '' }]}/>
     {/if}
     {#if $contributionsOps.fetching}
       <Loading />

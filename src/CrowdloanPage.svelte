@@ -35,12 +35,15 @@ import MediaQuery from './MediaQuery.svelte';
   $: crowdloans = $crowdloanOps.data?.crowdloans.nodes || [];
 </script>
 
+<MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
+
 <div class="content">
-  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan'}]}/>
+  {#if !isMobile}
+    <Breadcrumb links={[{title: 'Auction', path: '/'}, {title: 'Crowdloan'}]}/>
+  {/if}
   {#if $crowdloanOps.fetching && !crowdloans.length }
   <Loading />
   {:else}
-  <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
     {#if isMobile}
       {#each crowdloans as crowdloan (crowdloan.id) }
         <div class="box my-4 p-2" on:click={e => navigate(`/crowdloan/${crowdloan.id}`)}>
@@ -126,12 +129,9 @@ import MediaQuery from './MediaQuery.svelte';
         </table>
       </div>
     {/if}
-  </MediaQuery>
-
-  
   {/if}
-  
-</div>
+  </div>
+</MediaQuery>
 
 <style>
   .ellipsis-text {

@@ -35,7 +35,7 @@
     {#if parachain}
       <div title={paraId}>
         {#if parachain.website}
-          <a href="{parachain.website}" target="_blank" class="text-blue-900">{parachain?.name}</a>
+          <a href="{parachain.website}" target="_blank" class="text-blue-900" on:click={() => false}>{parachain?.name}</a>
         {:else}
           {parachain?.name}
         {/if}
