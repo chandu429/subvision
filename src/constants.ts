@@ -41,7 +41,7 @@ export const NetworkConfigs: Record<Network, Config> = {
     tokenSymbol: 'DOT',
     endpoint: '',
     paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/polkadot.json',
-    defaultParachainIcon: './ksm-logo.svg'
+    defaultParachainIcon: '/ksm-logo.svg'
   },
   kusama: {
     defaultChains: [
@@ -63,7 +63,7 @@ export const NetworkConfigs: Record<Network, Config> = {
     tokenSymbol: 'KSM',
     endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction',
     paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/kusama.json',
-    defaultParachainIcon: './ksm-logo.svg'
+    defaultParachainIcon: '/ksm-logo.svg'
   },
   rococo: {
     defaultChains: [
@@ -82,7 +82,7 @@ export const NetworkConfigs: Record<Network, Config> = {
     tokenSymbol: 'ROC',
     endpoint: 'https://api.subquery.network/sq/subvis-io/rococo-auction',
     paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/rococo.json',
-    defaultParachainIcon: './ksm-logo.svg'
+    defaultParachainIcon: '/ksm-logo.svg'
   }
 };
 

@@ -13,6 +13,7 @@ import MobileMenu from "./MobileMenu.svelte";
     <nav class="side-nav">
       <slot name="side-menu" />
     </nav>
+    
     <div class="content">
       <slot name="content">Content area</slot>
     </div>

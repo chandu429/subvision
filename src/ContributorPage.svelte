@@ -8,9 +8,9 @@
   import { getDateFromBlockNum } from './utils';
   import Loading from './Loading.svelte';
   import Breadcrumb from './Breadcrumb.svelte';
-import MediaQuery from './MediaQuery.svelte';
-import ParachainIcon from './ParachainIcon.svelte';
-import SortingButtonGroup from './SortingButtonGroup.svelte';
+  import MediaQuery from './MediaQuery.svelte';
+  import ParachainIcon from './ParachainIcon.svelte';
+
 
 
   export let fundId;
@@ -54,22 +54,118 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
   }
 
   const updateOrderBy = (event) => {
-    // $contributionsOps.variables.contributionFilter.account.startsWithInsensitive = searchAddr;
     $contributionsOps.variables.before = ''
     $contributionsOps.variables.after = ''
     $contributionsOps.variables.orderBy = event.target.value || 'BLOCK_NUM_DESC';
   }
 
 </script>
-
-<div class="content">
-  <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fund?.parachain?.paraId || '' }]}/>
-
-  {#if $contributionsOps.fetching}
-    <Loading />
-  {:else}
-    <MediaQuery query="(min-width: 640px)" let:matches>
-      {#if matches}
+<MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
+  <div class="content">
+    {#if !isMobile}
+      <Breadcrumb links={[{title: 'Parachain', path: '/'}, {title: 'Crowdloan', path: '/crowdloan'}, {title: fund?.parachain?.paraId || '' }]}/>
+    {/if}
+    {#if $contributionsOps.fetching}
+      <Loading />
+    {:else}
+      {#if isMobile}
+        <div class="box p-2 mt-4">
+          <div class="flex flex-row justify-between items-center">
+            <ParachainIcon paraId={fund?.parachain?.paraId} align="start" />
+            <div>
+              <div class="rounded-full py-1 px-2 text-white text-sm {fund.retiring ? 'bg-yellow-600' : 'bg-blue-500'}">{fund.retiring ? 'Retiring' : 'Active'}</div>
+            </div>
+          </div>
+          <div class="flex flex-row justify-between mt-2.5">
+            <div class="text-left">
+              <div class="text-xs text-gray-400">Raised / Cap</div>
+              <div><Token value={fund.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={fund.cap} /></div>
+              <div class="text-xs">{((fund.raised / fund.cap) * 100).toFixed(2)}%</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-right text-gray-400">Ends</div>
+              <div class="text-sm">{getDateFromBlockNum(fund.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
+              <div class="text-xs">{fund.lockExpiredBlock}</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 box">
+          <div class="p-3 search-box">
+            <input class="p-2 w-full border rounded-md outline-none" placeholder="Search wallet address" bind:value={searchAddr} on:keydown={(e) =>
+              (e.key === 'Enter') ? void updateSearchCriteria(searchAddr) : void ''
+            }/>
+            {#if searchAddr}
+              <div class="reset-btn" on:click={() => updateSearchCriteria()}><span class="material-icons text-gray-300">cancel</span></div>
+            {/if}
+          </div>
+          <div class="flex flex-row justify-between p-2 items-center">
+            <div>{totalRecord} Contributions</div>
+            <div class="border p-2 rounded-md">
+              <select class="text-sm bg-white outline-none" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
+                <optgroup label="Short By">
+                  <option value="BLOCK_NUM_DESC">Latest</option>
+                  <option value="BLOCK_NUM_ASC">Earliest</option>
+                  <option value="AMOUNT_DESC">Highest Price</option>
+                  <option value="AMOUNT_ASC">Lowest Price</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <div class="border-t mt-1">
+            {#each contributions as contribution, idx}
+              <div class="{idx % 2 === 0 ? 'bg-color-even' : 'bg-color-odd'} border-b">
+                <div class="w-full p-2">
+                  <div class="text-xs text-gray-600">Account</div>
+                  <div class="text-xs break-all">{contribution.account}</div>
+                </div>
+                <div class="flex justify-between px-2">
+                  <div class="text-left">
+                    <div class="text-xs text-gray-600">Block</div>
+                    <div class="text-xs">{contribution.blockNum}</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-gray-600">Time</div>
+                    <div class="text-right text-xs">{new Date(contribution.createdAt).toLocaleTimeString()}</div>
+                    <div class="text-right text-xs">{new Date(contribution.createdAt).toLocaleDateString()}</div>
+                  </div>
+                  <div class="text-right ">
+                    <div class="text-gray-600 text-xs">
+                      Amount
+                    </div>
+                    <div>
+                      <Token allowZero={true} value={contribution.amount} />
+                    </div>
+                    <div class="text-xs text-gray-600">{Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%</div>
+                  </div>
+                </div>
+              </div>
+            {/each}
+            <div class="mb-4 border-t border-grey-200 px-3 py-2 flex flex-1 justify-between">
+              <div class="text-right text-sm">
+                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev" 
+                  on:click={() => {
+                      $contributionsOps.variables.before = pageInfo.startCursor
+                      $contributionsOps.variables.after = ""
+                    }
+                  }
+                  disabled={!pageInfo.hasPreviousPage}
+                >&lt; Prev</button>
+              </div>
+              <div class="text-right text-sm">
+                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Next Page" title="Next Page" data-page="next"
+                on:click={() => {
+                    console.log(pageInfo.endCursor);
+                    $contributionsOps.variables.before = ""
+                    $contributionsOps.variables.after = pageInfo.endCursor
+                  }
+                }
+                disabled={!pageInfo.hasNextPage}
+                >Next &gt;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {:else}
         <div class="mt-6">
           <div class="p-4 flex justify-between">
             <div class="text-lg">Contributions ({totalRecord})</div>
@@ -162,107 +258,10 @@ import SortingButtonGroup from './SortingButtonGroup.svelte';
             </div>
           </div>
         </div>
-      {:else}
-        <div class="box p-2">
-          <div class="flex flex-row justify-between items-center">
-            <ParachainIcon paraId={fund?.parachain?.paraId} align="start" />
-            <div>
-              <div class="rounded-full py-1 px-2 text-white text-sm {fund.retiring ? 'bg-yellow-600' : 'bg-blue-500'}">{fund.retiring ? 'Retiring' : 'Active'}</div>
-            </div>
-          </div>
-          <div class="flex flex-row justify-between mt-2.5">
-            <div class="text-left">
-              <div class="text-xs text-gray-400">Raised / Cap</div>
-              <div><Token value={fund.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={fund.cap} /></div>
-              <div class="text-xs">{((fund.raised / fund.cap) * 100).toFixed(2)}%</div>
-            </div>
-            <div class="text-right">
-              <div class="text-xs text-right text-gray-400">Ends</div>
-              <div class="text-sm">{getDateFromBlockNum(fund.lockExpiredBlock, $lastBlockNum, $lastBlockTime)}</div>
-              <div class="text-xs">{fund.lockExpiredBlock}</div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 box">
-          <div class="p-3 search-box">
-            <input class="p-2 w-full border rounded-md outline-none" placeholder="Search wallet address" bind:value={searchAddr} on:keydown={(e) =>
-              (e.key === 'Enter') ? void updateSearchCriteria(searchAddr) : void ''
-            }/>
-            {#if searchAddr}
-              <div class="reset-btn" on:click={() => updateSearchCriteria()}><span class="material-icons text-gray-300">cancel</span></div>
-            {/if}
-          </div>
-          <div class="flex flex-row justify-between p-2 items-center">
-            <div>{totalRecord} Contributions</div>
-            <div class="border p-2 rounded-md">
-              <select class="text-sm bg-white outline-none" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
-                <optgroup label="Short By">
-                  <option value="BLOCK_NUM_DESC">Latest</option>
-                  <option value="BLOCK_NUM_ASC">Earliest</option>
-                  <option value="AMOUNT_DESC">Highest Price</option>
-                  <option value="AMOUNT_ASC">Lowest Price</option>
-                </optgroup>
-              </select>
-            </div>
-          </div>
-          <div class="border-t mt-1">
-            {#each contributions as contribution, idx}
-              <div class="{idx % 2 === 0 ? 'bg-color-even' : 'bg-color-odd'} border-b">
-                <div class="w-full p-2">
-                  <div class="text-xs text-gray-600">Account</div>
-                  <div class="text-xs flex-grow-0 w-20">{contribution.account}</div>
-                </div>
-                <div class="flex justify-between px-2">
-                  <div class="text-left">
-                    <div class="text-xs text-gray-600">Block</div>
-                    <div class="text-xs">{contribution.blockNum}</div>
-                  </div>
-                  <div class="text-right">
-                    <div class="text-xs text-gray-600">Time</div>
-                    <div class="text-right text-xs">{new Date(contribution.createdAt).toLocaleTimeString()}</div>
-                    <div class="text-right text-xs">{new Date(contribution.createdAt).toLocaleDateString()}</div>
-                  </div>
-                  <div class="text-right ">
-                    <div class="text-gray-600 text-xs">
-                      Amount
-                    </div>
-                    <div>
-                      <Token allowZero={true} value={contribution.amount} />
-                    </div>
-                    <div class="text-xs text-gray-600">{Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%</div>
-                  </div>
-                </div>
-              </div>
-            {/each}
-            <div class="mb-4 border-t border-grey-200 px-3 py-2 flex flex-1 justify-between">
-              <div class="text-right text-sm">
-                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev" 
-                  on:click={() => {
-                      $contributionsOps.variables.before = pageInfo.startCursor
-                      $contributionsOps.variables.after = ""
-                    }
-                  }
-                  disabled={!pageInfo.hasPreviousPage}
-                >&lt; Prev</button>
-              </div>
-              <div class="text-right text-sm">
-                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Next Page" title="Next Page" data-page="next"
-                on:click={() => {
-                    console.log(pageInfo.endCursor);
-                    $contributionsOps.variables.before = ""
-                    $contributionsOps.variables.after = pageInfo.endCursor
-                  }
-                }
-                disabled={!pageInfo.hasNextPage}
-                >Next &gt;</button>
-              </div>
-            </div>
-          </div>
-        </div>
       {/if}
-    </MediaQuery>
-  {/if}
-</div>
+    {/if}
+  </div>
+</MediaQuery>
 
 <style>
   .bg-color-odd {
