@@ -37,7 +37,7 @@
     <div class="text-base">{title}</div>
     <p class="text-xs break-words">{timeRemain}</p>
     <div class="progress h-4 mt-1">
-      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress+1}%">
+      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%">
         {#if progress}
           {progress}%
         {/if}

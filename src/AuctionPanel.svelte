@@ -61,7 +61,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
   <MediaQuery query="(max-width: 640px)" let:matches>
     {#if matches}
     <div class="box mt-4 p-4">
-      <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+      <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
     </div>
     {/if}
   </MediaQuery>
@@ -72,37 +72,33 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
   <div class="flex flex-row justify-between">
     <MediaQuery query="(min-width: 600px)" let:matches>
       {#if matches}
-      <div class="my-4 w-3/5 flex-grow">
-        <div class="py-2 text-lg">
-          <p>Leading Positions</p>
-        </div>
-        <div class="">
-          {#if curAuction.parachainLeases.length}
-          <div class="grid gap-4">
-            {#each biddingLeases as lease }
-              <LeaseCard {...lease } />
-            {/each}
+        {#if curAuction.parachainLeases.length}
+          <div class="my-4 w-3/5 flex-grow">
+            <div class="py-2 text-lg">
+              <p>Leading Positions</p>
+            </div>
+            <div class="">
+              <div class="grid gap-4">
+                {#each biddingLeases as lease }
+                  <LeaseCard {...lease } />
+                {/each}
+              </div>
+            </div>
           </div>
-          {/if}
-        </div>
-      </div>
+        {/if}
       {/if}
     </MediaQuery>
-    <div class="mt-4 sm:ml-4 sm:w-2/5 flex-grow">
-      <div class="py-2 text-lg">
-        <p>Latest Bids</p>
-      </div>
-      <div class="box">
-        {#if !latestBids.length}
-          <div class="box mt-2 p-6 text-center">
-            No bids submitted yet, Checkout <Link to="/crowdloan" class="text-blue-600 underline">Crowdloans</Link>
-          </div>
-        {:else}
+    {#if latestBids.length}
+      <div class="mt-4 sm:ml-4 sm:w-2/5 flex-grow">
+        <div class="py-2 text-lg">
+          <p>Latest Bids</p>
+        </div>
+        <div class="box">
           {#each latestBids as bid}
             <BidCard { ...bid } />
           {/each}
-        {/if}
+        </div>
       </div>
-    </div>
+    {/if}
   </div>
 </div>

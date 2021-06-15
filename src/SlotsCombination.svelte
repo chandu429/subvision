@@ -78,6 +78,11 @@
         </div>
       {/if}
     {:else}
+      {#if !combinations.length}
+        <div class="box mt-2 p-6 text-center">
+          No bids submitted yet, Checkout <Link to="/crowdloan" class="text-blue-600 underline">Crowdloans</Link>
+        </div>
+      {/if}
       <div class="pt-px box">
       {#each combinations as {series, totalLockupValue, winningChance}, idx}
         <div class="grid grid-cols-9 gap-1.5 border-b border-gray-200 my-1 pt-2 pb-2.5">
