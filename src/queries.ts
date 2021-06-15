@@ -118,6 +118,9 @@ query {
       parachain {
         paraId
         manager
+        contributions {
+          totalCount
+        }
       }
       retiring
       depositor
