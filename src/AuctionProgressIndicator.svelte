@@ -89,7 +89,7 @@
     overflow: hidden;
   }
   .meter > span:after,
-  .animate > span > span {
+  .animate > span {
     content: "";
     position: absolute;
     top: 1px;

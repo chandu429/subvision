@@ -75,7 +75,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
       {#if matches}
         {#if curAuction.parachainLeases.length}
           <div class="my-4 w-3/5 flex-grow">
-            <div class="py-2 text-lg text-center md:text-left lg:text-left">
+            <div class="py-2 text-lg">
               <p>Leading Positions</p>
             </div>
             <div class="">
@@ -91,7 +91,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
     </MediaQuery>
     {#if latestBids.length}
       <div class="mt-4 sm:ml-4 sm:w-2/5 flex-grow">
-        <div class="py-2 text-lg text-center md:text-left lg:text-left">
+        <div class="py-2 text-lg">
           <p>Latest Bids</p>
         </div>
         <div class="box">

@@ -35,7 +35,7 @@
 </script>
 
 <div>
-  <p class="text-lg mb-1 text-center md:text-left lg:text-left">Bidding Chart</p>
+  <p class="text-lg mb-1">Bidding Chart</p>
 </div>
 <div class="">
   <MediaQuery query="(max-width: 600px)" let:matches>
