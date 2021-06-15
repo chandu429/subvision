@@ -11,15 +11,14 @@
     const timeDiff = getTimeDiffInWord(timeDelta)
     title = isClosing ? 'Auction ending started' : 'Auction started';
     timeRemain = (isClosing ? 'Closing in ' : 'Ending starts in ') + timeDiff;
-    const total = closingEnd - auctionStart;
-    const cur = curBlockNum - auctionStart;
+    const total = isClosing ? closingEnd - closingStart : closingStart - auctionStart;
+    const cur =  (isClosing ? curBlockNum - closingStart : curBlockNum - auctionStart);
     progress = (curBlockNum < closingEnd ? Math.floor((cur / total) * 100) : 100);
-    console.log(cur, total, progress);
   }
 </script>
 
-<div class="justify-center col-span-2 flex flex-row px-4">
-  <div class="rounded-full flex items-center justify-center">
+<div class="justify-evenly flex-grow flex flex-row px-2 ml-4">
+  <div class="rounded-full ">
     <svg width="70px" height="70px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(-963.000000, -135.000000)">
@@ -33,15 +32,23 @@
       </g>
     </svg>
   </div>
-  <div class="px-4">
+  <div class="px-2 max-width">
     <div class="text-base">{title}</div>
     <p class="text-xs break-words">{timeRemain}</p>
-    <div class="progress h-4 mt-1">
-      <div class="progress-bar bg-theme-1" role="progressbar" style="width: {progress}%">
-        {#if progress}
-          {progress}%
-        {/if}
-      </div>
+    <div class="progress h-4 mt-1 relative">
+      <div class="progress-bar bg-theme-1 rounded-full" role="progressbar" style="width: {Math.max(progress, 5)}%;"></div>
+      <div class="progress-text text-xs" style="left: {progress}px">{progress}%</div>
     </div>
   </div>
 </div>
+
+<style>
+  .max-width {
+    max-width: 200px;
+  }
+  .progress-text {
+    position: absolute;
+    color: white;
+    top: 0;
+  }
+</style>

@@ -52,7 +52,6 @@ export const getTimeDiffInWord = (timeDeltaMs: number): string => {
     ({ remain, units }, unit) => {
       const { value, name } = unit;
       const curUnitValue = Math.floor(remain / value);
-      console.log(curUnitValue, name);
       return { remain: remain % value, units: units.concat({ name, value: curUnitValue }) };
     },
     { remain: timeDeltaMs, units: [] }
