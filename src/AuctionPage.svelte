@@ -79,7 +79,7 @@
   {#if $activeAuctions.fetching && !chronicle} 
     <Loading />
   {:else}
-    <div class="my-4">
+    <div class="my-2 sm:mt-6 md:mt-6 lg:mt-6">
     {#if !$curAuction}
       <SlotLeaseChart leases={slotLeases}/>
     {/if}

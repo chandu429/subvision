@@ -18,11 +18,11 @@ import MediaQuery from './MediaQuery.svelte';
 <MediaQuery query="(max-width: 640px)" let:matches>
   {#if matches}
     <div>
-      <div class="text-lg mt-2">
+      <div class="text-lg mt-4">
         Parachains
       </div>
       {#each parachains as parachain (parachain.id) }
-        <div class="box my-4 p-2">
+        <div class="box p-2 my-2">
           <div class="flex flex-row justify-between">
             <ParachainIcon paraId={parachain.paraId} align="start" smallIcon/>
             <div>
