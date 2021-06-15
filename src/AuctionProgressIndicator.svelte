@@ -17,7 +17,7 @@
   }
 </script>
 
-<div class="justify-evenly flex-grow flex flex-row px-2 ml-4">
+<div class="flex flex-row justify-center px-2 items-center fixed-width ">
   <div class="rounded-full ">
     <svg width="70px" height="70px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -32,10 +32,10 @@
       </g>
     </svg>
   </div>
-  <div class="px-2 max-width">
+  <div class="px-2 ml-2 relative">
     <div class="text-base">{title}</div>
-    <p class="text-xs break-words">{timeRemain}</p>
-    <div class="progress h-4 mt-1 relative">
+    <div class="text-xs fixed-width-words">{timeRemain}</div>
+    <div class="h-4 mt-1 relative">
       <div class="meter">
         <span style="width: {Math.max(progress, 1)}%;"></span>
       </div>
@@ -45,9 +45,18 @@
 </div>
 
 <style>
-  .max-width {
-    max-width: 200px;
+  @media (min-width: 600px) {
+    .fixed-width {
+      width: 35%;
+    }
+    .fixed-width-words {
+      position: inherit;
+      width: 280px;
+    }
   }
+
+  
+  
   .progress-text {
     position: absolute;
     color: white;
@@ -60,6 +69,7 @@
     background: #bbb;
     border-radius: 25px;
     padding: 1px;
+    width: 220px;
   }
 
   .meter > span {

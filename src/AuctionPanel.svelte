@@ -23,7 +23,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
       <h2 class="text-lg font-medium mr-5">Auction No.{curAuction.id}</h2>
     </div>
     <div class="mt-1 sm:mt-4">
-      <div class="box flex flex-row divide-x divide-gray-200 p-3 sm:p-4 justify-between">
+      <div class="box flex flex-none flex-row divide-x divide-gray-200 p-3 sm:p-4 justify-between">
         <div class="flex-grow px-1">
           <div class="text-gray-600 dark:text-gray-600 text-center">Lease Periods</div>
           <div class="text-sm sm:text-lg font-bold mt-4 text-center flex flex-col sm:flex-row justify-center flex-wrap">
@@ -48,12 +48,13 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
             <div>{curAuction.closingEnd}</div>
           </div>
         </div>
-        
-        <MediaQuery query="(min-width: 640px)" let:matches>
-          {#if matches}
-            <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
-          {/if}
-        </MediaQuery>
+
+          <MediaQuery query="(min-width: 600px)" let:matches>
+            {#if matches}
+              <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+            {/if}
+          </MediaQuery>
+
       </div>
     </div>
   </div>
@@ -74,7 +75,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
       {#if matches}
         {#if curAuction.parachainLeases.length}
           <div class="my-4 w-3/5 flex-grow">
-            <div class="py-2 text-lg">
+            <div class="py-2 text-lg text-center md:text-left lg:text-left">
               <p>Leading Positions</p>
             </div>
             <div class="">
@@ -90,7 +91,7 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
     </MediaQuery>
     {#if latestBids.length}
       <div class="mt-4 sm:ml-4 sm:w-2/5 flex-grow">
-        <div class="py-2 text-lg">
+        <div class="py-2 text-lg text-center md:text-left lg:text-left">
           <p>Latest Bids</p>
         </div>
         <div class="box">
