@@ -99,7 +99,7 @@
             <div class="rounded-full h-8 w-8 flex items-center justify-center text-white {getBgColorClass(idx)}">{idx + 1} </div>
             <div class="leading-rate text-sm">{round(winningChance * 100, 2)} %</div>
             {#if leaderLikelyWin && idx === 0}
-              <div class="winning-box text-red-600 text-xl border border-red-600 rounded-lg px-2">Winning</div>
+              <div class="winning-box text-red-400 text-xl border border-red-400 rounded-lg px-2">Winning</div>
             {/if}
             <div class="ml-2 text-sm locked-value">TLV: <Token value={totalLockupValue} allowZero={true}/></div>
           </div>
@@ -125,12 +125,12 @@
 
 <style>
   .gray-out {
-    filter: blur(1.5) grayscale(100%)
+    filter: blur(1px) grayscale(100%)
 
   }
   .winning-box {
     position: absolute;
-    top: 1.45rem;
+    top: 1.55rem;
     right: 1rem;
     text-align: right;
 
