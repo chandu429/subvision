@@ -6,7 +6,7 @@
 
 <nav class="side-nav">
   <Link to="/" class=" flex justify-center">
-    <img alt="Subvisio" src="/logo.svg" />
+    <img alt="Subvisio" src="/logo-white.svg" />
   </Link>
 
   <div class="side-nav__devider my-6" />

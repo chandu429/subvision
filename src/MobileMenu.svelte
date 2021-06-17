@@ -8,7 +8,7 @@
 
 <div class="mobile-menu-bar">
   <Link to="/" class="flex mr-auto">
-    <img alt="Subvisio" class="w-40" src="/logo.svg" />
+    <img alt="Subvisio" class="w-40" src="/logo-white.svg" />
   </Link>
   <button class="btn text-white" aria-label="menu" on:click="{toggleMenu}">
     <span class="material-icons md-light md-18">menu</span>
