@@ -125,7 +125,8 @@
 
 <style>
   .gray-out {
-    filter: grayscale(100%)
+    filter: blur(1.5) grayscale(100%)
+
   }
   .winning-box {
     position: absolute;

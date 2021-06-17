@@ -33,7 +33,7 @@
   const contributionsOps = operationStore(CONTRIBUTORS_QUERY, params, { requestPolicy: 'network-only'})
   query(contributionsOps);
   $: {
-    console.log('refetch')
+
     if (!contributionsOps.fetching && contributionsOps.data) {
       const data = normalize($contributionsOps.data);
       const { contributions: fundContribution, crowdloan, contributionsPageInfo, contributionsTotal } = data;
@@ -153,7 +153,6 @@
               <div class="text-right text-sm">
                 <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Next Page" title="Next Page" data-page="next"
                 on:click={() => {
-                    console.log(pageInfo.endCursor);
                     $contributionsOps.variables.before = ""
                     $contributionsOps.variables.after = pageInfo.endCursor
                   }
@@ -246,7 +245,6 @@
               <div class="text-right">
                 <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Next Page" title="Next Page" data-page="next"
                 on:click={() => {
-                    console.log(pageInfo.endCursor);
                     $contributionsOps.variables.before = ""
                     $contributionsOps.variables.after = pageInfo.endCursor
                   }
