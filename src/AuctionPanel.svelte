@@ -15,10 +15,6 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
     leadingRate: numBlockWon && round(((numBlockWon - 1) / closingPeriod), 4)
   }));
 
-$: {
-  console.log(latestBids[0].id, latestBids[1].id)
-}
-
 </script>
 
 <div >

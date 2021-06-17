@@ -5,9 +5,6 @@
   import { getTimeDiffInWord } from './utils';
   export let bidder, firstSlot, lastSlot, createdAt, amount, parachain, isCrowdloan, id;
   const { paraId } = parachain || {};
-  $: {
-    console.log(amount, createdAt);
-  }
 </script>
 
 <div class="mb-3 px-5 py-3 grid grid-cols-5 grid-flow-row gap-2 border-b">

@@ -20,7 +20,7 @@
     }
   };
 
-  let combinations;
+  let combinations, leaderLikelyWin;
   $: {
     const sortedLease = orderBy(leases, ['firstLease', 'lastLease'], ['asc', 'asc']);
     const normalizedLeases = sortedLease.map(({ firstLease, lastLease, ...others}) => ({
@@ -30,6 +30,15 @@
       ...others
     }));
     combinations = orderBy(gatherCombination(normalizedLeases), ['totalLockupValue'], ['desc']);
+    const confidentAmount = combinations[0].totalLockupValue * combinations[0].winningChance;
+    leaderLikelyWin = combinations.slice(1).every(({ totalLockupValue, winningChance }) => {
+      const curValue = totalLockupValue * winningChance;
+      console.log('diff:', (confidentAmount - curValue));
+      const leadingPercentage = ((confidentAmount - curValue) / confidentAmount);
+      console.log(confidentAmount, curValue, leadingPercentage);
+      return leadingPercentage > 0.9;
+    });
+    console.log({leaderLikelyWin});
   };
 
 </script>
@@ -43,10 +52,13 @@
       {#if combinations.length}
         <div>
           {#each combinations as {series, totalLockupValue, winningChance}, idx}
-          <div class="pt-3 px-4 my-4 border-b pb-2 box"> 
-            <div class="flex flex-row justify-between pb-2 border-b">
+          <div class="pt-3 px-4 my-4 border-b pb-2 box {(leaderLikelyWin && idx !== 0) ? 'gray-out' : ''}"> 
+            <div class="flex flex-row justify-between pb-2 border-b items-center">
               <div class="rounded-full h-6 w-6 flex items-center justify-center text-white {getBgColorClass(idx)}">{idx + 1} </div>
               <div class="ml-2 text-right"><Token value={totalLockupValue} allowZero={true}/></div>
+              {#if leaderLikelyWin && idx === 0}
+              <div class="text-red-600 border border-red-600 rounded-lg px-2">Winning</div>
+            {/if}
               <div class="text-right text-gray-400">{round(winningChance * 100, 2)} %</div>
             </div>
             {#each series as lease, leaseIdx}
@@ -85,14 +97,17 @@
       {/if}
       <div class="pt-px box">
       {#each combinations as {series, totalLockupValue, winningChance}, idx}
-        <div class="grid grid-cols-9 gap-1.5 border-b border-gray-200 my-1 pt-2 pb-2.5">
+        <div class="grid grid-cols-9 gap-1.5 border-b border-gray-200 my-1 pt-2 pb-2.5 pr-3 {(leaderLikelyWin && idx !== 0) ? 'gray-out' : ''}">
           <div class="px-3 absolute-box"> 
             <div class="rounded-full h-8 w-8 flex items-center justify-center text-white {getBgColorClass(idx)}">{idx + 1} </div>
             <div class="leading-rate text-sm">{round(winningChance * 100, 2)} %</div>
+            {#if leaderLikelyWin && idx === 0}
+              <div class="winning-box text-red-600 text-xl border border-red-600 rounded-lg px-2">Winning</div>
+            {/if}
             <div class="ml-2 text-sm locked-value">TLV: <Token value={totalLockupValue} allowZero={true}/></div>
           </div>
           {#each series as lease, leaseIdx }
-            {#each lease.slots as slot, idx}
+            {#each lease.slots as slot}
             <div class="rounded absolute-box {leaseIdx % 2 === 0 ? 'color-1' : 'color-2'} px-2 py-1">
               <div class="text-bg text-4xl {leaseIdx % 2 === 0 ? 'text-color-1' : 'text-color-2'}">{slot}</div>
               <div class="text-sm">
@@ -112,6 +127,16 @@
 </div>
 
 <style>
+  .gray-out {
+    filter: grayscale(100%)
+  }
+  .winning-box {
+    position: absolute;
+    top: 1.45rem;
+    right: 1rem;
+    text-align: right;
+
+  }
   .color-1 {
     background-color: rgba(37, 73, 230, 0.10);
   }
