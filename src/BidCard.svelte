@@ -13,7 +13,7 @@
   </div>
   <div class="text-xs text-gray-500 col-span-4 text-right">{getTimeDiffInWord(Date.now() - new Date(createdAt+'Z').getTime())}</div>
   <div class="text-base col-span-5">
-    has submit a new bid for slot {firstSlot} - {lastSlot} at <Token value={amount} />
+    has submit a new bid for slot {firstSlot} - {lastSlot} at <Token value={amount} isPrecise={true}/>
   </div>
   <div class="text-xs col-span-5 flex">
     {#if isCrowdloan }
