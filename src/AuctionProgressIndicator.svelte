@@ -37,7 +37,7 @@
     <div class="text-xs fixed-width-words">{timeRemain}</div>
     <div class="h-4 mt-1 relative">
       <div class="meter animate">
-        <span style="width: {Math.max(progress, 1)}%;"></span>
+        <span style="width: {Math.max(progress, 3)}%;"></span>
       </div>
       <div class="progress-text text-xs" style="left: {progress}px">{progress}%</div>
     </div>
