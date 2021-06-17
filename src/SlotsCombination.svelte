@@ -33,12 +33,9 @@
     const confidentAmount = combinations[0].totalLockupValue * combinations[0].winningChance;
     leaderLikelyWin = combinations.slice(1).every(({ totalLockupValue, winningChance }) => {
       const curValue = totalLockupValue * winningChance;
-      console.log('diff:', (confidentAmount - curValue));
       const leadingPercentage = ((confidentAmount - curValue) / confidentAmount);
-      console.log(confidentAmount, curValue, leadingPercentage);
       return leadingPercentage > 0.9;
     });
-    console.log({leaderLikelyWin});
   };
 
 </script>

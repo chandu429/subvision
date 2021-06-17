@@ -90,7 +90,7 @@ import MediaQuery from './MediaQuery.svelte';
               <th class="text-right whitespace-nowrap">Contributions</th>
               <th class="text-right whitespace-nowrap">Expiration</th>
               <th class="text-center whitespace-nowrap">Status</th>
-              <th class="text-center whitespace-nowrap">Contributors</th>
+              <th class="text-center whitespace-nowrap"></th>
             </tr>
           </thead>
           <tbody>
