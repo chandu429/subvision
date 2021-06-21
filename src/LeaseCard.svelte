@@ -37,7 +37,7 @@
     <div class="text-center text-xm flex flex-col">
       <div class="text-gray-400 mb-2">Leading rate</div>
       <div class="fixed-line-height">
-        <div class="">{leadingRate ? `${(leadingRate * 100)}%` : 'N/A' }</div>
+        <div class="">{leadingRate ? `${((leadingRate * 100)).toFixed(2)}%` : 'N/A' }</div>
       </div>
     </div>
   </div>
