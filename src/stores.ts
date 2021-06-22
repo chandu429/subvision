@@ -19,3 +19,5 @@ export const lastBlockTime = derived(chronicle, ($chronicle) => $chronicle?.upda
 export const curLease = derived(chronicle, ($chronicle) => $chronicle?.curLease);
 export const curLeaseStart = derived(chronicle, ($chronicle) => $chronicle?.curLeaseStart);
 export const curLeaseEnd = derived(chronicle, ($chronicle) => $chronicle?.curLeaseEnd);
+
+export const paraMappings = writable(null);

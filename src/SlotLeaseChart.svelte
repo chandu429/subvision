@@ -26,7 +26,7 @@
     const slotEnd = Math.max(leaseSlotEnd || defaultSlotEnd, defaultSlotEnd);
     
     slotIdxs = range(slotStart, slotEnd+1);
-    allSlots = slotIdxs.map((slotIdx) => ({ idx: slotIdx, startBlock: slotIdx * leasePeriod, endBlock: (slotIdx + 1) * leasePeriod  }));
+    allSlots = slotIdxs.map((slotIdx) => ({ idx: slotIdx, startBlock: slotIdx * leasePeriod + 1, endBlock: (slotIdx + 1) * leasePeriod  }));
 
   }
 </script>
