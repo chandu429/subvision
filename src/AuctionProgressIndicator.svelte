@@ -30,7 +30,6 @@
   $: {
     curStage = stages.find(({start, end}) => curBlockNum >= start && curBlockNum < end) || {start: 0, end: curBlockNum, title: 'Auction Closed', remainPrefix: 'waiting for winner announcement '};
     const timeDelta = (curStage.end - curBlockNum) * 6000;
-    console.log(curStage.end, curBlockNum);
     const timeDiff = getTimeDiffInWord(timeDelta)
     title = curStage.title;
     timeRemain = curStage.remainPrefix + timeDiff;
