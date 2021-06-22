@@ -10,34 +10,40 @@ export let paraId, winningAmount, firstLease, lastLease, auctionId;
 </script>
 
 
-<div class="box flex flex-col flex-1 p-4 flex-wrap relative banner ">
-
-  <div class="text-lg text-center mb-2 text-black">Congratulations to Auction {auctionId} winner!</div>
-  <div class="flex flex-row items-center justify-evenly">
-    <ParachainIcon paraId={paraId} align="start" dropShadow={true} />
-    <div class="flex flex-col text-center">
-      <div class="text-xs text-gray-600">Leases</div>
-      <div class="text-base">{firstLease} - {lastLease}</div>
-    </div>
-    <div class="flex flex-col text-center">
-      <div class="text-xs text-gray-600">Winnig Amount</div>
-      <div class="text-base">
-        <Token value={winningAmount} />
+<div class="box flex flex-col flex-1 p-4 flex-wrap relative banner">
+  <div class="banner-content">
+    <div class="text-lg text-center mb-2 text-black">Congratulations to Auction {auctionId} winner!</div>
+    <div class="flex flex-row items-center justify-evenly">
+      <ParachainIcon paraId={paraId} align="start" dropShadow={true} />
+      <div class="flex flex-col text-center">
+        <div class="text-xs text-gray-600">Leases</div>
+        <div class="text-base">{firstLease} - {lastLease}</div>
       </div>
-    </div>
-    <div class="flex flex-col text-center">
-      <div class="text-xs text-gray-600">Unlock Block</div>
-      <div class="text-base">{lastLease * leasePeriod + 1}</div>
+      <div class="flex flex-col text-center">
+        <div class="text-xs text-gray-600">Winnig Amount</div>
+        <div class="text-base">
+          <Token value={winningAmount} />
+        </div>
+      </div>
+      <div class="flex flex-col text-center">
+        <div class="text-xs text-gray-600">Unlock Block</div>
+        <div class="text-base">{lastLease * leasePeriod + 1}</div>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
+  .banner-content {
+    position: relative;
+    z-index: 100;
+  }
   .banner {
-    text-shadow: 2px 2px 4px #444cf755;
+    text-shadow: 2px 2px 3px #d4d4fa;
+    position: relative;
   }
   .banner::after {
-    content: "";
+    content: " ";
     border-radius: 0.45rem;
     position: absolute;
     top: 0;
@@ -48,6 +54,9 @@ export let paraId, winningAmount, firstLease, lastLease, auctionId;
     background-color: #d4d4fa;
     opacity: 0.2;
     background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #d4d4fa 25px ), repeating-linear-gradient( #444cf755, #444cf7 );
+    /* background-color: #ffffff; */
+/* opacity: 0.8; */
+/* background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #ffffff 25px ), repeating-linear-gradient( #f3d7e355, #f3d7e3 ); */
   }
 
 </style>
