@@ -3,29 +3,35 @@ import ParachainIcon from "./ParachainIcon.svelte";
 import Token from "./Token.svelte";
 import { config } from './constants';
 import { paraMappings } from './stores';
+import MediaQuery from "./MediaQuery.svelte";
 
 const { leasePeriod } = config;
-export let paraId, winningAmount, firstLease, lastLease, auctionId;
+export let paraId, winningAmount, firstLease, lastLease;
+
 
 </script>
 
 
-<div class="box flex flex-col flex-1 p-4 flex-wrap relative banner">
+<div class="box flex flex-col flex-1 p-4 relative banner">
   <div class="banner-content">
-    <div class="text-lg text-center mb-2 text-black">Congratulations to Auction {auctionId} winner!</div>
-    <div class="flex flex-row items-center justify-evenly">
-      <ParachainIcon paraId={paraId} align="start" dropShadow={true} />
-      <div class="flex flex-col text-center">
+    <div class="text-lg text-center mb-2 text-black">Congratulations to Auction Winner! 🎉</div>
+    <div class="flex flex-row items-center justify-evenly flex-wrap">
+      <div class="my-1">
+        <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
+          <ParachainIcon paraId={paraId} align="start" dropShadow={true} smallIcon={isMobile}/>
+        </MediaQuery>
+      </div>
+      <div class="flex flex-col text-center my-1">
         <div class="text-xs text-gray-600">Leases</div>
         <div class="text-base">{firstLease} - {lastLease}</div>
       </div>
-      <div class="flex flex-col text-center">
+      <div class="flex flex-col text-center my-1">
         <div class="text-xs text-gray-600">Winnig Amount</div>
         <div class="text-base">
           <Token value={winningAmount} />
         </div>
       </div>
-      <div class="flex flex-col text-center">
+      <div class="flex flex-col text-center my-1">
         <div class="text-xs text-gray-600">Unlock Block</div>
         <div class="text-base">{lastLease * leasePeriod + 1}</div>
       </div>
@@ -43,7 +49,7 @@ export let paraId, winningAmount, firstLease, lastLease, auctionId;
     position: relative;
   }
   .banner::after {
-    content: " ";
+    content: "";
     border-radius: 0.45rem;
     position: absolute;
     top: 0;

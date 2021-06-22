@@ -8,12 +8,18 @@
   $: {
     isClosing = curBlockNum >= closingStart;
     const timeDelta = (isClosing ? closingEnd - (curBlockNum || 0) : (closingStart - curBlockNum)) * 6000;
-    const timeDiff = getTimeDiffInWord(timeDelta)
-    title = isClosing ? 'Auction ending started' : 'Auction started';
-    timeRemain = (isClosing ? 'Closing in ' : 'Ending starts in ') + timeDiff;
+    if (timeDelta <= 0) {
+      title = 'Auction finished, waiting for winner announcement';
+      timeRemain = ''
+    } else {
+      const timeDiff = getTimeDiffInWord(timeDelta)
+      title = isClosing ? 'Auction ending started' : 'Auction started';
+      timeRemain = (isClosing ? 'Closing in ' : 'Ending starts in ') + timeDiff;
+    }
     const total = isClosing ? closingEnd - closingStart : closingStart - auctionStart;
     const cur =  (isClosing ? curBlockNum - closingStart : curBlockNum - auctionStart);
     progress = (curBlockNum < closingEnd ? Math.floor((cur / total) * 100) : 100);
+
   }
 </script>
 

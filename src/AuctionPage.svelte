@@ -84,7 +84,7 @@ import WinnerBanner from './WinnerBanner.svelte';
   {:else}
     {#if latestWinner}
       <div class="mt-6 mb-4">
-        <WinnerBanner auctionId={latestWinner.auctionId} paraId={latestWinner.parachain.paraId} firstLease={latestWinner.firstLease} lastLease={latestWinner.lastLease} winningAmount={latestWinner.winningAmount}/>
+        <WinnerBanner paraId={latestWinner.parachain.paraId} firstLease={latestWinner.firstLease} lastLease={latestWinner.lastLease} winningAmount={latestWinner.winningAmount}/>
       </div>
     {/if}
     <div class="my-2 sm:mt-6 md:mt-6 lg:mt-6">
