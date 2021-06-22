@@ -13,12 +13,11 @@
   import ParachainList from './ParachainList.svelte';
   import AuctionPanel from './AuctionPanel.svelte';
   import MediaQuery from './MediaQuery.svelte';
-import ParachainIcon from './ParachainIcon.svelte';
-import WinnerBanner from './WinnerBanner.svelte';
+  import WinnerBanner from './WinnerBanner.svelte';
 
 
   let timer = 0;
-
+  let initFetch = true;
   let slotLeases = [], parachains = []
 
   const activeAuction = {
@@ -54,7 +53,7 @@ import WinnerBanner from './WinnerBanner.svelte';
       const { auctions, parachainLeases: leases } = normalize($activeAuctions.data) || {};
       const [auction] = auctions;
       curAuction.set(auction);
-      
+      initFetch = false;
       if (leases) {
         slotLeases = leases;
       }
@@ -79,7 +78,7 @@ import WinnerBanner from './WinnerBanner.svelte';
     {/if}
   </MediaQuery>
   
-  {#if $activeAuctions.fetching && !chronicle} 
+  {#if $activeAuctions.fetching && initFetch}
     <Loading />
   {:else}
     {#if latestWinner}

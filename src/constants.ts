@@ -21,6 +21,7 @@ interface Config {
   paraMappingUrl: string;
   defaultParachainIcon: string;
   defaultChains: ParachainInfo[];
+  epochDuration: number;
 }
 
 export const NetworkConfigs: Record<Network, Config> = {
@@ -35,6 +36,7 @@ export const NetworkConfigs: Record<Network, Config> = {
         description: ''
       }
     ],
+    epochDuration: 2400,
     leasePeriod: 2419200,
     leasesPerSlot: 3,
     decimal: 10,
@@ -64,6 +66,7 @@ export const NetworkConfigs: Record<Network, Config> = {
         website: 'https://genshiro.equilibrium.io'
       }
     ],
+    epochDuration: 600,
     leasePeriod: 604800,
     leasesPerSlot: 7,
     decimal: 12,
@@ -83,6 +86,7 @@ export const NetworkConfigs: Record<Network, Config> = {
         description: ''
       }
     ],
+    epochDuration: 100,
     leasePeriod: 14400,
     leasesPerSlot: 7,
     decimal: 12,

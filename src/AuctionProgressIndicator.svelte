@@ -1,25 +1,43 @@
 <script>
   import { getTimeDiffInWord } from './utils';
+  import { config } from './constants';
+
 
   export let closingStart, closingEnd, curBlockNum, auctionStart;
 
-  let title, timeRemain, isClosing, progress;
+  let title, timeRemain, isClosing, progress, curStage = 0;
+
+  const stages = [
+    {
+      start: auctionStart, 
+      end: closingStart,
+      title: 'Auction started',
+      remainPrefix: 'Ending started in '
+    }, 
+    { 
+      start: closingStart, 
+      end: closingEnd,
+      title: 'Auction ending started',
+      remainPrefix: 'Closed in '
+    }, 
+    { 
+      start: closingEnd,
+      end: closingEnd + config.epochDuration,
+      title: 'Auction Closed',
+      remainPrefix: 'waiting for winner announcement in '
+    }];
   
   $: {
-    isClosing = curBlockNum >= closingStart;
-    const timeDelta = (isClosing ? closingEnd - (curBlockNum || 0) : (closingStart - curBlockNum)) * 6000;
-    if (timeDelta <= 0) {
-      title = 'Auction finished, waiting for winner announcement';
-      timeRemain = ''
-    } else {
-      const timeDiff = getTimeDiffInWord(timeDelta)
-      title = isClosing ? 'Auction ending started' : 'Auction started';
-      timeRemain = (isClosing ? 'Closing in ' : 'Ending starts in ') + timeDiff;
-    }
-    const total = isClosing ? closingEnd - closingStart : closingStart - auctionStart;
-    const cur =  (isClosing ? curBlockNum - closingStart : curBlockNum - auctionStart);
-    progress = (curBlockNum < closingEnd ? Math.floor((cur / total) * 100) : 100);
+    curStage = stages.find(([start, end]) => curBlockNum >= start && curBlockNum < end) || {start: 0, end: curBlockNum, title: 'Auction Closed', remainPrefix: 'waiting for winner announcement '};
+    const timeDelta = (curStage.end - curBlockNum) * 6000;
 
+    const timeDiff = getTimeDiffInWord(timeDelta)
+    title = curStage.title;
+    timeRemain = remainPrefix + timeDiff;
+
+    const total = curStage.end - curStage.start;
+    const cur =  curBlockNum - curStage.start;
+    progress = Math.floor((cur / total) * 100);
   }
 </script>
 
