@@ -34,7 +34,7 @@ export let paraId, winningAmount, firstLease, lastLease, auctionId;
 
 <style>
   .banner {
-    text-shadow: 2px 2px 3px #444cf755;
+    text-shadow: 2px 2px 4px #444cf755;
   }
   .banner::after {
     content: "";
