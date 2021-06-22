@@ -20,7 +20,7 @@
     }
   };
 
-  let combinations, leaderLikelyWin;
+  let combinations, leaderLikelyWin = false;
   $: {
     const sortedLease = orderBy(leases, ['firstLease', 'lastLease'], ['asc', 'asc']);
     const normalizedLeases = sortedLease.map(({ firstLease, lastLease, ...others}) => ({
@@ -30,12 +30,15 @@
       ...others
     }));
     combinations = orderBy(gatherCombination(normalizedLeases), ['totalLockupValue'], ['desc']);
-    const confidentAmount = combinations[0].totalLockupValue * combinations[0].winningChance;
-    leaderLikelyWin = combinations.slice(1).every(({ totalLockupValue, winningChance }) => {
-      const curValue = totalLockupValue * winningChance;
-      const leadingPercentage = ((confidentAmount - curValue) / confidentAmount);
-      return leadingPercentage > 0.9;
-    });
+    if (combinations.length) {
+      const confidentAmount = combinations[0].totalLockupValue * combinations[0].winningChance;
+      leaderLikelyWin = combinations.slice(1).every(({ totalLockupValue, winningChance }) => {
+        const curValue = totalLockupValue * winningChance;
+        const leadingPercentage = ((confidentAmount - curValue) / confidentAmount);
+        return leadingPercentage > 0.9;
+      });
+    }
+    
   };
 
 </script>
