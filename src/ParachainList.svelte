@@ -91,7 +91,7 @@ import MediaQuery from './MediaQuery.svelte';
               <td>
                 <div class="text-center">
                   {parachain.curLease ? 'Block '+ parachain.curLease?.lastLease * leasePeriod : 'N/A'}
-                  <p class="text-xs">{parachain.curLease ? getDateFromBlockNum(parachain.curLease.lastLease * leasePeriod, $lastBlockNum, $lastBlockTime) : ''}</p>
+                  <p class="text-xs text-gray-500">{parachain.curLease ? getDateFromBlockNum((parachain.curLease.lastLease + 1) * leasePeriod, $lastBlockNum, $lastBlockTime) : ''}</p>
                 </div>
               </td>
               
