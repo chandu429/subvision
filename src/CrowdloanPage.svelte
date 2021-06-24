@@ -81,7 +81,7 @@
             <div class="flex flex-row justify-between">
               <ParachainIcon paraId={crowdloan.parachain.paraId} align="start" smallIcon/>
               <div>
-                <div class="rounded-full py-1 px-2 text-white text-sm {crowdloan.retiring ? 'bg-yellow-600' : 'bg-blue-500'}">{crowdloan.retiring ? 'Retiring' : 'Active'}</div>
+                <div class="rounded-full py-1 px-2 text-white text-sm {crowdloan.retiring ? 'bg-yellow-600' : 'bg-blue-500'}">{crowdloan.status}</div>
               </div>
             </div>
             <div class="flex justify-between mt-2">
