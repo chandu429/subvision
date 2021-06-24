@@ -71,7 +71,7 @@ query ($auctionStatusFilter: AuctionFilter) {
           ...bidParachainFields
         }
       }
-      parachainLeases (filter: {activeForAuction: {isNull: false}}){
+      parachainLeases (filter: {activeForAuction: {isNull: false}, hasWon: {equalTo: false}}){
         nodes {
           id
           paraId
@@ -124,9 +124,9 @@ query {
           totalCount
         }
       }
-      retiring
       depositor
       verifier
+      status
       cap
       raised
       firstSlot
