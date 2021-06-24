@@ -71,7 +71,7 @@ export const NetworkConfigs: Record<Network, Config> = {
     leasesPerSlot: 7,
     decimal: 12,
     tokenSymbol: 'KSM',
-    endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction__c3Vid',
+    endpoint: 'https://api.subquery.network/sq/subvis-io/kusama-auction',
     paraMappingUrl: 'https://raw.githubusercontent.com/soramitsu/fearless-utils/master/crowdloan/kusama.json',
     defaultParachainIcon: '/ksm-logo.svg'
   },
