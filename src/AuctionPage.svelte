@@ -73,8 +73,11 @@
 
 <div class="content">
 
-
-  <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Parachains' }]}/>
+  <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
+    {#if !isMobile}
+      <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Parachains' }]}/>
+    {/if}
+  </MediaQuery>
 
   
   {#if $activeAuctions.fetching && initFetch}

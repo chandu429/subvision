@@ -16,9 +16,14 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
   }));
 
 </script>
-
+<MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
 <div >
   <div class="">
+    {#if isMobile}
+    <div class="block sm:flex items-center text-center">
+      <h2 class="text-lg font-medium mr-5">Auction No.{curAuction.id}</h2>
+    </div>
+    {/if}
     <div class="mt-1 sm:mt-4">
       <div class="box flex flex-none flex-row divide-x divide-gray-200 p-3 sm:p-4 justify-between">
         <div class="flex-grow px-1">
@@ -45,47 +50,42 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
             <div>{curAuction.closingEnd}</div>
           </div>
         </div>
-
-          <MediaQuery query="(min-width: 600px)" let:matches>
-            {#if matches}
-              <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
-            {/if}
-          </MediaQuery>
-
+        {#if !isMobile}
+          <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={ curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
+        {/if}
       </div>
     </div>
   </div>
 
-  <MediaQuery query="(max-width: 640px)" let:matches>
-    {#if matches}
+
+    {#if isMobile}
     <div class="box mt-4 p-4">
       <AuctionProgressIndicator closingStart={curAuction?.closingStart } closingEnd={curAuction?.closingEnd} curBlockNum={$chronicle?.curBlockNum} auctionStart={curAuction?.blockNum} />
     </div>
     {/if}
-  </MediaQuery>
 
   <div class="mt-6">
     <SlotsCombination leases={biddingLeases} firstLease={curAuction.leaseStart} />
   </div>
   <div class="flex flex-row justify-between">
-    <MediaQuery query="(min-width: 600px)" let:matches>
-      {#if matches}
-        {#if curAuction.parachainLeases.length}
-          <div class="my-4 w-3/5 flex-grow">
-            <div class="py-2 text-lg">
-              <p>Leading Positions</p>
-            </div>
-            <div class="">
-              <div class="grid gap-4">
-                {#each biddingLeases as lease }
-                  <LeaseCard {...lease } />
-                {/each}
-              </div>
-            </div>
+
+  {#if !isMobile}
+    {#if curAuction.parachainLeases.length}
+      <div class="my-4 w-3/5 flex-grow">
+        <div class="py-2 text-lg">
+          <p>Leading Positions</p>
+        </div>
+        <div class="">
+          <div class="grid gap-4">
+            {#each biddingLeases as lease }
+              <LeaseCard {...lease } />
+            {/each}
           </div>
-        {/if}
-      {/if}
-    </MediaQuery>
+        </div>
+      </div>
+    {/if}
+  {/if}
+
     {#if latestBids.length}
       <div class="mt-4 sm:ml-4 sm:w-2/5 flex-grow">
         <div class="py-2 text-lg">
@@ -100,3 +100,4 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
     {/if}
   </div>
 </div>
+</MediaQuery>
