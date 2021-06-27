@@ -7,17 +7,17 @@
 </script>
 
 <div class="top-bar">
-  <div>
+  <div class="text-base">
     {#each links as link}
       {#if link.path}
-        <Link to={link.path}><span class="text-blue-600 underline">{link.title}</span></Link><ChevronIcon />
+        <Link to={link.path}><span class="text-blue-600 underline">{link.title || ''}</span></Link><ChevronIcon />
       {:else}
-        <span>{link.title}</span>
+        <span class="text-md">{link.title || ''}</span>
       {/if}
     {/each}
   </div>
   <div class="text-right flex-1 text-sm">
-    {$timeStr}
+    {$timeStr || ' '}
     <div class="text-gray-400 text-xs">Block: {$lastBlockNum}</div>
     <div class="text-gray-400 text-xs">Current lease: {$curLease || 'N/A'}</div>
   </div>

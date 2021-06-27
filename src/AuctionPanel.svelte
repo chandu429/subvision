@@ -19,9 +19,6 @@ $: biddingLeases = curAuction.parachainLeases.map(({ numBlockWon, ...others }) =
 
 <div >
   <div class="">
-    <div class="block sm:flex items-center text-center">
-      <h2 class="text-lg font-medium mr-5">Auction No.{curAuction.id}</h2>
-    </div>
     <div class="mt-1 sm:mt-4">
       <div class="box flex flex-none flex-row divide-x divide-gray-200 p-3 sm:p-4 justify-between">
         <div class="flex-grow px-1">

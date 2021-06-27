@@ -67,16 +67,15 @@
 
 
   $: latestBids = $curAuction ? orderBy([].concat($curAuction.latestBids), ['createdAt'], ['desc']).slice(0, 10) : [];
-  $: latestWinner = orderBy(slotLeases, ['winningResultBlock'], ['desc']).filter(({ winningResultBlock }) => $lastBlockNum - winningResultBlock <= 172800 )[0];
+  $: latestWinner = orderBy(slotLeases, ['closingEnd'], ['desc']).filter(({ closingEnd }) => $lastBlockNum - closingEnd <= 43200 )[0];
   
 </script>
 
 <div class="content">
-  <MediaQuery query="max-width: 600px" let:matches={isMobile}>
-    {#if isMobile}
-      <Breadcrumb links={[{title: 'Auction'}]}/>
-    {/if}
-  </MediaQuery>
+
+
+  <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Parachains' }]}/>
+
   
   {#if $activeAuctions.fetching && initFetch}
     <Loading />
