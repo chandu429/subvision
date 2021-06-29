@@ -101,7 +101,7 @@
             <div>{totalRecord} Contributions</div>
             <div class="border p-2 rounded-md">
               <select class="text-sm bg-white outline-none" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
-                <optgroup label="Short By">
+                <optgroup label="Sort By">
                   <option value="BLOCK_NUM_DESC">Latest</option>
                   <option value="BLOCK_NUM_ASC">Earliest</option>
                   <option value="AMOUNT_DESC">Highest Price</option>
@@ -189,7 +189,7 @@
                 <div>
                   <div class="border p-2 rounded-md ">
                     <select class="text-sm outline-none bg-white" on:change={updateOrderBy} value={$contributionsOps.variables.orderBy}>
-                      <optgroup label="Short By">
+                      <optgroup label="Sort By">
                         <option value="BLOCK_NUM_DESC">Latest</option>
                         <option value="BLOCK_NUM_ASC">Earliest</option>
                         <option value="AMOUNT_DESC">Highest Price</option>
