@@ -79,7 +79,7 @@
         {#each crowdloans as crowdloan (crowdloan.id) }
           <div class="box mb-4 mt-6 p-2" on:click={e => navigate(`/crowdloan/${crowdloan.id}`)}>
             <div class="flex flex-row justify-between">
-              <ParachainIcon paraId={crowdloan.parachain.paraId} align="start" smallIcon/>
+              <ParachainIcon paraId={crowdloan.parachain.paraId} align="start" smallIcon />
               <div>
                 <div class="rounded-full py-1 px-2 text-white text-sm {crowdloan.status !== 'Started' ? 'bg-yellow-600' : 'bg-blue-500'}">{crowdloan.status}</div>
               </div>
