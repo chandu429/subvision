@@ -14,6 +14,7 @@
   import AuctionPanel from './AuctionPanel.svelte';
   import MediaQuery from './MediaQuery.svelte';
   import WinnerBanner from './WinnerBanner.svelte';
+  import EmailSubscriptionPanel from './EmailSubscriptionPanel.svelte';
 
 
   let timer = 0;
@@ -71,14 +72,17 @@
   
 </script>
 
-<div class="content">
 
+<div class="content">
+  
   <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
     {#if !isMobile}
-      <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Parachains' }]}/>
+      <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Auction' }]}/>
+      <EmailSubscriptionPanel />
     {/if}
   </MediaQuery>
 
+  
   
   {#if $activeAuctions.fetching && initFetch}
     <Loading />
