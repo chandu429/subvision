@@ -13,6 +13,8 @@ export type Scalars = {
   BigFloat: any;
   /** A location in a connection that can be used for resuming pagination. */
   Cursor: any;
+  /** The day, does not include a time. */
+  Date: any;
   /**
    * A point in time as described by the [ISO
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
@@ -40,21 +42,19 @@ export type Auction = Node & {
   /** Reads and enables pagination through a set of `Chronicle`. */
   chroniclesByCurAuctionId: ChroniclesConnection;
   /** Reads and enables pagination through a set of `AuctionParachain`. */
-  parachains: AuctionParachainsConnection;
+  auctionParachains: AuctionParachainsConnection;
+  /** Reads and enables pagination through a set of `ParachainLease`. */
+  parachainLeases: ParachainLeasesConnection;
   /** Reads and enables pagination through a set of `Bid`. */
   bids: BidsConnection;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
   /** Reads and enables pagination through a set of `Parachain`. */
   parachainsByAuctionParachainAuctionIdAndParachainId: AuctionParachainsByAuctionParachainAuctionIdAndParachainIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `Parachain`. */
+  parachainsByParachainLeaseAuctionIdAndParachainId: AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Parachain`. */
   parachainsByBidAuctionIdAndParachainId: AuctionParachainsByBidAuctionIdAndParachainIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Crowdloan`. */
   crowdloansByBidAuctionIdAndFundId: AuctionCrowdloansByBidAuctionIdAndFundIdManyToManyConnection;
-  /** Reads and enables pagination through a set of `Parachain`. */
-  parachainsByWinningBlockAuctionIdAndParachainId: AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyConnection;
-  /** Reads and enables pagination through a set of `Bid`. */
-  bidsByWinningBlockAuctionIdAndBidId: AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyConnection;
 };
 
 
@@ -69,7 +69,7 @@ export type AuctionChroniclesByCurAuctionIdArgs = {
 };
 
 
-export type AuctionParachainsArgs = {
+export type AuctionAuctionParachainsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -77,6 +77,17 @@ export type AuctionParachainsArgs = {
   after?: Maybe<Scalars['Cursor']>;
   orderBy?: Maybe<Array<AuctionParachainsOrderBy>>;
   filter?: Maybe<AuctionParachainFilter>;
+};
+
+
+export type AuctionParachainLeasesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ParachainLeasesOrderBy>>;
+  filter?: Maybe<ParachainLeaseFilter>;
 };
 
 
@@ -91,18 +102,18 @@ export type AuctionBidsArgs = {
 };
 
 
-export type AuctionWinningBlocksArgs = {
+export type AuctionParachainsByAuctionParachainAuctionIdAndParachainIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
+  orderBy?: Maybe<Array<ParachainsOrderBy>>;
+  filter?: Maybe<ParachainFilter>;
 };
 
 
-export type AuctionParachainsByAuctionParachainAuctionIdAndParachainIdArgs = {
+export type AuctionParachainsByParachainLeaseAuctionIdAndParachainIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -132,64 +143,6 @@ export type AuctionCrowdloansByBidAuctionIdAndFundIdArgs = {
   after?: Maybe<Scalars['Cursor']>;
   orderBy?: Maybe<Array<CrowdloansOrderBy>>;
   filter?: Maybe<CrowdloanFilter>;
-};
-
-
-export type AuctionParachainsByWinningBlockAuctionIdAndParachainIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ParachainsOrderBy>>;
-  filter?: Maybe<ParachainFilter>;
-};
-
-
-export type AuctionBidsByWinningBlockAuctionIdAndBidIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<BidsOrderBy>>;
-  filter?: Maybe<BidFilter>;
-};
-
-/** A connection to a list of `Bid` values, with data from `WinningBlock`. */
-export type AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyConnection = {
-  __typename?: 'AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyConnection';
-  /** A list of `Bid` objects. */
-  nodes: Array<Maybe<Bid>>;
-  /** A list of edges which contains the `Bid`, info from the `WinningBlock`, and the cursor to aid in pagination. */
-  edges: Array<AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Bid` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Bid` edge in the connection, with data from `WinningBlock`. */
-export type AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyEdge = {
-  __typename?: 'AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Bid` at the end of the edge. */
-  node?: Maybe<Bid>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
-};
-
-
-/** A `Bid` edge in the connection, with data from `WinningBlock`. */
-export type AuctionBidsByWinningBlockAuctionIdAndBidIdManyToManyEdgeWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
 };
 
 /** A connection to a list of `Crowdloan` values, with data from `Bid`. */
@@ -380,40 +333,40 @@ export type AuctionParachainsByBidAuctionIdAndParachainIdManyToManyEdgeBidsArgs 
   filter?: Maybe<BidFilter>;
 };
 
-/** A connection to a list of `Parachain` values, with data from `WinningBlock`. */
-export type AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyConnection = {
-  __typename?: 'AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyConnection';
+/** A connection to a list of `Parachain` values, with data from `ParachainLease`. */
+export type AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyConnection = {
+  __typename?: 'AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyConnection';
   /** A list of `Parachain` objects. */
   nodes: Array<Maybe<Parachain>>;
-  /** A list of edges which contains the `Parachain`, info from the `WinningBlock`, and the cursor to aid in pagination. */
-  edges: Array<AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyEdge>;
+  /** A list of edges which contains the `Parachain`, info from the `ParachainLease`, and the cursor to aid in pagination. */
+  edges: Array<AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Parachain` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-/** A `Parachain` edge in the connection, with data from `WinningBlock`. */
-export type AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyEdge = {
-  __typename?: 'AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyEdge';
+/** A `Parachain` edge in the connection, with data from `ParachainLease`. */
+export type AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyEdge = {
+  __typename?: 'AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `Parachain` at the end of the edge. */
   node?: Maybe<Parachain>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
+  /** Reads and enables pagination through a set of `ParachainLease`. */
+  leases: ParachainLeasesConnection;
 };
 
 
-/** A `Parachain` edge in the connection, with data from `WinningBlock`. */
-export type AuctionParachainsByWinningBlockAuctionIdAndParachainIdManyToManyEdgeWinningBlocksArgs = {
+/** A `Parachain` edge in the connection, with data from `ParachainLease`. */
+export type AuctionParachainsByParachainLeaseAuctionIdAndParachainIdManyToManyEdgeLeasesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
+  orderBy?: Maybe<Array<ParachainLeasesOrderBy>>;
+  filter?: Maybe<ParachainLeaseFilter>;
 };
 
 /** A connection to a list of `AuctionParachain` values. */
@@ -539,81 +492,6 @@ export type Bid = Node & {
   parachain?: Maybe<Parachain>;
   /** Reads a single `Crowdloan` that is related to this `Bid`. */
   fund?: Maybe<Crowdloan>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
-  /** Reads and enables pagination through a set of `Auction`. */
-  auctionsByWinningBlockBidIdAndAuctionId: BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyConnection;
-  /** Reads and enables pagination through a set of `Parachain`. */
-  parachainsByWinningBlockBidIdAndParachainId: BidParachainsByWinningBlockBidIdAndParachainIdManyToManyConnection;
-};
-
-
-export type BidWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
-};
-
-
-export type BidAuctionsByWinningBlockBidIdAndAuctionIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<AuctionsOrderBy>>;
-  filter?: Maybe<AuctionFilter>;
-};
-
-
-export type BidParachainsByWinningBlockBidIdAndParachainIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ParachainsOrderBy>>;
-  filter?: Maybe<ParachainFilter>;
-};
-
-/** A connection to a list of `Auction` values, with data from `WinningBlock`. */
-export type BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyConnection = {
-  __typename?: 'BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyConnection';
-  /** A list of `Auction` objects. */
-  nodes: Array<Maybe<Auction>>;
-  /** A list of edges which contains the `Auction`, info from the `WinningBlock`, and the cursor to aid in pagination. */
-  edges: Array<BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Auction` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Auction` edge in the connection, with data from `WinningBlock`. */
-export type BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyEdge = {
-  __typename?: 'BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Auction` at the end of the edge. */
-  node?: Maybe<Auction>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
-};
-
-
-/** A `Auction` edge in the connection, with data from `WinningBlock`. */
-export type BidAuctionsByWinningBlockBidIdAndAuctionIdManyToManyEdgeWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
 };
 
 /** A filter to be used against `Bid` object types. All fields are combined with a logical ‘and.’ */
@@ -650,42 +528,6 @@ export type BidFilter = {
   or?: Maybe<Array<BidFilter>>;
   /** Negates the expression. */
   not?: Maybe<BidFilter>;
-};
-
-/** A connection to a list of `Parachain` values, with data from `WinningBlock`. */
-export type BidParachainsByWinningBlockBidIdAndParachainIdManyToManyConnection = {
-  __typename?: 'BidParachainsByWinningBlockBidIdAndParachainIdManyToManyConnection';
-  /** A list of `Parachain` objects. */
-  nodes: Array<Maybe<Parachain>>;
-  /** A list of edges which contains the `Parachain`, info from the `WinningBlock`, and the cursor to aid in pagination. */
-  edges: Array<BidParachainsByWinningBlockBidIdAndParachainIdManyToManyEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Parachain` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Parachain` edge in the connection, with data from `WinningBlock`. */
-export type BidParachainsByWinningBlockBidIdAndParachainIdManyToManyEdge = {
-  __typename?: 'BidParachainsByWinningBlockBidIdAndParachainIdManyToManyEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Parachain` at the end of the edge. */
-  node?: Maybe<Parachain>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
-};
-
-
-/** A `Parachain` edge in the connection, with data from `WinningBlock`. */
-export type BidParachainsByWinningBlockBidIdAndParachainIdManyToManyEdgeWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
 };
 
 /** A connection to a list of `Bid` values. */
@@ -991,21 +833,27 @@ export type Crowdloan = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['String'];
   parachainId: Scalars['String'];
-  retiring: Scalars['Boolean'];
   depositor: Scalars['String'];
   verifier?: Maybe<Scalars['String']>;
   cap: Scalars['BigFloat'];
   raised: Scalars['BigFloat'];
   lockExpiredBlock: Scalars['Int'];
   blockNum?: Maybe<Scalars['Int']>;
-  createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
+  firstSlot: Scalars['Int'];
+  lastSlot: Scalars['Int'];
+  status: Scalars['String'];
+  leaseExpiredBlock?: Maybe<Scalars['Int']>;
+  dissolvedBlock?: Maybe<Scalars['Int']>;
+  updatedAt?: Maybe<Scalars['Datetime']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  isFinished?: Maybe<Scalars['Boolean']>;
+  wonAuctionId?: Maybe<Scalars['String']>;
   /** Reads a single `Parachain` that is related to this `Crowdloan`. */
   parachain?: Maybe<Parachain>;
   /** Reads and enables pagination through a set of `Bid`. */
   bidsByFundId: BidsConnection;
   /** Reads and enables pagination through a set of `Contribution`. */
-  contributionsByFundId: ContributionsConnection;
+  contributions: ContributionsConnection;
   /** Reads and enables pagination through a set of `Auction`. */
   auctionsByBidFundIdAndAuctionId: CrowdloanAuctionsByBidFundIdAndAuctionIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Parachain`. */
@@ -1026,7 +874,7 @@ export type CrowdloanBidsByFundIdArgs = {
 };
 
 
-export type CrowdloanContributionsByFundIdArgs = {
+export type CrowdloanContributionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1111,8 +959,6 @@ export type CrowdloanFilter = {
   id?: Maybe<StringFilter>;
   /** Filter by the object’s `parachainId` field. */
   parachainId?: Maybe<StringFilter>;
-  /** Filter by the object’s `retiring` field. */
-  retiring?: Maybe<BooleanFilter>;
   /** Filter by the object’s `depositor` field. */
   depositor?: Maybe<StringFilter>;
   /** Filter by the object’s `verifier` field. */
@@ -1125,10 +971,24 @@ export type CrowdloanFilter = {
   lockExpiredBlock?: Maybe<IntFilter>;
   /** Filter by the object’s `blockNum` field. */
   blockNum?: Maybe<IntFilter>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `firstSlot` field. */
+  firstSlot?: Maybe<IntFilter>;
+  /** Filter by the object’s `lastSlot` field. */
+  lastSlot?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<StringFilter>;
+  /** Filter by the object’s `leaseExpiredBlock` field. */
+  leaseExpiredBlock?: Maybe<IntFilter>;
+  /** Filter by the object’s `dissolvedBlock` field. */
+  dissolvedBlock?: Maybe<IntFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isFinished` field. */
+  isFinished?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `wonAuctionId` field. */
+  wonAuctionId?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<CrowdloanFilter>>;
   /** Checks for any expressions in this list. */
@@ -1215,8 +1075,8 @@ export type CrowdloanSequence = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['String'];
   curIndex: Scalars['Int'];
-  bumpAt?: Maybe<Scalars['String']>;
   createdAt: Scalars['Datetime'];
+  blockNum: Scalars['Int'];
   updatedAt: Scalars['Datetime'];
 };
 
@@ -1226,10 +1086,10 @@ export type CrowdloanSequenceFilter = {
   id?: Maybe<StringFilter>;
   /** Filter by the object’s `curIndex` field. */
   curIndex?: Maybe<IntFilter>;
-  /** Filter by the object’s `bumpAt` field. */
-  bumpAt?: Maybe<StringFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `blockNum` field. */
+  blockNum?: Maybe<IntFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
@@ -1269,10 +1129,10 @@ export enum CrowdloanSequencesOrderBy {
   IdDesc = 'ID_DESC',
   CurIndexAsc = 'CUR_INDEX_ASC',
   CurIndexDesc = 'CUR_INDEX_DESC',
-  BumpAtAsc = 'BUMP_AT_ASC',
-  BumpAtDesc = 'BUMP_AT_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
+  BlockNumAsc = 'BLOCK_NUM_ASC',
+  BlockNumDesc = 'BLOCK_NUM_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -1308,8 +1168,6 @@ export enum CrowdloansOrderBy {
   IdDesc = 'ID_DESC',
   ParachainIdAsc = 'PARACHAIN_ID_ASC',
   ParachainIdDesc = 'PARACHAIN_ID_DESC',
-  RetiringAsc = 'RETIRING_ASC',
-  RetiringDesc = 'RETIRING_DESC',
   DepositorAsc = 'DEPOSITOR_ASC',
   DepositorDesc = 'DEPOSITOR_DESC',
   VerifierAsc = 'VERIFIER_ASC',
@@ -1322,13 +1180,28 @@ export enum CrowdloansOrderBy {
   LockExpiredBlockDesc = 'LOCK_EXPIRED_BLOCK_DESC',
   BlockNumAsc = 'BLOCK_NUM_ASC',
   BlockNumDesc = 'BLOCK_NUM_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
+  FirstSlotAsc = 'FIRST_SLOT_ASC',
+  FirstSlotDesc = 'FIRST_SLOT_DESC',
+  LastSlotAsc = 'LAST_SLOT_ASC',
+  LastSlotDesc = 'LAST_SLOT_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  LeaseExpiredBlockAsc = 'LEASE_EXPIRED_BLOCK_ASC',
+  LeaseExpiredBlockDesc = 'LEASE_EXPIRED_BLOCK_DESC',
+  DissolvedBlockAsc = 'DISSOLVED_BLOCK_ASC',
+  DissolvedBlockDesc = 'DISSOLVED_BLOCK_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  IsFinishedAsc = 'IS_FINISHED_ASC',
+  IsFinishedDesc = 'IS_FINISHED_DESC',
+  WonAuctionIdAsc = 'WON_AUCTION_ID_ASC',
+  WonAuctionIdDesc = 'WON_AUCTION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
 
 
 
@@ -1420,26 +1293,22 @@ export type Parachain = Node & {
   chronicle?: Maybe<Chronicle>;
   /** Reads and enables pagination through a set of `Crowdloan`. */
   funds: CrowdloansConnection;
-  /** Reads and enables pagination through a set of `ParachainLeased`. */
-  leased: ParachainLeasedsConnection;
   /** Reads and enables pagination through a set of `AuctionParachain`. */
   auctionParachains: AuctionParachainsConnection;
+  /** Reads and enables pagination through a set of `ParachainLease`. */
+  leases: ParachainLeasesConnection;
   /** Reads and enables pagination through a set of `Bid`. */
   bids: BidsConnection;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
   /** Reads and enables pagination through a set of `Contribution`. */
   contributions: ContributionsConnection;
   /** Reads and enables pagination through a set of `Auction`. */
   auctionsByAuctionParachainParachainIdAndAuctionId: ParachainAuctionsByAuctionParachainParachainIdAndAuctionIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Auction`. */
+  auctionsByParachainLeaseParachainIdAndAuctionId: ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyConnection;
+  /** Reads and enables pagination through a set of `Auction`. */
   auctionsByBidParachainIdAndAuctionId: ParachainAuctionsByBidParachainIdAndAuctionIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Crowdloan`. */
   crowdloansByBidParachainIdAndFundId: ParachainCrowdloansByBidParachainIdAndFundIdManyToManyConnection;
-  /** Reads and enables pagination through a set of `Auction`. */
-  auctionsByWinningBlockParachainIdAndAuctionId: ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyConnection;
-  /** Reads and enables pagination through a set of `Bid`. */
-  bidsByWinningBlockParachainIdAndBidId: ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyConnection;
   /** Reads and enables pagination through a set of `Crowdloan`. */
   crowdloansByContributionParachainIdAndFundId: ParachainCrowdloansByContributionParachainIdAndFundIdManyToManyConnection;
 };
@@ -1456,17 +1325,6 @@ export type ParachainFundsArgs = {
 };
 
 
-export type ParachainLeasedArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ParachainLeasedsOrderBy>>;
-  filter?: Maybe<ParachainLeasedFilter>;
-};
-
-
 export type ParachainAuctionParachainsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -1478,6 +1336,17 @@ export type ParachainAuctionParachainsArgs = {
 };
 
 
+export type ParachainLeasesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ParachainLeasesOrderBy>>;
+  filter?: Maybe<ParachainLeaseFilter>;
+};
+
+
 export type ParachainBidsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -1486,17 +1355,6 @@ export type ParachainBidsArgs = {
   after?: Maybe<Scalars['Cursor']>;
   orderBy?: Maybe<Array<BidsOrderBy>>;
   filter?: Maybe<BidFilter>;
-};
-
-
-export type ParachainWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
 };
 
 
@@ -1512,6 +1370,17 @@ export type ParachainContributionsArgs = {
 
 
 export type ParachainAuctionsByAuctionParachainParachainIdAndAuctionIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<AuctionsOrderBy>>;
+  filter?: Maybe<AuctionFilter>;
+};
+
+
+export type ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1541,28 +1410,6 @@ export type ParachainCrowdloansByBidParachainIdAndFundIdArgs = {
   after?: Maybe<Scalars['Cursor']>;
   orderBy?: Maybe<Array<CrowdloansOrderBy>>;
   filter?: Maybe<CrowdloanFilter>;
-};
-
-
-export type ParachainAuctionsByWinningBlockParachainIdAndAuctionIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<AuctionsOrderBy>>;
-  filter?: Maybe<AuctionFilter>;
-};
-
-
-export type ParachainBidsByWinningBlockParachainIdAndBidIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<BidsOrderBy>>;
-  filter?: Maybe<BidFilter>;
 };
 
 
@@ -1597,12 +1444,12 @@ export type ParachainAuctionsByAuctionParachainParachainIdAndAuctionIdManyToMany
   /** The `Auction` at the end of the edge. */
   node?: Maybe<Auction>;
   /** Reads and enables pagination through a set of `AuctionParachain`. */
-  parachains: AuctionParachainsConnection;
+  auctionParachains: AuctionParachainsConnection;
 };
 
 
 /** A `Auction` edge in the connection, with data from `AuctionParachain`. */
-export type ParachainAuctionsByAuctionParachainParachainIdAndAuctionIdManyToManyEdgeParachainsArgs = {
+export type ParachainAuctionsByAuctionParachainParachainIdAndAuctionIdManyToManyEdgeAuctionParachainsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1648,76 +1495,40 @@ export type ParachainAuctionsByBidParachainIdAndAuctionIdManyToManyEdgeBidsArgs 
   filter?: Maybe<BidFilter>;
 };
 
-/** A connection to a list of `Auction` values, with data from `WinningBlock`. */
-export type ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyConnection = {
-  __typename?: 'ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyConnection';
+/** A connection to a list of `Auction` values, with data from `ParachainLease`. */
+export type ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyConnection = {
+  __typename?: 'ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyConnection';
   /** A list of `Auction` objects. */
   nodes: Array<Maybe<Auction>>;
-  /** A list of edges which contains the `Auction`, info from the `WinningBlock`, and the cursor to aid in pagination. */
-  edges: Array<ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyEdge>;
+  /** A list of edges which contains the `Auction`, info from the `ParachainLease`, and the cursor to aid in pagination. */
+  edges: Array<ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Auction` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-/** A `Auction` edge in the connection, with data from `WinningBlock`. */
-export type ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyEdge = {
-  __typename?: 'ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyEdge';
+/** A `Auction` edge in the connection, with data from `ParachainLease`. */
+export type ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyEdge = {
+  __typename?: 'ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `Auction` at the end of the edge. */
   node?: Maybe<Auction>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
+  /** Reads and enables pagination through a set of `ParachainLease`. */
+  parachainLeases: ParachainLeasesConnection;
 };
 
 
-/** A `Auction` edge in the connection, with data from `WinningBlock`. */
-export type ParachainAuctionsByWinningBlockParachainIdAndAuctionIdManyToManyEdgeWinningBlocksArgs = {
+/** A `Auction` edge in the connection, with data from `ParachainLease`. */
+export type ParachainAuctionsByParachainLeaseParachainIdAndAuctionIdManyToManyEdgeParachainLeasesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
-};
-
-/** A connection to a list of `Bid` values, with data from `WinningBlock`. */
-export type ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyConnection = {
-  __typename?: 'ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyConnection';
-  /** A list of `Bid` objects. */
-  nodes: Array<Maybe<Bid>>;
-  /** A list of edges which contains the `Bid`, info from the `WinningBlock`, and the cursor to aid in pagination. */
-  edges: Array<ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Bid` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Bid` edge in the connection, with data from `WinningBlock`. */
-export type ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyEdge = {
-  __typename?: 'ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Bid` at the end of the edge. */
-  node?: Maybe<Bid>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks: WinningBlocksConnection;
-};
-
-
-/** A `Bid` edge in the connection, with data from `WinningBlock`. */
-export type ParachainBidsByWinningBlockParachainIdAndBidIdManyToManyEdgeWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
+  orderBy?: Maybe<Array<ParachainLeasesOrderBy>>;
+  filter?: Maybe<ParachainLeaseFilter>;
 };
 
 /** A connection to a list of `Crowdloan` values, with data from `Bid`. */
@@ -1777,12 +1588,12 @@ export type ParachainCrowdloansByContributionParachainIdAndFundIdManyToManyEdge 
   /** The `Crowdloan` at the end of the edge. */
   node?: Maybe<Crowdloan>;
   /** Reads and enables pagination through a set of `Contribution`. */
-  contributionsByFundId: ContributionsConnection;
+  contributions: ContributionsConnection;
 };
 
 
 /** A `Crowdloan` edge in the connection, with data from `Contribution`. */
-export type ParachainCrowdloansByContributionParachainIdAndFundIdManyToManyEdgeContributionsByFundIdArgs = {
+export type ParachainCrowdloansByContributionParachainIdAndFundIdManyToManyEdgeContributionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -1820,85 +1631,132 @@ export type ParachainFilter = {
   not?: Maybe<ParachainFilter>;
 };
 
-export type ParachainLeased = Node & {
-  __typename?: 'ParachainLeased';
+export type ParachainLease = Node & {
+  __typename?: 'ParachainLease';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['String'];
+  paraId: Scalars['Int'];
   parachainId: Scalars['String'];
-  firstSlot: Scalars['Int'];
-  lastSlot: Scalars['Int'];
-  blockNum: Scalars['Int'];
-  winningAmount: Scalars['BigFloat'];
+  leaseRange: Scalars['String'];
+  firstLease: Scalars['Int'];
+  lastLease: Scalars['Int'];
+  latestBidAmount: Scalars['BigFloat'];
+  auctionId?: Maybe<Scalars['String']>;
+  activeForAuction?: Maybe<Scalars['String']>;
+  winningAmount?: Maybe<Scalars['BigFloat']>;
+  extraAmount?: Maybe<Scalars['BigFloat']>;
+  wonBidFrom?: Maybe<Scalars['String']>;
+  numBlockWon?: Maybe<Scalars['Int']>;
+  winningResultBlock?: Maybe<Scalars['Int']>;
+  hasWon: Scalars['Boolean'];
   createdAt: Scalars['Datetime'];
   updatedAt: Scalars['Datetime'];
-  /** Reads a single `Parachain` that is related to this `ParachainLeased`. */
+  /** Reads a single `Parachain` that is related to this `ParachainLease`. */
   parachain?: Maybe<Parachain>;
+  /** Reads a single `Auction` that is related to this `ParachainLease`. */
+  auction?: Maybe<Auction>;
 };
 
-/** A filter to be used against `ParachainLeased` object types. All fields are combined with a logical ‘and.’ */
-export type ParachainLeasedFilter = {
+/** A filter to be used against `ParachainLease` object types. All fields are combined with a logical ‘and.’ */
+export type ParachainLeaseFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<StringFilter>;
+  /** Filter by the object’s `paraId` field. */
+  paraId?: Maybe<IntFilter>;
   /** Filter by the object’s `parachainId` field. */
   parachainId?: Maybe<StringFilter>;
-  /** Filter by the object’s `firstSlot` field. */
-  firstSlot?: Maybe<IntFilter>;
-  /** Filter by the object’s `lastSlot` field. */
-  lastSlot?: Maybe<IntFilter>;
-  /** Filter by the object’s `blockNum` field. */
-  blockNum?: Maybe<IntFilter>;
+  /** Filter by the object’s `leaseRange` field. */
+  leaseRange?: Maybe<StringFilter>;
+  /** Filter by the object’s `firstLease` field. */
+  firstLease?: Maybe<IntFilter>;
+  /** Filter by the object’s `lastLease` field. */
+  lastLease?: Maybe<IntFilter>;
+  /** Filter by the object’s `latestBidAmount` field. */
+  latestBidAmount?: Maybe<BigFloatFilter>;
+  /** Filter by the object’s `auctionId` field. */
+  auctionId?: Maybe<StringFilter>;
+  /** Filter by the object’s `activeForAuction` field. */
+  activeForAuction?: Maybe<StringFilter>;
   /** Filter by the object’s `winningAmount` field. */
   winningAmount?: Maybe<BigFloatFilter>;
+  /** Filter by the object’s `extraAmount` field. */
+  extraAmount?: Maybe<BigFloatFilter>;
+  /** Filter by the object’s `wonBidFrom` field. */
+  wonBidFrom?: Maybe<StringFilter>;
+  /** Filter by the object’s `numBlockWon` field. */
+  numBlockWon?: Maybe<IntFilter>;
+  /** Filter by the object’s `winningResultBlock` field. */
+  winningResultBlock?: Maybe<IntFilter>;
+  /** Filter by the object’s `hasWon` field. */
+  hasWon?: Maybe<BooleanFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ParachainLeasedFilter>>;
+  and?: Maybe<Array<ParachainLeaseFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ParachainLeasedFilter>>;
+  or?: Maybe<Array<ParachainLeaseFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ParachainLeasedFilter>;
+  not?: Maybe<ParachainLeaseFilter>;
 };
 
-/** A connection to a list of `ParachainLeased` values. */
-export type ParachainLeasedsConnection = {
-  __typename?: 'ParachainLeasedsConnection';
-  /** A list of `ParachainLeased` objects. */
-  nodes: Array<Maybe<ParachainLeased>>;
-  /** A list of edges which contains the `ParachainLeased` and cursor to aid in pagination. */
-  edges: Array<ParachainLeasedsEdge>;
+/** A connection to a list of `ParachainLease` values. */
+export type ParachainLeasesConnection = {
+  __typename?: 'ParachainLeasesConnection';
+  /** A list of `ParachainLease` objects. */
+  nodes: Array<Maybe<ParachainLease>>;
+  /** A list of edges which contains the `ParachainLease` and cursor to aid in pagination. */
+  edges: Array<ParachainLeasesEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `ParachainLeased` you could get from the connection. */
+  /** The count of *all* `ParachainLease` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-/** A `ParachainLeased` edge in the connection. */
-export type ParachainLeasedsEdge = {
-  __typename?: 'ParachainLeasedsEdge';
+/** A `ParachainLease` edge in the connection. */
+export type ParachainLeasesEdge = {
+  __typename?: 'ParachainLeasesEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ParachainLeased` at the end of the edge. */
-  node?: Maybe<ParachainLeased>;
+  /** The `ParachainLease` at the end of the edge. */
+  node?: Maybe<ParachainLease>;
 };
 
-/** Methods to use when ordering `ParachainLeased`. */
-export enum ParachainLeasedsOrderBy {
+/** Methods to use when ordering `ParachainLease`. */
+export enum ParachainLeasesOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  ParaIdAsc = 'PARA_ID_ASC',
+  ParaIdDesc = 'PARA_ID_DESC',
   ParachainIdAsc = 'PARACHAIN_ID_ASC',
   ParachainIdDesc = 'PARACHAIN_ID_DESC',
-  FirstSlotAsc = 'FIRST_SLOT_ASC',
-  FirstSlotDesc = 'FIRST_SLOT_DESC',
-  LastSlotAsc = 'LAST_SLOT_ASC',
-  LastSlotDesc = 'LAST_SLOT_DESC',
-  BlockNumAsc = 'BLOCK_NUM_ASC',
-  BlockNumDesc = 'BLOCK_NUM_DESC',
+  LeaseRangeAsc = 'LEASE_RANGE_ASC',
+  LeaseRangeDesc = 'LEASE_RANGE_DESC',
+  FirstLeaseAsc = 'FIRST_LEASE_ASC',
+  FirstLeaseDesc = 'FIRST_LEASE_DESC',
+  LastLeaseAsc = 'LAST_LEASE_ASC',
+  LastLeaseDesc = 'LAST_LEASE_DESC',
+  LatestBidAmountAsc = 'LATEST_BID_AMOUNT_ASC',
+  LatestBidAmountDesc = 'LATEST_BID_AMOUNT_DESC',
+  AuctionIdAsc = 'AUCTION_ID_ASC',
+  AuctionIdDesc = 'AUCTION_ID_DESC',
+  ActiveForAuctionAsc = 'ACTIVE_FOR_AUCTION_ASC',
+  ActiveForAuctionDesc = 'ACTIVE_FOR_AUCTION_DESC',
   WinningAmountAsc = 'WINNING_AMOUNT_ASC',
   WinningAmountDesc = 'WINNING_AMOUNT_DESC',
+  ExtraAmountAsc = 'EXTRA_AMOUNT_ASC',
+  ExtraAmountDesc = 'EXTRA_AMOUNT_DESC',
+  WonBidFromAsc = 'WON_BID_FROM_ASC',
+  WonBidFromDesc = 'WON_BID_FROM_DESC',
+  NumBlockWonAsc = 'NUM_BLOCK_WON_ASC',
+  NumBlockWonDesc = 'NUM_BLOCK_WON_DESC',
+  WinningResultBlockAsc = 'WINNING_RESULT_BLOCK_ASC',
+  WinningResultBlockDesc = 'WINNING_RESULT_BLOCK_DESC',
+  HasWonAsc = 'HAS_WON_ASC',
+  HasWonDesc = 'HAS_WON_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
@@ -1980,14 +1838,10 @@ export type Query = Node & {
   crowdloanSequences?: Maybe<CrowdloanSequencesConnection>;
   /** Reads and enables pagination through a set of `Crowdloan`. */
   crowdloans?: Maybe<CrowdloansConnection>;
-  /** Reads and enables pagination through a set of `ParachainLeased`. */
-  parachainLeaseds?: Maybe<ParachainLeasedsConnection>;
+  /** Reads and enables pagination through a set of `ParachainLease`. */
+  parachainLeases?: Maybe<ParachainLeasesConnection>;
   /** Reads and enables pagination through a set of `Parachain`. */
   parachains?: Maybe<ParachainsConnection>;
-  /** Reads and enables pagination through a set of `Subquery`. */
-  subqueries?: Maybe<SubqueriesConnection>;
-  /** Reads and enables pagination through a set of `WinningBlock`. */
-  winningBlocks?: Maybe<WinningBlocksConnection>;
   auctionParachain?: Maybe<AuctionParachain>;
   auction?: Maybe<Auction>;
   bid?: Maybe<Bid>;
@@ -1995,11 +1849,8 @@ export type Query = Node & {
   contribution?: Maybe<Contribution>;
   crowdloanSequence?: Maybe<CrowdloanSequence>;
   crowdloan?: Maybe<Crowdloan>;
-  parachainLeased?: Maybe<ParachainLeased>;
+  parachainLease?: Maybe<ParachainLease>;
   parachain?: Maybe<Parachain>;
-  subquery?: Maybe<Subquery>;
-  subqueryByName?: Maybe<Subquery>;
-  winningBlock?: Maybe<WinningBlock>;
   /** Reads a single `AuctionParachain` using its globally unique `ID`. */
   auctionParachainByNodeId?: Maybe<AuctionParachain>;
   /** Reads a single `Auction` using its globally unique `ID`. */
@@ -2014,14 +1865,11 @@ export type Query = Node & {
   crowdloanSequenceByNodeId?: Maybe<CrowdloanSequence>;
   /** Reads a single `Crowdloan` using its globally unique `ID`. */
   crowdloanByNodeId?: Maybe<Crowdloan>;
-  /** Reads a single `ParachainLeased` using its globally unique `ID`. */
-  parachainLeasedByNodeId?: Maybe<ParachainLeased>;
+  /** Reads a single `ParachainLease` using its globally unique `ID`. */
+  parachainLeaseByNodeId?: Maybe<ParachainLease>;
   /** Reads a single `Parachain` using its globally unique `ID`. */
   parachainByNodeId?: Maybe<Parachain>;
-  /** Reads a single `Subquery` using its globally unique `ID`. */
-  subqueryByNodeId?: Maybe<Subquery>;
-  /** Reads a single `WinningBlock` using its globally unique `ID`. */
-  winningBlockByNodeId?: Maybe<WinningBlock>;
+  _metadata?: Maybe<_Metadata>;
 };
 
 
@@ -2116,14 +1964,14 @@ export type QueryCrowdloansArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryParachainLeasedsArgs = {
+export type QueryParachainLeasesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ParachainLeasedsOrderBy>>;
-  filter?: Maybe<ParachainLeasedFilter>;
+  orderBy?: Maybe<Array<ParachainLeasesOrderBy>>;
+  filter?: Maybe<ParachainLeaseFilter>;
 };
 
 
@@ -2136,30 +1984,6 @@ export type QueryParachainsArgs = {
   after?: Maybe<Scalars['Cursor']>;
   orderBy?: Maybe<Array<ParachainsOrderBy>>;
   filter?: Maybe<ParachainFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QuerySubqueriesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<SubqueriesOrderBy>>;
-  filter?: Maybe<SubqueryFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWinningBlocksArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<WinningBlocksOrderBy>>;
-  filter?: Maybe<WinningBlockFilter>;
 };
 
 
@@ -2206,31 +2030,13 @@ export type QueryCrowdloanArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryParachainLeasedArgs = {
+export type QueryParachainLeaseArgs = {
   id: Scalars['String'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParachainArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QuerySubqueryArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QuerySubqueryByNameArgs = {
-  name: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWinningBlockArgs = {
   id: Scalars['String'];
 };
 
@@ -2278,25 +2084,13 @@ export type QueryCrowdloanByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryParachainLeasedByNodeIdArgs = {
+export type QueryParachainLeaseByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParachainByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QuerySubqueryByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWinningBlockByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -2378,193 +2172,15 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: Maybe<Scalars['String']>;
 };
 
-/** A connection to a list of `Subquery` values. */
-export type SubqueriesConnection = {
-  __typename?: 'SubqueriesConnection';
-  /** A list of `Subquery` objects. */
-  nodes: Array<Maybe<Subquery>>;
-  /** A list of edges which contains the `Subquery` and cursor to aid in pagination. */
-  edges: Array<SubqueriesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Subquery` you could get from the connection. */
-  totalCount: Scalars['Int'];
+export type _Metadata = {
+  __typename?: '_Metadata';
+  lastProcessedHeight?: Maybe<Scalars['Int']>;
+  lastProcessedTimestamp?: Maybe<Scalars['Date']>;
+  targetHeight?: Maybe<Scalars['Int']>;
+  chain?: Maybe<Scalars['String']>;
+  specName?: Maybe<Scalars['String']>;
+  genesisHash?: Maybe<Scalars['String']>;
+  indexerHealthy?: Maybe<Scalars['Boolean']>;
+  indexerNodeVersion?: Maybe<Scalars['String']>;
+  queryNodeVersion?: Maybe<Scalars['String']>;
 };
-
-/** A `Subquery` edge in the connection. */
-export type SubqueriesEdge = {
-  __typename?: 'SubqueriesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Subquery` at the end of the edge. */
-  node?: Maybe<Subquery>;
-};
-
-/** Methods to use when ordering `Subquery`. */
-export enum SubqueriesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  DbSchemaAsc = 'DB_SCHEMA_ASC',
-  DbSchemaDesc = 'DB_SCHEMA_DESC',
-  VersionAsc = 'VERSION_ASC',
-  VersionDesc = 'VERSION_DESC',
-  HashAsc = 'HASH_ASC',
-  HashDesc = 'HASH_DESC',
-  NextBlockHeightAsc = 'NEXT_BLOCK_HEIGHT_ASC',
-  NextBlockHeightDesc = 'NEXT_BLOCK_HEIGHT_DESC',
-  NetworkAsc = 'NETWORK_ASC',
-  NetworkDesc = 'NETWORK_DESC',
-  NetworkGenesisAsc = 'NETWORK_GENESIS_ASC',
-  NetworkGenesisDesc = 'NETWORK_GENESIS_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-export type Subquery = Node & {
-  __typename?: 'Subquery';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  dbSchema: Scalars['String'];
-  version: Scalars['Int'];
-  hash: Scalars['String'];
-  nextBlockHeight: Scalars['Int'];
-  network?: Maybe<Scalars['String']>;
-  networkGenesis?: Maybe<Scalars['String']>;
-  createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
-};
-
-/** A filter to be used against `Subquery` object types. All fields are combined with a logical ‘and.’ */
-export type SubqueryFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `dbSchema` field. */
-  dbSchema?: Maybe<StringFilter>;
-  /** Filter by the object’s `version` field. */
-  version?: Maybe<IntFilter>;
-  /** Filter by the object’s `hash` field. */
-  hash?: Maybe<StringFilter>;
-  /** Filter by the object’s `nextBlockHeight` field. */
-  nextBlockHeight?: Maybe<IntFilter>;
-  /** Filter by the object’s `network` field. */
-  network?: Maybe<StringFilter>;
-  /** Filter by the object’s `networkGenesis` field. */
-  networkGenesis?: Maybe<StringFilter>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<SubqueryFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<SubqueryFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<SubqueryFilter>;
-};
-
-export type WinningBlock = Node & {
-  __typename?: 'WinningBlock';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['String'];
-  auctionId: Scalars['String'];
-  parachainId: Scalars['String'];
-  blockNum: Scalars['Int'];
-  bidId: Scalars['String'];
-  firstSlot: Scalars['Int'];
-  lastSlot: Scalars['Int'];
-  createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
-  /** Reads a single `Auction` that is related to this `WinningBlock`. */
-  auction?: Maybe<Auction>;
-  /** Reads a single `Parachain` that is related to this `WinningBlock`. */
-  parachain?: Maybe<Parachain>;
-  /** Reads a single `Bid` that is related to this `WinningBlock`. */
-  bid?: Maybe<Bid>;
-};
-
-/** A filter to be used against `WinningBlock` object types. All fields are combined with a logical ‘and.’ */
-export type WinningBlockFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<StringFilter>;
-  /** Filter by the object’s `auctionId` field. */
-  auctionId?: Maybe<StringFilter>;
-  /** Filter by the object’s `parachainId` field. */
-  parachainId?: Maybe<StringFilter>;
-  /** Filter by the object’s `blockNum` field. */
-  blockNum?: Maybe<IntFilter>;
-  /** Filter by the object’s `bidId` field. */
-  bidId?: Maybe<StringFilter>;
-  /** Filter by the object’s `firstSlot` field. */
-  firstSlot?: Maybe<IntFilter>;
-  /** Filter by the object’s `lastSlot` field. */
-  lastSlot?: Maybe<IntFilter>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<WinningBlockFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<WinningBlockFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<WinningBlockFilter>;
-};
-
-/** A connection to a list of `WinningBlock` values. */
-export type WinningBlocksConnection = {
-  __typename?: 'WinningBlocksConnection';
-  /** A list of `WinningBlock` objects. */
-  nodes: Array<Maybe<WinningBlock>>;
-  /** A list of edges which contains the `WinningBlock` and cursor to aid in pagination. */
-  edges: Array<WinningBlocksEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `WinningBlock` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `WinningBlock` edge in the connection. */
-export type WinningBlocksEdge = {
-  __typename?: 'WinningBlocksEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `WinningBlock` at the end of the edge. */
-  node?: Maybe<WinningBlock>;
-};
-
-/** Methods to use when ordering `WinningBlock`. */
-export enum WinningBlocksOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  AuctionIdAsc = 'AUCTION_ID_ASC',
-  AuctionIdDesc = 'AUCTION_ID_DESC',
-  ParachainIdAsc = 'PARACHAIN_ID_ASC',
-  ParachainIdDesc = 'PARACHAIN_ID_DESC',
-  BlockNumAsc = 'BLOCK_NUM_ASC',
-  BlockNumDesc = 'BLOCK_NUM_DESC',
-  BidIdAsc = 'BID_ID_ASC',
-  BidIdDesc = 'BID_ID_DESC',
-  FirstSlotAsc = 'FIRST_SLOT_ASC',
-  FirstSlotDesc = 'FIRST_SLOT_DESC',
-  LastSlotAsc = 'LAST_SLOT_ASC',
-  LastSlotDesc = 'LAST_SLOT_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
