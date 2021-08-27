@@ -1,7 +1,11 @@
 <script lang=ts>
 import {validateEmail} from './utils'
-import {POST, GET} from './fetch-service'
+import {POST} from './fetch-service'
+
 export let isCompact = false;
+
+const {EMAIL_GATEWAY} = process.env
+console.log('EMAIL_GATEWAY', EMAIL_GATEWAY)
 let email = "";
 let subscribeSuccess = false;
 let subscribeError = ""
@@ -9,19 +13,13 @@ let subscribeError = ""
 const handleOnSubscribe = async () => {
 	subscribeSuccess=false
 	subscribeError=null
-    console.log('validateEmail', validateEmail(email))
+
     if(!email || !validateEmail(email)){
 		subscribeError = "Enter a valid email address."
 		return;
 	}
 
-	const getData = await GET("https://gorest.co.in/public/v1/users")
-	console.log('getData', getData.data)
-	const random = Math.random()
-	const body = {name:`Tenali-${random}${Date.now()}`, gender:"male", email:`Tenali-${random}${Date.now()}@test.io`, status:"active"}
-	const headerOptions = {Authorization: "Bearer 6efe3da88f56f9fa04eab32aa17eb9208154dd3422c231317a07ab0580037267"}
-	const {data, error, ok} = await POST("https://gorest.co.in/public/v1/users", body, headerOptions)
-	// const {data, error, ok} = await GET("https://gorest.co.in/public/v1/users")
+	const {data, error, ok} = await POST(EMAIL_GATEWAY, {email})
 	if(ok){
 	  subscribeSuccess = true
 	  console.log("handleOnSubscribe",data)

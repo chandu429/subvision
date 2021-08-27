@@ -156,6 +156,5 @@ export const gatherCombination = (sortedLease: Lease[]): GroupedLeaseSeries[] =>
 };
 
 export function validateEmail(email) {
-  console.log('email', email);
   return /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(email);
 }
