@@ -27,7 +27,7 @@ jobs:
           npm run build
         env:
           STAGE: rococo
-		  EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
+	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
 
       - name: Deploy to dev - rococo
         if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
@@ -47,7 +47,7 @@ jobs:
           npm run build
         env:
           STAGE: kusama
-		  EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
+	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
 
       - name: Deploy to dev - kusama
         if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
@@ -79,7 +79,7 @@ jobs:
           npm run build
         env:
           STAGE: rococo
-		  EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
+	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
 
       - name: Deploy to prod - rococo
         if: github.event.inputs.environment == 'prod'
@@ -99,7 +99,7 @@ jobs:
           npm run build
         env:
           STAGE: kusama
-		  EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
+	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
 
       - name: Deploy to prod - kusama
         if: github.event.inputs.environment == 'prod'
