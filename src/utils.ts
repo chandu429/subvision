@@ -154,3 +154,7 @@ export const gatherCombination = (sortedLease: Lease[]): GroupedLeaseSeries[] =>
     return all.concat(group);
   }, [] as GroupedLeaseSeries[]);
 };
+
+export function validateEmail(email) {
+  return /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(email);
+}
