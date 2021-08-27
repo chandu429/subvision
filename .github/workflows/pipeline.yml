@@ -8,7 +8,7 @@ on:
         required: true
   push:
     branches:
-    - main
+      - main
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -23,11 +23,10 @@ jobs:
 
       - name: Build for development - rococo
         if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
-        run:
-          npm run build
+        run: npm run build
         env:
           STAGE: rococo
-	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
 
       - name: Deploy to dev - rococo
         if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
@@ -43,11 +42,10 @@ jobs:
 
       - name: Build for development - kusama
         if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
-        run:
-          npm run build
+        run: npm run build
         env:
           STAGE: kusama
-	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_DEV_EMAIL_GATEWAY }}
 
       - name: Deploy to dev - kusama
         if: ${{ github.event.inputs.environment == 'dev' || !github.event.inputs.environment }}
@@ -75,11 +73,10 @@ jobs:
 
       - name: Build for production - rococo
         if: github.event.inputs.environment == 'prod'
-        run:
-          npm run build
+        run: npm run build
         env:
           STAGE: rococo
-	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
 
       - name: Deploy to prod - rococo
         if: github.event.inputs.environment == 'prod'
@@ -95,11 +92,10 @@ jobs:
 
       - name: Build for production - kusama
         if: github.event.inputs.environment == 'prod'
-        run:
-          npm run build
+        run: npm run build
         env:
           STAGE: kusama
-	  EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
+          EMAIL_GATEWAY: ${{ secrets.LAMBDA_PROD_EMAIL_GATEWAY }}
 
       - name: Deploy to prod - kusama
         if: github.event.inputs.environment == 'prod'
