@@ -91,7 +91,7 @@ const handleOnSubscribe = async () => {
 		{#if subscribeError}
 		<p class="text-sm text-red-400">{subscribeError}</p>
 		{/if}
-	</div>>
+	</div>
   </div>
 </div>
 {/if}

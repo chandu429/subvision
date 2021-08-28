@@ -1,9 +1,10 @@
 overwrite: true
-schema: "http://localhost:3000"
+# schema: "http://localhost:3000"
+schema: 'https://api.subquery.network/sq/subvis-io/kusama-auction'
 generates:
   src/generated/graphql.ts:
     plugins:
-      - "typescript"
+      - 'typescript'
   ./graphql.schema.json:
     plugins:
-      - "introspection"
+      - 'introspection'
