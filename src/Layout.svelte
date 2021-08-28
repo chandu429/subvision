@@ -1,12 +1,15 @@
 <script>
-import MobileMenu from "./MobileMenu.svelte";
-import MediaQuery from './MediaQuery.svelte';
-import { timeStr, lastBlockNum, curLease, curAuction } from './stores.ts';
-import EmailSubscriptionPanel from "./EmailSubscriptionPanel.svelte";
+  import MobileMenu from './MobileMenu.svelte';
+  import MediaQuery from './MediaQuery.svelte';
+  import { timeStr, lastBlockNum, curLease, curAuction } from './stores.ts';
+  import EmailSubscriptionPanel from './EmailSubscriptionPanel.svelte';
+  import { useNavigate } from 'svelte-navigator';
 
+  const navigate = useNavigate();
 </script>
+
 <div>
-  <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
+  <MediaQuery query="(max-width: 600px)" let:matches="{isMobile}">
     {#if isMobile}
       <div class="mobile-menu">
         <slot name="mobile-menu">
@@ -23,7 +26,7 @@ import EmailSubscriptionPanel from "./EmailSubscriptionPanel.svelte";
           <div class="text-xs">Block: {$lastBlockNum || 'N/A'}</div>
         </div>
       </div>
-      <EmailSubscriptionPanel/>
+      <EmailSubscriptionPanel />
     {/if}
   </MediaQuery>
   <div class="flex">
@@ -37,9 +40,8 @@ import EmailSubscriptionPanel from "./EmailSubscriptionPanel.svelte";
   </div>
   <footer class="flex flex-wrap items-center justify-between pt-4 m-auto">
     <div class="container mx-auto flex flex-col flex-wrap items-center justify-between">
-      <div class="text-white">
-        Subvis.io © 2021
-      </div>
+      <div class="text-white"><button on:click="{() => navigate('/private-policy')}"> Private Policy </button></div>
+      <div class="text-white"> Subvis.io © 2021 </div>
     </div>
   </footer>
 </div>

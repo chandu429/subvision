@@ -44,6 +44,7 @@
     "graphql": "^15.5.0",
     "lodash-es": "^4.17.21",
     "sirv-cli": "^1.0.0",
-    "svelte-apollo": "^0.4.0"
+    "svelte-apollo": "^0.4.0",
+    "svelte-pdf": "^1.0.9"
   }
 }
