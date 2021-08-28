@@ -5,6 +5,7 @@
   import AuctionPage from './AuctionPage.svelte';
   import CrowdloanPage from './CrowdloanPage.svelte';
   import ContributorPage from './ContributorPage.svelte';
+  import PrivatePolicyPage from './PrivatePolicy.svelte';
   import Tailwind from './Tailwind.svelte';
   import { initClient } from '@urql/svelte';
   import { config } from './constants';
@@ -14,7 +15,6 @@
   import { normalize } from './utils';
   import { chronicle } from './stores';
   import Placeholder from './Placeholder.svelte';
-
 
   initClient({
     url: config.endpoint
@@ -29,45 +29,49 @@
     if (!timer) {
       timer = setInterval(() => {
         chronicleOps.update((origin) => {
-          origin.context = {...origin.context, timeFlag: Math.random()}
-        })
+          origin.context = { ...origin.context, timeFlag: Math.random() };
+        });
       }, 2500);
     }
 
     return () => {
       clearInterval(timer);
       timer = 0;
-    }
+    };
   });
 
   $: {
     const { chronicle: curChronicle } = normalize($chronicleOps.data) || {};
     if (curChronicle) {
-      chronicle.set(curChronicle)
+      chronicle.set(curChronicle);
     }
   }
-
 </script>
 
 <Tailwind />
 
-<Router >
+<Router>
   <main class="main">
     <Layout>
       <div slot="side-menu"><SideMenu /></div>
       <div slot="content">
-        <Route path="/" component={AuctionPage} />
-        <Route path="/crowdloan" component={CrowdloanPage} />
+        <Route path="/" component="{AuctionPage}" />
+        <Route path="/crowdloan" component="{CrowdloanPage}" />
         <Route path="/crowdloan/:id" let:params>
-          <ContributorPage fundId={params.id} path={params}/>
+          <ContributorPage fundId="{params.id}" path="{params}" />
         </Route>
-        <Route path="/*" component={Placeholder} />
+        <Route path="/private-policy" component="{PrivatePolicyPage}" />
+        <Route path="/*" component="{Placeholder}" />
       </div>
     </Layout>
   </main>
 </Router>
 <!-- Google Tag Manager (noscript) -->
 <noscript>
-  <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5MK662" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  <iframe
+    src="https://www.googletagmanager.com/ns.html?id=GTM-P5MK662"
+    height="0"
+    width="0"
+    style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
