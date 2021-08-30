@@ -7,6 +7,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import strip from '@rollup/plugin-strip';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -70,7 +71,10 @@ export default {
     }),
     !production && serve(),
     !production && livereload('public'),
-    production && terser()
+    production && terser(),
+    strip({
+      include: '**/*.(mjs|js|ts|svelte)'
+    })
   ],
   watch: {
     clearScreen: false

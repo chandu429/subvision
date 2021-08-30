@@ -15,6 +15,7 @@
     "@graphql-codegen/typescript": "1.22.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-strip": "^2.1.0",
     "@rollup/plugin-typescript": "^8.1.0",
     "@tsconfig/svelte": "^1.0.0",
     "@types/node": "^15.0.3",
