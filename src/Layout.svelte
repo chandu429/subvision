@@ -40,7 +40,7 @@
   </div>
   <footer class="flex flex-wrap items-center justify-between pt-4 m-auto">
     <div class="container mx-auto flex flex-col flex-wrap items-center justify-between">
-      <div class="text-white"><button on:click="{() => navigate('/private-policy')}"> Private Policy </button></div>
+      <div class="text-white"><button on:click="{() => navigate('/privacy-policy')}"> Privacy Policy </button></div>
       <div class="text-white"> Subvis.io © 2021 </div>
     </div>
   </footer>
