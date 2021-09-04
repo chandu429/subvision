@@ -3,7 +3,6 @@ query {
   chronicle(id: "ChronicleKey"){
     curAuctionId
     curBlockNum
-    updatedAt
     curLease
     curLeaseStart
     curLeaseEnd

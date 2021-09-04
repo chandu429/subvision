@@ -60,7 +60,7 @@
         <Route path="/crowdloan/:id" let:params>
           <ContributorPage fundId="{params.id}" path="{params}" />
         </Route>
-        <Route path="/private-policy" component="{PrivatePolicyPage}" />
+        <Route path="/privacy-policy" component="{PrivatePolicyPage}" />
         <Route path="/*" component="{Placeholder}" />
       </div>
     </Layout>
