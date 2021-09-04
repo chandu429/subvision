@@ -3,27 +3,32 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-    
+
     <title>Subvisio</title>
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.svg" />
     <link rel="stylesheet" href="/build/bundle.css" />
     <link rel="stylesheet" href="/theme.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
     <script defer src="/build/bundle.js"></script>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-P5MK662');</script>
-      <!-- End Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-P5MK662');
+    </script>
+    <!-- End Google Tag Manager -->
   </head>
 
-  <body>
-
-  </body>
+  <body> </body>
 
   <style>
     @media (max-width: 600px) {
@@ -33,80 +38,78 @@
       }
     }
 
-  .progress-text {
-    position: absolute;
-    color: white;
-    top: 0;
-    z-index: 2;
-  }
-  .meter {
-    box-sizing: content-box;
-    height: 14px;
-    position: relative;
-    background: #bbb;
-    border-radius: 4px;
-    padding: 1px;
-    width: 220px;
-  }
-
-  .meter > span {
-    display: block;
-    height: 100%;
-    border-radius: 4px;
-    background-color: rgb(28, 63, 170);
-    background-image: linear-gradient(
-      center bottom,
-      rgb(28, 63, 170) 37%,
-      rgb(255, 255, 255) 69%
-    );
-    position: relative;
-    overflow: hidden;
-  }
-  .meter > span:after,
-  .animate > span {
-    content: "";
-    position: absolute;
-    top: 0px;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-image: linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, 0.2) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.2) 50%,
-      rgba(255, 255, 255, 0.2) 75%,
-      transparent 75%,
-      transparent
-    );
-    z-index: 1;
-    background-size: 50px 50px;
-    animation: move 2s linear infinite;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .animate > span:after {
-    display: none;
-  }
-
-  .orange > span {
-    background-image: linear-gradient(#f1a165, #f36d0a);
-  }
-
-
-  @keyframes move {
-    0% {
-      background-position: 0 0;
+    .progress-text {
+      position: absolute;
+      color: white;
+      top: 0;
+      z-index: 2;
     }
-    100% {
-      background-position: 50px 50px;
+    .meter {
+      box-sizing: content-box;
+      height: 14px;
+      position: relative;
+      background: #bbb;
+      border-radius: 4px;
+      padding: 1px;
+      width: 220px;
     }
-  }
-  
-  :focus {outline:none !important; } ::-moz-focus-inner {border:0;}
 
+    .meter > span {
+      display: block;
+      height: 100%;
+      border-radius: 4px;
+      background-color: rgb(28, 63, 170);
+      background-image: linear-gradient(center bottom, rgb(28, 63, 170) 37%, rgb(255, 255, 255) 69%);
+      position: relative;
+      overflow: hidden;
+    }
+    .meter > span:after,
+    .animate > span {
+      content: '';
+      position: absolute;
+      top: 0px;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        transparent 75%,
+        transparent
+      );
+      z-index: 1;
+      background-size: 50px 50px;
+      animation: move 2s linear infinite;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .animate > span:after {
+      display: none;
+    }
+
+    .orange > span {
+      background-image: linear-gradient(#f1a165, #f36d0a);
+    }
+
+    @keyframes move {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 50px 50px;
+      }
+    }
+
+    :focus {
+      outline: none !important;
+    }
+    ::-moz-focus-inner {
+      border: 0;
+    }
   </style>
-  
 </html>
