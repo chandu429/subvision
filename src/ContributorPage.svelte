@@ -134,14 +134,14 @@
                     <div>
                       <Token allowZero={true} value={contribution.amount} />
                     </div>
-                    <div class="text-xs text-gray-600">{Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%</div>
+                    <div class="text-xs text-gray-600">{!fund.raised || fund.raised === "0" ? "-" : `${Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%`}</div>
                   </div>
                 </div>
               </div>
             {/each}
             <div class="mb-4 border-t border-grey-200 px-3 py-2 flex flex-1 justify-between">
               <div class="text-right text-sm">
-                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev" 
+                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev"
                   on:click={() => {
                       $contributionsOps.variables.before = pageInfo.startCursor
                       $contributionsOps.variables.after = ""
@@ -216,7 +216,7 @@
                   <tr class="odd:bg-gray-100">
                     <td class="border-b dark:border-dark-5">{contribution.account}</td>
                     <td class="border-b dark:border-dark-5 text-right"><Token allowZero={true} value={contribution.amount} /></td>
-                    <td class="border-b dark:border-dark-5 text-right">{Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%</td>
+                    <td class="border-b dark:border-dark-5 text-right">{!fund.raised || fund.raised === "0" ? "-" : `${Big(contribution.amount).div(fund.raised).times(100).toFixed(4)}%`}</td>
                     <td class="border-b dark:border-dark-5 text-right">
                       <div class="text-right">Block: {contribution.blockNum}</div>
                       <div class="text-right">{new Date(contribution.createdAt).toLocaleTimeString()} {new Date(contribution.createdAt).toLocaleDateString()}</div>
@@ -233,7 +233,7 @@
             </div>
             <div class="border-t border-grey-200 px-6 py-4 flex flex-1 justify-between">
               <div class="text-right">
-                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev" 
+                <button class="btn disabled:opacity-50" type="button" role="button" aria-label="Prev Page" title="Prev Page" data-page="prev"
                   on:click={() => {
                       $contributionsOps.variables.before = pageInfo.startCursor
                       $contributionsOps.variables.after = ""
@@ -262,7 +262,7 @@
 
 <style>
   .bg-color-odd {
-    background-color: #fffeee; 
+    background-color: #fffeee;
   }
   .bg-color-even {
     background-color: #fff;

@@ -116,13 +116,13 @@ query {
   crowdloans(orderBy: RAISED_DESC) {
     nodes {
       id
-      parachain {
+	  parachain{
         paraId
         manager
-        contributions {
-          totalCount
-        }
       }
+	 contributions {
+		totalCount
+	  }
       depositor
       verifier
       status

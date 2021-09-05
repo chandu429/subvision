@@ -46,7 +46,6 @@
         : selectedStatus === 'Retired'
           ? loan.status === 'Retiring' || loan.status === 'Dissolved'
           : false);
-  
 
 </script>
 
@@ -89,10 +88,10 @@
                 <div class="text-xs text-gray-400">Lease</div>
                 <div class="text-lg">{crowdloan.firstSlot} - {crowdloan.lastSlot}</div>
               </div>
-              
+
               <div class="text-right">
                 <div class="text-xs  text-gray-400">Contributions</div>
-                <div class="text-lg">{(crowdloan.parachain.contributions?.totalCount || 0).toLocaleString()}</div>
+                <div class="text-lg">{(crowdloan.contributions?.totalCount || 0).toLocaleString()}</div>
               </div>
             </div>
             <div class="flex justify-between mt-1">
@@ -140,7 +139,7 @@
                     <div class="text-right">{((crowdloan.raised / crowdloan.cap) * 100).toFixed(2)}%</div>
                   </td>
                   <td>
-                    <div class="text-right">{crowdloan.parachain.contributions?.totalCount || 0}</div>
+                    <div class="text-right">{crowdloan.contributions?.totalCount || 0}</div>
                   </td>
                   <td class="">
                     <div class="text-right">Block: {crowdloan.lockExpiredBlock}</div>
