@@ -68,13 +68,20 @@
 
 
   $: latestBids = $curAuction ? orderBy([].concat($curAuction.latestBids), ['createdAt'], ['desc']).slice(0, 10) : [];
-  $: latestWinner = orderBy(slotLeases, ['closingEnd'], ['desc']).filter(({ closingEnd }) => $lastBlockNum - closingEnd <= 43200 )[0];
-  
+  $: latestWinner = orderBy(slotLeases, ['auction.closingEnd'], ['desc']).filter(({ auction }) => $lastBlockNum - auction.closingEnd <= 43200 )[0];
+  $: {
+	console.log('Auction-page: curAuction', curAuction.latestBids);
+    console.log('Auction-page: slotLeases', slotLeases);
+    console.log('Auction-page: latestBids', latestBids);
+    console.log('Auction-page: latestWinner', latestWinner)
+  }
+//   $: latestWinner = orderBy(slotLeases, ['closingEnd'], ['desc']).filter(({ closingEnd }) => $lastBlockNum - closingEnd <= 43200 )[0];
+
 </script>
 
 
 <div class="content">
-  
+
   <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
     {#if !isMobile}
       <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Auction' }]}/>
@@ -82,8 +89,8 @@
     {/if}
   </MediaQuery>
 
-  
-  
+
+
   {#if $activeAuctions.fetching && initFetch}
     <Loading />
   {:else}

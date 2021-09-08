@@ -45,6 +45,9 @@ query ($auctionStatusFilter: AuctionFilter) {
       parachain {
         ...parachainFields
       }
+	  auction {
+		closingEnd
+	  }
       auctionId
       winningResultBlock
       firstLease

@@ -26,7 +26,7 @@ export let paraId, winningAmount, firstLease, lastLease;
         <div class="text-base">{firstLease} - {lastLease}</div>
       </div>
       <div class="flex flex-col text-center my-1">
-        <div class="text-xs text-gray-600">Winnig Amount</div>
+        <div class="text-xs text-gray-600">Winning Amount</div>
         <div class="text-base">
           <Token value={winningAmount} />
         </div>
