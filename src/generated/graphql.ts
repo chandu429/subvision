@@ -37,8 +37,6 @@ export type Auction = Node & {
   closingEnd: Scalars['Int'];
   resultBlock?: Maybe<Scalars['Int']>;
   ongoing: Scalars['Boolean'];
-  createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
   /** Reads and enables pagination through a set of `Chronicle`. */
   chroniclesByCurAuctionId: ChroniclesConnection;
   /** Reads and enables pagination through a set of `AuctionParachain`. */
@@ -205,10 +203,6 @@ export type AuctionFilter = {
   resultBlock?: Maybe<IntFilter>;
   /** Filter by the object’s `ongoing` field. */
   ongoing?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AuctionFilter>>;
   /** Checks for any expressions in this list. */
@@ -228,7 +222,6 @@ export type AuctionParachain = Node & {
   createdAt: Scalars['Datetime'];
   firstSlot: Scalars['Int'];
   lastSlot: Scalars['Int'];
-  updatedAt: Scalars['Datetime'];
   /** Reads a single `Auction` that is related to this `AuctionParachain`. */
   auction?: Maybe<Auction>;
   /** Reads a single `Parachain` that is related to this `AuctionParachain`. */
@@ -251,8 +244,6 @@ export type AuctionParachainFilter = {
   firstSlot?: Maybe<IntFilter>;
   /** Filter by the object’s `lastSlot` field. */
   lastSlot?: Maybe<IntFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AuctionParachainFilter>>;
   /** Checks for any expressions in this list. */
@@ -408,8 +399,6 @@ export enum AuctionParachainsOrderBy {
   FirstSlotDesc = 'FIRST_SLOT_DESC',
   LastSlotAsc = 'LAST_SLOT_ASC',
   LastSlotDesc = 'LAST_SLOT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -461,10 +450,6 @@ export enum AuctionsOrderBy {
   ResultBlockDesc = 'RESULT_BLOCK_DESC',
   OngoingAsc = 'ONGOING_ASC',
   OngoingDesc = 'ONGOING_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -485,7 +470,6 @@ export type Bid = Node & {
   lastSlot: Scalars['Int'];
   bidder?: Maybe<Scalars['String']>;
   createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
   /** Reads a single `Auction` that is related to this `Bid`. */
   auction?: Maybe<Auction>;
   /** Reads a single `Parachain` that is related to this `Bid`. */
@@ -520,8 +504,6 @@ export type BidFilter = {
   bidder?: Maybe<StringFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<BidFilter>>;
   /** Checks for any expressions in this list. */
@@ -579,8 +561,6 @@ export enum BidsOrderBy {
   BidderDesc = 'BIDDER_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -648,8 +628,6 @@ export type Chronicle = Node & {
   curLease?: Maybe<Scalars['Int']>;
   curLeaseStart?: Maybe<Scalars['Int']>;
   curLeaseEnd?: Maybe<Scalars['Int']>;
-  createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
   /** Reads a single `Auction` that is related to this `Chronicle`. */
   curAuction?: Maybe<Auction>;
   /** Reads and enables pagination through a set of `Parachain`. */
@@ -681,10 +659,6 @@ export type ChronicleFilter = {
   curLeaseStart?: Maybe<IntFilter>;
   /** Filter by the object’s `curLeaseEnd` field. */
   curLeaseEnd?: Maybe<IntFilter>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ChronicleFilter>>;
   /** Checks for any expressions in this list. */
@@ -730,10 +704,6 @@ export enum ChroniclesOrderBy {
   CurLeaseStartDesc = 'CUR_LEASE_START_DESC',
   CurLeaseEndAsc = 'CUR_LEASE_END_ASC',
   CurLeaseEndDesc = 'CUR_LEASE_END_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -749,7 +719,6 @@ export type Contribution = Node & {
   amount: Scalars['BigFloat'];
   blockNum: Scalars['Int'];
   createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
   /** Reads a single `Parachain` that is related to this `Contribution`. */
   parachain?: Maybe<Parachain>;
   /** Reads a single `Crowdloan` that is related to this `Contribution`. */
@@ -772,8 +741,6 @@ export type ContributionFilter = {
   blockNum?: Maybe<IntFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ContributionFilter>>;
   /** Checks for any expressions in this list. */
@@ -821,8 +788,6 @@ export enum ContributionsOrderBy {
   BlockNumDesc = 'BLOCK_NUM_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -1077,7 +1042,6 @@ export type CrowdloanSequence = Node & {
   curIndex: Scalars['Int'];
   createdAt: Scalars['Datetime'];
   blockNum: Scalars['Int'];
-  updatedAt: Scalars['Datetime'];
 };
 
 /** A filter to be used against `CrowdloanSequence` object types. All fields are combined with a logical ‘and.’ */
@@ -1090,8 +1054,6 @@ export type CrowdloanSequenceFilter = {
   createdAt?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `blockNum` field. */
   blockNum?: Maybe<IntFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<CrowdloanSequenceFilter>>;
   /** Checks for any expressions in this list. */
@@ -1133,8 +1095,6 @@ export enum CrowdloanSequencesOrderBy {
   CreatedAtDesc = 'CREATED_AT_DESC',
   BlockNumAsc = 'BLOCK_NUM_ASC',
   BlockNumDesc = 'BLOCK_NUM_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -1288,7 +1248,6 @@ export type Parachain = Node & {
   deposit: Scalars['BigFloat'];
   manager: Scalars['String'];
   chronicleId?: Maybe<Scalars['String']>;
-  updatedAt: Scalars['Datetime'];
   /** Reads a single `Chronicle` that is related to this `Parachain`. */
   chronicle?: Maybe<Chronicle>;
   /** Reads and enables pagination through a set of `Crowdloan`. */
@@ -1621,8 +1580,6 @@ export type ParachainFilter = {
   manager?: Maybe<StringFilter>;
   /** Filter by the object’s `chronicleId` field. */
   chronicleId?: Maybe<StringFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ParachainFilter>>;
   /** Checks for any expressions in this list. */
@@ -1650,8 +1607,6 @@ export type ParachainLease = Node & {
   numBlockWon?: Maybe<Scalars['Int']>;
   winningResultBlock?: Maybe<Scalars['Int']>;
   hasWon: Scalars['Boolean'];
-  createdAt: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
   /** Reads a single `Parachain` that is related to this `ParachainLease`. */
   parachain?: Maybe<Parachain>;
   /** Reads a single `Auction` that is related to this `ParachainLease`. */
@@ -1690,10 +1645,6 @@ export type ParachainLeaseFilter = {
   winningResultBlock?: Maybe<IntFilter>;
   /** Filter by the object’s `hasWon` field. */
   hasWon?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: Maybe<DatetimeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ParachainLeaseFilter>>;
   /** Checks for any expressions in this list. */
@@ -1757,10 +1708,6 @@ export enum ParachainLeasesOrderBy {
   WinningResultBlockDesc = 'WINNING_RESULT_BLOCK_DESC',
   HasWonAsc = 'HAS_WON_ASC',
   HasWonDesc = 'HAS_WON_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -1806,8 +1753,6 @@ export enum ParachainsOrderBy {
   ManagerDesc = 'MANAGER_DESC',
   ChronicleIdAsc = 'CHRONICLE_ID_ASC',
   ChronicleIdDesc = 'CHRONICLE_ID_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
