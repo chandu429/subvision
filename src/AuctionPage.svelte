@@ -106,6 +106,7 @@
     </div>
     {#if $curAuction}
       <AuctionPanel {...{curAuction: $curAuction, latestBids} }/>
+	  <SlotLeaseChart leases={slotLeases}/>
     {:else}
       <ParachainList {parachains}/>
     {/if}
