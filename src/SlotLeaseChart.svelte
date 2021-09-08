@@ -3,7 +3,7 @@
   import { config } from './constants';
   import ParachainIcon from './ParachainIcon.svelte';
   import ProgressBar from './ProgressBar.svelte';
-  import { lastBlockNum, lastBlockTime } from './stores';
+  import { lastBlockNum, lastBlockTime, curLease } from './stores';
   import { getDateFromBlockNum, getColSpan } from './utils';
 
   export let leases;
@@ -14,23 +14,25 @@
   $: {
     activeLeases = leases
     .filter(({ lastLease }) => lastLease * leasePeriod > $lastBlockNum)
-    .map(({firstLease, lastLease, ...rest}) => ({ slots: range(firstLease, lastLease + 1), firstLease, lastLease, ...rest }));
-    
-    const defaultSlotStart = Math.ceil($lastBlockNum / leasePeriod);
-    const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
+    .map(({firstLease, lastLease, ...rest}) => ({ slots: range(Math.max(firstLease, $curLease), lastLease + 1), firstLease, lastLease, ...rest }))
+	.sort((leaseA, leaseB) => leaseB.winningResultBlock - leaseA.winningResultBlock);
 
-    const leaseSlotStart = minBy(activeLeases, "firstLease")?.firstLease;
+	const defaultSlotStart = $curLease;
+    const defaultSlotEnd = defaultSlotStart + leasesPerSlot;
+	const leaseSlotStart = minBy(activeLeases, "firstLease")?.firstLease;
     const leaseSlotEnd = maxBy(leases, "lastLease")?.lastLease;
-    
-    const slotStart = Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
+
+    const slotStart = defaultSlotStart || leaseSlotStart; // Math.min(leaseSlotStart || defaultSlotStart, defaultSlotStart);
     const slotEnd = Math.max(leaseSlotEnd || defaultSlotEnd, defaultSlotEnd);
-    
+
     slotIdxs = range(slotStart, slotEnd+1);
     allSlots = slotIdxs.map((slotIdx) => ({ idx: slotIdx, startBlock: slotIdx * leasePeriod + 1, endBlock: (slotIdx + 1) * leasePeriod  }));
-
-  }
+	}
 </script>
 
+<div class="py-2 text-lg">
+  <p>Parachain</p>
+</div>
 <div class="box overflow-x-scroll py-2">
   <table class="w-full text-center">
     <tr>
@@ -48,7 +50,7 @@
       </td>
       {/each}
     </tr>
-    {#if !activeLeases.length} 
+    {#if !activeLeases.length}
     <tr>
       <td colspan={allSlots.length + 1}>
         <div class="flex empty-content px-6 justify-center items-center">
@@ -95,5 +97,5 @@
   .empty-content {
     height: 80px;
   }
-  
+
 </style>
