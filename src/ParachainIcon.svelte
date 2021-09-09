@@ -23,16 +23,17 @@
 </script>
 
 <script>
-  export let paraId, smallIcon = false, align='center', showText=true, dropShadow=false;
+  export let paraId, smallIcon = false, showText=true, dropShadow=false;
+  export let align='start';
   const parachain = $paraMappings?.[paraId];
 </script>
 
-<div class="flex items-center justify-{align}" alt="{paraId}"> 
-  <div class="{smallIcon ? 'w-6 h-6' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-2 {dropShadow ? 'drop-shadow' : ''}" alt="{paraId}">
+<div class="flex items-center justify-{align}" alt="{paraId}">
+  <div class="{smallIcon ? 'w-6 h-6 ml-4' : 'w-10 h-10'} flex-none image-fit rounded-full overflow-hidden mr-2 {dropShadow ? 'drop-shadow' : ''}" alt="{paraId}">
     <img alt="{parachain?.name || paraId}" src="{parachain?.icon || config.defaultParachainIcon}">
   </div>
   {#if showText}
-  <div class="text-sm" alt="{paraId}">
+  <div class="text-sm text-left" alt="{paraId}">
     {#if parachain}
       <div title={paraId}>
         {#if parachain.website}
