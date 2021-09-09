@@ -62,20 +62,20 @@
     }
     if ($parachainsQuery.data) {
       const { parachains: paraList } = normalize($parachainsQuery.data) || {};
-      parachains = orderBy((paraList || []).map(({ leases, funds, ...rest }) => ({...rest, crowdloan: funds[0], curLease: leases[0] })), ['curLease.firstLease'], ['asc']);
+	//   console.log('Auction-page: parachains', parachains);
+      parachains = orderBy((paraList || []).map(({ leases, funds, ...rest }) => ({...rest, crowdloan: funds[0], curLease: leases[0] })), ({ curLease }) => curLease?.winningResultBlock || 0, ['desc']);
     }
   }
 
 
   $: latestBids = $curAuction ? orderBy([].concat($curAuction.latestBids), ['createdAt'], ['desc']).slice(0, 10) : [];
   $: latestWinner = orderBy(slotLeases, ['auction.closingEnd'], ['desc']).filter(({ auction }) => $lastBlockNum - auction.closingEnd <= 43200 )[0];
-  $: {
-	console.log('Auction-page: curAuction', curAuction.latestBids);
-    console.log('Auction-page: slotLeases', slotLeases);
-    console.log('Auction-page: latestBids', latestBids);
-    console.log('Auction-page: latestWinner', latestWinner)
-  }
-//   $: latestWinner = orderBy(slotLeases, ['closingEnd'], ['desc']).filter(({ closingEnd }) => $lastBlockNum - closingEnd <= 43200 )[0];
+//   $: {
+// 	console.log('Auction-page: curAuction', curAuction.latestBids);
+//     console.log('Auction-page: slotLeases', slotLeases);
+//     console.log('Auction-page: latestBids', latestBids);
+//     console.log('Auction-page: latestWinner', latestWinner)
+//   }
 
 </script>
 
