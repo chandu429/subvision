@@ -10,7 +10,7 @@
   import Breadcrumb from './Breadcrumb.svelte';
   import MediaQuery from './MediaQuery.svelte';
   import ParachainIcon from './ParachainIcon.svelte';
-
+  import {CrowdloanStatus} from './constants'
 
   export let fundId;
 
@@ -43,6 +43,7 @@
       totalRecord = contributionsTotal;
     }
     searchedText = $contributionsOps.variables.contributionFilter.account.startsWithInsensitive;
+	console.log('contributions - fund:', fund);
   }
 
   const updateSearchCriteria = (addr = '') => {
@@ -171,7 +172,7 @@
               Raised/Cap: <Token value={fund.raised} allowZero={true} addSymbol={false} /> / <Token allowZero={true} value={fund.cap} />
               <p>Unlock block: {fund.lockExpiredBlock}</p>
               <p>{fund ? getDateFromBlockNum(fund.lockExpiredBlock, $lastBlockNum, $lastBlockTime) : ''}</p>
-              <p>{fund?.retiring ? 'Inactive' : 'Active'}</p>
+              <p>{fund?.status === CrowdloanStatus.STARTED ? 'Active' : fund?.status }</p>
             </div>
           </div>
           <div class="intro-y box">
