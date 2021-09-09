@@ -148,6 +148,7 @@ query ($fundId: String!, $contributionFilter: ContributionFilter!, $after: Curso
     cap
     raised
     lockExpiredBlock
+	status
     parachain {
       paraId
       manager

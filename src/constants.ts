@@ -1,7 +1,13 @@
 type Network = 'polkadot' | 'kusama' | 'rococo';
-
 const { STAGE, NODE_ENV } = process.env;
 const isProd = NODE_ENV?.startsWith('prod');
+
+export enum CrowdloanStatus {
+	RETIRING = 'Retiring',
+	DISSOLVED = 'Dissolved',
+	STARTED = 'Started',
+	WON = 'Won'
+  }
 
 export interface ParachainInfo {
   paraid: string;
