@@ -52,7 +52,7 @@
 	  crowdloans.sort((crowdloanA, crowdloanB) => crowdloanB.wonAuctionId - crowdloanA.wonAuctionId)
     }
 
-	if(crowdloans && selectedStatus === 'Retired'){
+    if(crowdloans && selectedStatus === 'Retired'){
 	  crowdloans.sort((crowdloanA, crowdloanB) => crowdloanB.lockExpiredBlock - crowdloanA.lockExpiredBlock)
     }
   }
