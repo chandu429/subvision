@@ -47,6 +47,10 @@
           ? loan.status === 'Retiring' || loan.status === 'Dissolved'
           : false);
 
+  $: if(crowdloans && selectedStatus === 'Completed'){
+	crowdloans.sort((crowdloanA, crowdloanB) => crowdloanB.wonAuctionId - crowdloanA.wonAuctionId)
+  }
+
 </script>
 
 <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>

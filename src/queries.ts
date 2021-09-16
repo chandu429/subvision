@@ -136,6 +136,7 @@ query {
       lockExpiredBlock
       blockNum
       createdAt
+	  wonAuctionId
     }
   }
 }
