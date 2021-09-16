@@ -47,8 +47,14 @@
           ? loan.status === 'Retiring' || loan.status === 'Dissolved'
           : false);
 
-  $: if(crowdloans && selectedStatus === 'Completed'){
-	crowdloans.sort((crowdloanA, crowdloanB) => crowdloanB.wonAuctionId - crowdloanA.wonAuctionId)
+  $: {
+    if(crowdloans && selectedStatus === 'Completed'){
+	  crowdloans.sort((crowdloanA, crowdloanB) => crowdloanB.wonAuctionId - crowdloanA.wonAuctionId)
+    }
+
+	if(crowdloans && selectedStatus === 'Retired'){
+	  crowdloans.sort((crowdloanA, crowdloanB) => crowdloanB.lockExpiredBlock - crowdloanA.lockExpiredBlock)
+    }
   }
 
 </script>
