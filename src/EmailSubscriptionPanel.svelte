@@ -1,8 +1,10 @@
 <script lang=ts>
 import {validateEmail} from './utils'
 import {POST} from './fetch-service'
+import {createEventDispatcher} from 'svelte';
 
 export let isCompact = false;
+const dispatch = createEventDispatcher();
 
 const {EMAIL_GATEWAY} = process.env
 console.log('EMAIL_GATEWAY', EMAIL_GATEWAY)
@@ -29,6 +31,10 @@ const handleOnSubscribe = async () => {
 	  subscribeSuccess = false
 	  subscribeError = error
 	}
+}
+
+const closeSubscriptionPanel= ()=>{
+	dispatch('onCloseEmailSubscriptionPanel')
 }
 </script>
 
@@ -70,9 +76,20 @@ const handleOnSubscribe = async () => {
 	{/if}
 	</div>
   </div>
+  
   <div class="flex-0 sm:flex-auto md:flex-auto lg:flex-auto email-sub-bg">
   </div>
+   
+   <div>
+   <button class=" p-5 leading-none" on:click ={closeSubscriptionPanel} >
+   <div class = "text-base  h-6 w-6 text-white"><span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+<path d="M19.3337 2.54669L17.4537 0.666687L10.0003 8.12002L2.54699 0.666687L0.666992 2.54669L8.12033 10L0.666992 17.4534L2.54699 19.3334L10.0003 11.88L17.4537 19.3334L19.3337 17.4534L11.8803 10L19.3337 2.54669Z" fill="white"/>
+</svg></span></div>
+   </button>
+   
+   </div>
 </div>
+
 {:else}
 <div class="flex flex-col flex-1 email-sub-bg-color rounded-xl text-white m-4 md:m-1 p-6 md:p-4">
   <p class="text-md font-semibold">Don't miss the next auction date!</p>
@@ -93,5 +110,6 @@ const handleOnSubscribe = async () => {
 		{/if}
 	</div>
   </div>
+  
 </div>
 {/if}

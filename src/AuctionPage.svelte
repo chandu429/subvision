@@ -20,7 +20,11 @@
   let timer = 0;
   let initFetch = true;
   let slotLeases = [], parachains = []
+  let showEmailSubscription = true;
 
+  const closeEmailSubscriptionPanel = ()=>{
+    showEmailSubscription = false;
+  }
   const activeAuction = {
     auctionStatusFilter: {
       ongoing: {
@@ -85,7 +89,9 @@
   <MediaQuery query="(max-width: 600px)" let:matches={isMobile}>
     {#if !isMobile}
       <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Auction' }]}/>
-      <EmailSubscriptionPanel />
+      {#if showEmailSubscription}
+      <EmailSubscriptionPanel  on:onCloseEmailSubscriptionPanel={closeEmailSubscriptionPanel}/>
+      {/if}
     {/if}
   </MediaQuery>
 
