@@ -1,13 +1,12 @@
 <script lang=ts>
 import {validateEmail} from './utils'
 import {POST} from './fetch-service'
-import {createEventDispatcher} from 'svelte';
 import {fade} from 'svelte/transition';
 
 
 
 export let isCompact = false;
-const dispatch = createEventDispatcher();
+let showEmailSubscription = true
 
 const {EMAIL_GATEWAY} = process.env
 console.log('EMAIL_GATEWAY', EMAIL_GATEWAY)
@@ -15,8 +14,9 @@ let email = "";
 let subscribeSuccess = false;
 let subscribeError = ""
 
-const closeSubscriptionPanel = ()=>{
-	dispatch('closeEmailSubscriptionPanel')
+
+const handleCloseButton = ()=>{
+	showEmailSubscription = false;
 }
 const handleOnSubscribe = async () => {
 	subscribeSuccess=false
@@ -58,6 +58,7 @@ const handleOnSubscribe = async () => {
 
 </style>
 
+{#if showEmailSubscription}
 {#if !isCompact}
 <div class="flex flex-1 w-full email-sub-bg-color rounded-xl my-4 text-white" out:fade>
   <div class="flex-grow p-4 cap-width sm:ml-6 md:ml-8">
@@ -80,16 +81,16 @@ const handleOnSubscribe = async () => {
 	{/if}
 	</div>
   </div>
-  
+
   <div class="flex-0 sm:flex-auto md:flex-auto lg:flex-auto email-sub-bg">
   </div>
-   
+
    <div>
-   <button class=" p-5 leading-none" on:click ={closeSubscriptionPanel} >
+   <button class=" p-5 leading-none" on:click ={handleCloseButton} >
 		<div class = "text-base  h-6 w-6 text-white">
 			<span>
-				 <svg xmlns="http://www.w3.org/2000/svg" 
-                    width="20" 
+				 <svg xmlns="http://www.w3.org/2000/svg"
+                    width="20"
                     height="20"
                     viewBox="0 0 20 20"
                     fill="none">
@@ -98,7 +99,7 @@ const handleOnSubscribe = async () => {
 			</span>
 		</div>
    </button>
-   
+
    </div>
 </div>
 
@@ -122,6 +123,7 @@ const handleOnSubscribe = async () => {
 		{/if}
 	</div>
   </div>
-  
+
 </div>
+{/if}
 {/if}
