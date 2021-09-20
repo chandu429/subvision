@@ -22,9 +22,7 @@
   let slotLeases = [], parachains = []
   let showEmailSubscription = true;
 
-  const closeEmailSubscriptionPanel = ()=>{
-    showEmailSubscription = false;
-  }
+  
   const activeAuction = {
     auctionStatusFilter: {
       ongoing: {
@@ -90,7 +88,7 @@
     {#if !isMobile}
       <Breadcrumb links={[{title: $curAuction ? `Auction No.${$curAuction.id}` : 'Auction' }]}/>
       {#if showEmailSubscription}
-      <EmailSubscriptionPanel  on:onCloseEmailSubscriptionPanel={closeEmailSubscriptionPanel}/>
+      <EmailSubscriptionPanel  on:closeEmailSubscriptionPanel={()=>{showEmailSubscription = false}}/>
       {/if}
     {/if}
   </MediaQuery>

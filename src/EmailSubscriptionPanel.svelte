@@ -2,6 +2,9 @@
 import {validateEmail} from './utils'
 import {POST} from './fetch-service'
 import {createEventDispatcher} from 'svelte';
+import {fade} from 'svelte/transition';
+
+
 
 export let isCompact = false;
 const dispatch = createEventDispatcher();
@@ -12,6 +15,9 @@ let email = "";
 let subscribeSuccess = false;
 let subscribeError = ""
 
+const closeSubscriptionPanel = ()=>{
+	dispatch('closeEmailSubscriptionPanel')
+}
 const handleOnSubscribe = async () => {
 	subscribeSuccess=false
 	subscribeError=null
@@ -33,9 +39,7 @@ const handleOnSubscribe = async () => {
 	}
 }
 
-const closeSubscriptionPanel= ()=>{
-	dispatch('onCloseEmailSubscriptionPanel')
-}
+
 </script>
 
 <style>
@@ -55,7 +59,7 @@ const closeSubscriptionPanel= ()=>{
 </style>
 
 {#if !isCompact}
-<div class="flex flex-1 w-full email-sub-bg-color rounded-xl my-4 text-white">
+<div class="flex flex-1 w-full email-sub-bg-color rounded-xl my-4 text-white" out:fade>
   <div class="flex-grow p-4 cap-width sm:ml-6 md:ml-8">
     <p class="text-xl font-semibold">Don't miss the next auction date!</p>
     <p class="text-lg">Subscribe to get notified with important updates</p>
@@ -82,9 +86,17 @@ const closeSubscriptionPanel= ()=>{
    
    <div>
    <button class=" p-5 leading-none" on:click ={closeSubscriptionPanel} >
-   <div class = "text-base  h-6 w-6 text-white"><span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-<path d="M19.3337 2.54669L17.4537 0.666687L10.0003 8.12002L2.54699 0.666687L0.666992 2.54669L8.12033 10L0.666992 17.4534L2.54699 19.3334L10.0003 11.88L17.4537 19.3334L19.3337 17.4534L11.8803 10L19.3337 2.54669Z" fill="white"/>
-</svg></span></div>
+		<div class = "text-base  h-6 w-6 text-white">
+			<span>
+				 <svg xmlns="http://www.w3.org/2000/svg" 
+                    width="20" 
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none">
+                    <path d="M19.3337 2.54669L17.4537 0.666687L10.0003 8.12002L2.54699 0.666687L0.666992 2.54669L8.12033 10L0.666992 17.4534L2.54699 19.3334L10.0003 11.88L17.4537 19.3334L19.3337 17.4534L11.8803 10L19.3337 2.54669Z" fill="white"/>
+                 </svg>
+			</span>
+		</div>
    </button>
    
    </div>
