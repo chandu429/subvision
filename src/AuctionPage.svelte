@@ -20,7 +20,6 @@
   let timer = 0;
   let initFetch = true;
   let slotLeases = [], parachains = []
-
   const activeAuction = {
     auctionStatusFilter: {
       ongoing: {
